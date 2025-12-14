@@ -1,4 +1,4 @@
-nname: Build, Test and Deploy Next.js to dev
+name: Build, Test and Deploy Next.js to dev
 
 on:
   push:
