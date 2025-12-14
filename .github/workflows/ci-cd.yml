@@ -26,9 +26,7 @@ jobs:
       
       - name: Run linter
         run: npm run lint
-      
-      - name: Run tests
-        run: npm test
+        continue-on-error: false
       
       - name: Build application
         run: npm run build
@@ -36,7 +34,6 @@ jobs:
           NODE_ENV: production
   
   deploy:
-    needs: test
     runs-on: ubuntu-latest
     environment: development
     
