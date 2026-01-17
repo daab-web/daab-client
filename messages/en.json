@@ -1,6 +1,43 @@
 {
   "Global": {
-    "title": "WAAS",
-    "description": "The World Association of Azerbaijani Scientists"
+    "title": "WAAS - World Association of Azerbaijani Scientists",
+    "description": "Official website of WAAS"
+  },
+  "Navigation": {
+    "aboutWaas": "About WAAS",
+    "boardOfDirectors": "Board of Directors",
+    "ourScientists": "Scientists",
+    "ourActivities": "Activities",
+    "membership": "WAAS Membership",
+    "istanbulMeeting": "Istanbul Meeting",
+    "bakuForum": "Baku Forum",
+    
+    "about": {
+      "necessity": "Necessity of establishment",
+      "mission": "Our mission",
+      "vision": "Our vision",
+      "values": "Our values",
+      "charter": "Our charter"
+    },
+    
+    "istanbul": {
+      "participants": "Meeting participants",
+      "objectives": "Meeting objectives",
+      "proposals": "Proposals",
+      "decisions": "Decisions made"
+    },
+    
+    "baku": {
+      "venue": "Venue",
+      "logistics": "Logistics",
+      "program": "Program",
+      "presentations": "Presentations",
+      "discussions": "Group discussion sessions",
+      "individualProposals": "Individual proposals",
+      "letters": "Letters",
+      "videoGallery": "Video gallery",
+      "photoGallery": "Photo gallery",
+      "book": "Book about the forum"
+    }
   }
 }

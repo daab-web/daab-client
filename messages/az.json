@@ -1,6 +1,43 @@
 {
   "Global": {
-    "title": "DAAB",
-    "description": "Dünya Azərbaycanlı Alimlər Birliyi"
+    "title": "DAAB - Dünya Azərbaycanlı Alimlər Birliyi",
+    "description": "DAAB-ın rəsmi veb saytı"
+  },
+  "Navigation": {
+    "aboutWaas": "DAAB haqqında",
+    "boardOfDirectors": "İdarə heyəti",
+    "ourScientists": "Alimlərimiz",
+    "ourActivities": "Fəaliyyətimiz",
+    "membership": "DAAB-a üzvlük",
+    "istanbulMeeting": "İstanbul Təsis Toplantısı",
+    "bakuForum": "Bakı Forumu",
+    
+    "about": {
+      "necessity": "Təsis zərurəti",
+      "mission": "Missiyamız",
+      "vision": "Vizyonumuz",
+      "values": "Dəyərlərimiz",
+      "charter": "Nizamnamemiz"
+    },
+    
+    "istanbul": {
+      "participants": "Görüşün iştirakçıları",
+      "objectives": "Görüşün hədəfləri",
+      "proposals": "Təkliflər",
+      "decisions": "Alınmış qərarlar"
+    },
+    
+    "baku": {
+      "venue": "Məkan",
+      "logistics": "Logistika",
+      "program": "Proqram",
+      "presentations": "Məruzələr",
+      "discussions": "Qrup müzakirə sessiyaları",
+      "individualProposals": "Fərdi təkliflər",
+      "letters": "Məktublar",
+      "videoGallery": "Video qalereya",
+      "photoGallery": "Foto qalereya",
+      "book": "Forum haqqında kitab"
+    }
   }
 }
