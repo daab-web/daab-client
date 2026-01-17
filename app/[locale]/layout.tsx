@@ -5,7 +5,7 @@ import "./globals.css";
 import { NextIntlClientProvider } from "next-intl";
 
 import * as React from "react"
-import { NavigationMenuDemo } from "@/components/navbar";
+import Navbar from "@/components/navbar";
 import { ThemeProvider } from "@/components/theme-provider";
 
 const geistSans = Geist({
@@ -44,7 +44,7 @@ export default async function RootLayout({ children, params }: Props) {
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <NextIntlClientProvider>
             <header className="my-4 flex gap-2">
-              <NavigationMenuDemo />
+              <Navbar />
             </header>
             {children}
           </NextIntlClientProvider>
