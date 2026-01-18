@@ -6,11 +6,9 @@ import Link from "next/link"
 import { useIsMobile } from "@/hooks/use-mobile"
 import {
   NavigationMenu,
-  NavigationMenuContent,
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
 import { useTranslations } from "next-intl"
@@ -23,36 +21,9 @@ export function BottomNavigationMenu() {
     <NavigationMenu viewport={isMobile}>
       <NavigationMenuList className="flex-wrap">
         <NavigationMenuItem>
-          <NavigationMenuTrigger>{t('aboutWaas')}</NavigationMenuTrigger>
-          <NavigationMenuContent>
-            <ul className="grid gap-2 md:w-100 lg:w-125 lg:grid-cols-[.75fr_1fr]">
-              <ListItem
-                key={t("about.necessity")}
-                title={t("about.necessity")}
-                href={"/about/necessity"}
-              />
-              <ListItem
-                key={t("about.mission")}
-                title={t("about.mission")}
-                href={"/about/mission"}
-              />
-              <ListItem
-                key={t("about.vision")}
-                title={t("about.vision")}
-                href={"/about/vision"}
-              />
-              <ListItem
-                key={t("about.values")}
-                title={t("about.values")}
-                href={"/about/values"}
-              />
-              <ListItem
-                key={t("about.charter")}
-                title={t("about.charter")}
-                href={"/about/charter"}
-              />
-            </ul>
-          </NavigationMenuContent>
+          <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>
+            <Link href={"/about"}>{t('aboutWaas')}</Link>
+          </NavigationMenuLink>
         </NavigationMenuItem>
         <NavigationMenuItem>
           <NavigationMenuLink asChild className={navigationMenuTriggerStyle()}>

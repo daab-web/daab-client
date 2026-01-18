@@ -39,14 +39,16 @@ export default async function RootLayout({ children, params }: Props) {
   return (
     <html lang={locale} suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased flex items-start justify-center`}
+        className={`${geistSans.variable} ${geistMono.variable} justify-self-center antialiased flex flex-col items-center gap-8 w-9/12`}
       >
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
           <NextIntlClientProvider>
             <header className="my-4 flex gap-2">
               <Navbar />
             </header>
-            {children}
+            <main className="w-full flex flex-col items-center">
+              {children}
+            </main>
           </NextIntlClientProvider>
         </ThemeProvider>
       </body>

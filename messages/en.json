@@ -39,5 +39,32 @@
       "photoGallery": "Photo gallery",
       "book": "Book about the forum"
     }
+  },
+
+  "About": {
+    "necessity": {
+      "title": "Dünya Azərbaycanlı Alimlər Birliyinin Yaradılma Zərurəti",
+      "part1": "22 aprel 2022-ci il tarixində Qarabağın incisi Şuşa şəhərində Dünya Azərbaycanlıların V Qurultayı təşkil edilmişdir. Azərbaycanın müstəqillik tarixində mühüm və əhəmiyyatli tarixi hadisələrdən hesab olunan bu qurultayda 65 ölkədən 400 nəfərə yaxın soydaşımız iştirak etmişdir. İşğaldan azad edilmiş torpaqlarımızda təşkil edilmiş ən böyük tədbirlərdən hesab edilən Qurultayda ölkə başçısı, Silahlı Qüvvələrin  Ali Baş Komandanı, cənab İlham Əliyevin söylədiyi ətraflı, çoxşaxəli nitqi günü-gündən inkişaf etməkdə olan Azərbaycan diasporunun qarşısına böyük vəzifə və məsuliyyət qoymuşdur. Məhz Prezident İlham Əliyevin tapşırıqlarına əsasən, bu gün diasporun daha mütəşəkkil formada inkişafı üçün məqsədyönlü fəaliyyət aparılmaqdadır. Öz fərqliliyi və potensialı baxımından zənginliyi ilə seçilən Azərbaycan diasporunda elm xadimlərinin, alimlərin yer alması diasporumuzun daha da inkişaf etməsi baxımından böyük perspektivlər vəd etməkdədir. İstər qurultay zamanı, istərsə də qurultaydan sonrakı dövrlər ərzində yeni-yeni azərbaycanlı alim və elm adamları ilə yaxından tanışlıq imkanımız olmuş, gələcəkdə qarşılıqlı əməkdaşlıq imkanları haqqında fikir mübadiləsi aparılmışdır.",
+      "part2": "Azərbaycan Respublikası Diasporla İş üzrə Dövlət Komitəsinin (DİDK) dəstəyi ilə biz, bir qrup azərbaycanlı ziyalı diasporumuzda təmsil olunan alimlərin təşkilatlanmasının zəruriliyini rəhbər tutaraq, qarşımıza hamımızı birləşdirəcək vahid bir platformanın yaradılması məqsədini qoyduq. Bu niyyətimizi həyata keçirmək üçün Türkiyədə toplandıq və \"Dünya Azərbaycanlı Alimlər Dərnəyinin\" (DAAB) təməlini atdıq.",
+      "part3": "Toplantı 9 dekabr 2022-ci il tarixində DİDK nümayəndələrinin və müxtəlif ölkələrdən təşrif gətirmiş Azərbaycanlı elm xadimlərinin iştirakı ilə İstanbul şəhərində baş tutdu."
+    },
+
+    "mission": {
+      "title": "MİSSİYAMIZ",
+      "text": "Dünya Azərbaycanlı Alimlər Birliyi dünyanın müxtəlif ölkələrində yaşayan Azərbaycanlı ziyalıların birliyi kimi fəaliyyət göstərən qeyri-hökumət təşkilatı olaraq elm və texnologiya, energetika, təhsil, səhiyyə, sosial elmlər və mədəniyyət sahələri ilə bağlı strateji planların hazırlanması və icra olunmasında Azərbaycana dəstək verir."
+    },
+
+    "vision": {
+      "title": "VİZYONUMUZ",
+      "text": "Dünya Azərbaycanlı Alimlər Birliyi elmi biliklərin inkişaf etdirilməsi, innovasiyaların təşviqi, Azərbaycanda və dünya çapında fərq yarada biləcək alimlərin, mühəndislərin, incəsənət xadimlərinin, səhiyyə işçilərinin yetişdirilməsinə yönəlmiş fəaliyyətində mükəmməlliyi ilə tanınan beynəlxalq bir qurum olmaq niyyətindədir. Biz Azərbaycanın dünya miqyasında zəngin və dərin tarixə malik, bəşəriyyət üçün firavan və dinc gələcək yaratmaq uğrunda böyük sərmayə yatırmış sülhsevər bir dövlət kimi tanınması və qəbul edilməsini  istəyirik. Dünya Azərbaycanın qlobal arenada iştirakından faydalanacaq və öz növbəsində Azərbaycan da beynəlxalq təcrübədən yararlanaraq gələcək nəsillər üçün daha güclü dövlət qurmağa davam edəcək."
+    },
+
+    "values": {
+      "title": "DƏYƏRLƏRİMİZ"
+    },
+
+    "charter": {
+      "title": "DÜNYA AZƏRBAYCANLI ALİMLƏR BİRLİYİNİN NİZAMNAMƏSİ"
+    }
   }
 }
