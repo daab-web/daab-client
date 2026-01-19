@@ -8,6 +8,7 @@ import { getTranslations } from "next-intl/server";
 import Image from "next/image";
 import necessity1 from "@/public/about/necessity.jpg";
 import necessity2 from "@/public/about/necessity2.jpg";
+import Necessity from "@/content/az/necessity-content/page.mdx";
 
 export default async function About() {
   const navTranslation = await getTranslations("Navigation");
