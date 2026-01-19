@@ -14,10 +14,15 @@ export default async function About() {
   const aboutTranslation = await getTranslations("About");
 
   return (
-    <Accordion type="single" collapsible className="w-full" defaultValue="">
+    <Accordion
+      type="single"
+      collapsible
+      className="mx-auto w-full max-w-3xl"
+      defaultValue=""
+    >
       <AccordionItem value="necessity">
         <AccordionTrigger>{navTranslation("about.necessity")}</AccordionTrigger>
-        <AccordionContent className="flex flex-col gap-4 text-balance text-lg">
+        <AccordionContent className="flex flex-col items-center gap-4 text-balance text-lg text-center">
           <div className="w-full text-center">
             <h1 className="font-extrabold text-2xl">
               {aboutTranslation("necessity.title")}
@@ -33,7 +38,7 @@ export default async function About() {
 
       <AccordionItem value="mission">
         <AccordionTrigger>{navTranslation("about.mission")}</AccordionTrigger>
-        <AccordionContent>
+        <AccordionContent className="flex flex-col items-center gap-4 text-balance text-lg text-center">
           <div className="w-full text-center">
             <h1 className="font-extrabold text-2xl">
               {aboutTranslation("mission.title")}
@@ -45,7 +50,7 @@ export default async function About() {
 
       <AccordionItem value="vision">
         <AccordionTrigger>{navTranslation("about.vision")}</AccordionTrigger>
-        <AccordionContent>
+        <AccordionContent className="flex flex-col items-center gap-4 text-balance text-lg text-center">
           <div className="w-full text-center">
             <h1 className="font-extrabold text-2xl">
               {aboutTranslation("vision.title")}
@@ -57,18 +62,19 @@ export default async function About() {
 
       <AccordionItem value="values">
         <AccordionTrigger>{navTranslation("about.values")}</AccordionTrigger>
-        <AccordionContent>
+        <AccordionContent className="flex flex-col items-center gap-4 text-balance text-lg text-center">
           <div className="w-full text-center">
             <h1 className="font-extrabold text-2xl">
-              {aboutTranslation("vision.title")}
+              {aboutTranslation("values.title")}
             </h1>
+            <p>{aboutTranslation("values.text")}</p>
           </div>
         </AccordionContent>
       </AccordionItem>
 
       <AccordionItem value="charter">
         <AccordionTrigger>{navTranslation("about.charter")}</AccordionTrigger>
-        <AccordionContent>
+        <AccordionContent className="flex flex-col items-center gap-4 text-balance text-lg text-center">
           <div className="w-full text-center">
             <h1 className="font-extrabold text-2xl">
               {aboutTranslation("charter.title")}

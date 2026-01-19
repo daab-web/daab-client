@@ -11,7 +11,7 @@
     "membership": "DAAB-a üzvlük",
     "istanbulMeeting": "İstanbul Təsis Toplantısı",
     "bakuForum": "Bakı Forumu",
-    
+
     "about": {
       "necessity": "Təsis zərurəti",
       "mission": "Missiyamız",
@@ -19,14 +19,14 @@
       "values": "Dəyərlərimiz",
       "charter": "Nizamnamemiz"
     },
-    
+
     "istanbul": {
       "participants": "Görüşün iştirakçıları",
       "objectives": "Görüşün hədəfləri",
       "proposals": "Təkliflər",
       "decisions": "Alınmış qərarlar"
     },
-    
+
     "baku": {
       "venue": "Məkan",
       "logistics": "Logistika",
@@ -60,11 +60,96 @@
     },
 
     "values": {
-      "title": "DƏYƏRLƏRİMİZ"
+      "title": "DƏYƏRLƏRİMİZ",
+      "text": "AKADEMİK AZADLIQ, AKADEMİK ETİKA, DÜRÜSTLÜK, FƏRQLİLİKLƏRƏ HÖRMƏT, KEYFİYYƏT, MƏSULİYYƏT, MÜKƏMMƏLLİK, LƏYAQƏT, ŞƏFFAFLIQ "
     },
 
     "charter": {
       "title": "DÜNYA AZƏRBAYCANLI ALİMLƏR BİRLİYİNİN NİZAMNAMƏSİ"
+    }
+  },
+
+  "Directors": {
+    "title": "İdarə heyəti",
+    "intro": "DAAB rəhbərliyini yaxından tanıyın.",
+    "members": {
+      "masud": {
+        "name": "Masud Əfəndiyev, Prof. Dr.",
+        "role": "DAAB İdarə Heyətinin Sədri",
+        "subtitle": "",
+        "country": "Almaniya",
+        "profileUrl": "#"
+      },
+      "baxtiyar": {
+        "name": "Bəxtiyar Siracov, Dr.",
+        "role": "DAAB İdarə Heyətinin Həmsədri",
+        "subtitle": "",
+        "country": "Avstriya",
+        "profileUrl": "#"
+      },
+      "seymur": {
+        "name": "Seymur Nəsirov, Dr.",
+        "role": "DAAB İdarə Heyətinin Həmsədri",
+        "subtitle": "",
+        "country": "Misir",
+        "profileUrl": "#"
+      },
+      "emil": {
+        "name": "Emil Əhmədov, Prof. Dr.",
+        "role": "DAAB İdarə Heyətinin Üzvü",
+        "subtitle": "",
+        "country": "Rusiya Federasiyası",
+        "profileUrl": "#"
+      },
+      "nigar": {
+        "name": "Nigar Məsumova",
+        "role": "DAAB İdarə Heyətinin Üzvü",
+        "subtitle": "",
+        "country": "Rusiya Federasiyası",
+        "profileUrl": "#"
+      },
+      "sevinc": {
+        "name": "Sevinc Məmmədova, Dr.",
+        "role": "DAAB İdarə Heyətinin Üzvü",
+        "subtitle": "",
+        "country": "ABŞ",
+        "profileUrl": "#"
+      },
+      "saadat": {
+        "name": "Saadat Kərimi, Prof. Dr.",
+        "role": "DAAB İdarə Heyətinin Üzvü",
+        "subtitle": "Mətbuat Katibi",
+        "country": "İsveç",
+        "profileUrl": "#"
+      },
+      "teymur": {
+        "name": "Teymur Rzayev, Prof. Dr.",
+        "role": "DAAB İdarə Heyətinin Üzvü",
+        "subtitle": "",
+        "country": "Türkiyə",
+        "profileUrl": "#"
+      },
+      "togrulIsmayil": {
+        "name": "Toğrul İsmayıl, Prof. Dr.",
+        "role": "DAAB İdarə Heyətinin Üzvü",
+        "subtitle": "",
+        "country": "Türkiyə",
+        "profileUrl": "#"
+      },
+      "togrulKerimov": {
+        "name": "Toğrul Kərimov, Dr.",
+        "role": "DAAB İdarə Heyətinin Üzvü",
+        "subtitle": "",
+        "country": "Almaniya",
+        "profileUrl": "#"
+      },
+      "yulduz": {
+        "name": "Yulduz Rəhimov, Prof. Dr.",
+        "role": "DAAB İdarə Heyətinin Üzvü",
+        "subtitle": "Elmi Katib",
+        "country": "Kanada",
+        "profileUrl": "#"
+      }
     }
   }
 }
