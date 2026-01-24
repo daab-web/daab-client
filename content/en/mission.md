@@ -1,0 +1,1 @@
+**The World Association of Azerbaijani Scientists** operates as a non-governmental organization that unites Azerbaijani scholars living across different countries. We support Azerbaijan in developing and implementing strategic plans in science and technology, energy, education, healthcare, social sciences, and culture.

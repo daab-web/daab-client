@@ -18,7 +18,7 @@ export function AboutSidebar() {
   ];
 
   return (
-    <aside className="w-48 flex-shrink-0">
+    <aside className="w-48 shrink-0">
       <nav className="sticky top-24 flex flex-col gap-1">
         {sections.map((section) => {
           const isActive = pathname === section.path;
@@ -30,7 +30,7 @@ export function AboutSidebar() {
                 "text-sm transition-colors px-3 py-2 rounded-md text-left",
                 isActive
                   ? "text-foreground bg-accent font-medium"
-                  : "text-muted-foreground hover:text-foreground hover:bg-accent"
+                  : "text-muted-foreground hover:text-foreground hover:bg-accent",
               )}
             >
               {section.label}
@@ -41,4 +41,3 @@ export function AboutSidebar() {
     </aside>
   );
 }
-
