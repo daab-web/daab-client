@@ -41,7 +41,6 @@ function MobileSidebarTrigger() {
     <Button
       variant="outline"
       size="icon"
-      aria-label="Open navigation"
       className="lg:hidden border border-input bg-background"
       onClick={toggleSidebar}
     >

@@ -73,6 +73,28 @@
     }
   },
 
+  "Scientists": {
+    "heroTitle": "Xaricdə yaşayan azərbaycanlı alimlər",
+    "heroSubtitle": "Alimlərimiz (tam ad, ölkə, fəaliyyət sahələri)",
+    "tableHeaders": {
+      "fullname": "Ad, Soyad",
+      "institution": "Təşkilat",
+      "country": "Ölkə",
+      "areas": "Fəaliyyət sahələri"
+    },
+    "pagination": {
+      "previous": "Əvvəlki",
+      "next": "Növbəti",
+      "page": "Səhifə {page} / {total}"
+    },
+    "detail": {
+      "country": "Ölkə",
+      "areas": "Fəaliyyət sahələri",
+      "back": "Alimlər siyahısına qayıt",
+      "profile": "Profil"
+    }
+  },
+
   "Directors": {
     "title": "İdarə heyəti",
     "intro": "DAAB rəhbərliyini yaxından tanıyın.",
