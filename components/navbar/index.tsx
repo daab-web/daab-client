@@ -6,8 +6,10 @@ export default function Navbar() {
   return (
     <div className="flex flex-col gap-4">
       <TopNavigation />
-      <Separator />
-      <BottomNavigationMenu />
+      <Separator className="hidden lg:block" />
+      <div className="hidden lg:block">
+        <BottomNavigationMenu />
+      </div>
     </div>
   );
 }

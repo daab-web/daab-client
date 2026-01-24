@@ -1,5 +1,22 @@
 import type { MDXComponents } from "mdx/types";
-import Image from "next/image";
+import Image, { type ImageProps } from "next/image";
+
+import { cn } from "@/lib/utils";
+
+function MdxImage({ className, sizes, ...props }: ImageProps) {
+  return (
+    <div className="my-8 mx-auto w-full max-w-180">
+      <Image
+        sizes={sizes ?? "(min-width: 1024px) 720px, 100vw"}
+        className={cn(
+          "mx-auto block h-auto w-full rounded-lg shadow-md",
+          className,
+        )}
+        {...props}
+      />
+    </div>
+  );
+}
 
 const components: MDXComponents = {
   h1: ({ children }) => (
@@ -35,18 +52,16 @@ const components: MDXComponents = {
     <li className="text-base leading-7 text-foreground pl-2">{children}</li>
   ),
   hr: () => <hr className="my-8 border-border" />,
-  img: (props) => {
-    // Handle regular img tags
-    return <img {...(props as any)} className="my-8 rounded-lg shadow-md mx-auto" />;
-  },
-  Image: (props: any) => {
-    // Handle Next.js Image component from MDX
-    return (
-      <div className="my-8 flex justify-center">
-        <Image {...props} className={props.className || "rounded-lg shadow-md"} />
-      </div>
-    );
-  },
+  img: (props) => (
+    <img
+      {...(props as any)}
+      className={cn(
+        "my-8 mx-auto block h-auto w-full max-w-180 rounded-lg shadow-md",
+        props.className,
+      )}
+    />
+  ),
+  Image: (props: ImageProps) => <MdxImage {...props} />,
 };
 
 export function useMDXComponents(): MDXComponents {
