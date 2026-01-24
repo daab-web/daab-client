@@ -12,7 +12,7 @@ export async function TopNavigation() {
     <div className="flex items-center justify-between gap-4">
       <Link
         href="/"
-        className="flex items-center gap-2 text-[#274380] font-bold min-w-0 flex-none lg:flex-1"
+        className="flex items-center gap-2 text-[#274380] dark:text-[#C9D6F0] font-bold min-w-0 flex-none lg:flex-1"
       >
         <Image src="/daab-logo.png" alt="logo" width={80} height={80} />
         <h1 className="hidden lg:block">{t("title")}</h1>

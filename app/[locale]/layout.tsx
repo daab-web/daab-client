@@ -48,12 +48,11 @@ export default async function RootLayout({ children, params }: Props) {
           disableTransitionOnChange
         >
           <NextIntlClientProvider>
-            <header className="my-4 flex gap-2 justify-center">
+            <div className="fixed inset-0 -z-10 bg-transparent from-background to-muted backdrop-blur-xs" />
+            <header className="py-4 flex gap-2 justify-center">
               <Navbar />
             </header>
-            <main className="w-full">
-              {children}
-            </main>
+            <main className="w-full h-screen">{children}</main>
           </NextIntlClientProvider>
         </ThemeProvider>
       </body>
