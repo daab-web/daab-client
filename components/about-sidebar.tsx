@@ -3,23 +3,16 @@
 import { Link, usePathname } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
+import { ABOUT_SECTIONS } from "@/lib/navigation";
 
 export function AboutSidebar() {
   const t = useTranslations("Navigation.about");
   const pathname = usePathname();
 
-  const sections = [
-    { id: "necessity", label: t("necessity"), path: "/about/necessity" },
-    { id: "mission", label: t("mission"), path: "/about/mission" },
-    { id: "vision", label: t("vision"), path: "/about/vision" },
-    { id: "values", label: t("values"), path: "/about/values" },
-    { id: "charter", label: t("charter"), path: "/about/charter" },
-  ];
-
   return (
-    <aside className="w-48 shrink-0">
+    <aside className="hidden w-full shrink-0 lg:block lg:w-48">
       <nav className="sticky top-24 flex flex-col gap-1">
-        {sections.map((section) => {
+        {ABOUT_SECTIONS.map((section) => {
           const isActive = pathname === section.path;
           return (
             <Link
@@ -32,7 +25,7 @@ export function AboutSidebar() {
                   : "text-muted-foreground hover:text-foreground hover:bg-accent",
               )}
             >
-              {section.label}
+              {t(section.id)}
             </Link>
           );
         })}
