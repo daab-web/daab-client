@@ -1,88 +1,12 @@
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from "@/components/ui/accordion";
-import { getTranslations } from "next-intl/server";
-import Image from "next/image";
-import necessity1 from "@/public/about/necessity.jpg";
-import necessity2 from "@/public/about/necessity2.jpg";
-import Necessity from "@/content/az/necessity-content/page.mdx";
-
 export default async function About() {
-  const navTranslation = await getTranslations("Navigation");
-  const aboutTranslation = await getTranslations("About");
-
   return (
-    <Accordion
-      type="single"
-      collapsible
-      className="mx-auto w-full max-w-3xl"
-      defaultValue=""
-    >
-      <AccordionItem value="necessity">
-        <AccordionTrigger>{navTranslation("about.necessity")}</AccordionTrigger>
-        <AccordionContent className="flex flex-col items-center gap-4 text-balance text-lg text-center">
-          <div className="w-full text-center">
-            <h1 className="font-extrabold text-2xl">
-              {aboutTranslation("necessity.title")}
-            </h1>
-          </div>
-          <Image src={necessity1} alt="necessity1" className="self-center" />
-          <p>{aboutTranslation("necessity.part1")}</p>
-          <Image src={necessity2} alt="necessity2" className="self-center" />
-          <p>{aboutTranslation("necessity.part2")}</p>
-          <p>{aboutTranslation("necessity.part3")}</p>
-        </AccordionContent>
-      </AccordionItem>
-
-      <AccordionItem value="mission">
-        <AccordionTrigger>{navTranslation("about.mission")}</AccordionTrigger>
-        <AccordionContent className="flex flex-col items-center gap-4 text-balance text-lg text-center">
-          <div className="w-full text-center">
-            <h1 className="font-extrabold text-2xl">
-              {aboutTranslation("mission.title")}
-            </h1>
-          </div>
-          <p>{aboutTranslation("mission.text")}</p>
-        </AccordionContent>
-      </AccordionItem>
-
-      <AccordionItem value="vision">
-        <AccordionTrigger>{navTranslation("about.vision")}</AccordionTrigger>
-        <AccordionContent className="flex flex-col items-center gap-4 text-balance text-lg text-center">
-          <div className="w-full text-center">
-            <h1 className="font-extrabold text-2xl">
-              {aboutTranslation("vision.title")}
-            </h1>
-          </div>
-          <p>{aboutTranslation("vision.text")}</p>
-        </AccordionContent>
-      </AccordionItem>
-
-      <AccordionItem value="values">
-        <AccordionTrigger>{navTranslation("about.values")}</AccordionTrigger>
-        <AccordionContent className="flex flex-col items-center gap-4 text-balance text-lg text-center">
-          <div className="w-full text-center">
-            <h1 className="font-extrabold text-2xl">
-              {aboutTranslation("values.title")}
-            </h1>
-            <p>{aboutTranslation("values.text")}</p>
-          </div>
-        </AccordionContent>
-      </AccordionItem>
-
-      <AccordionItem value="charter">
-        <AccordionTrigger>{navTranslation("about.charter")}</AccordionTrigger>
-        <AccordionContent className="flex flex-col items-center gap-4 text-balance text-lg text-center">
-          <div className="w-full text-center">
-            <h1 className="font-extrabold text-2xl">
-              {aboutTranslation("charter.title")}
-            </h1>
-          </div>
-        </AccordionContent>
-      </AccordionItem>
-    </Accordion>
+    <div className="flex flex-col items-center justify-center min-h-[60vh] py-8">
+      <div className="text-center max-w-2xl mx-auto px-4">
+        <h1 className="text-3xl font-extrabold mb-4">About WAAS</h1>
+        <p className="text-muted-foreground text-lg">
+          Select a section from the sidebar to learn more about our organization.
+        </p>
+      </div>
+    </div>
   );
 }

@@ -14,10 +14,10 @@
 
     "about": {
       "necessity": "Necessity of establishment",
-      "mission": "Our mission",
-      "vision": "Our vision",
-      "values": "Our values",
-      "charter": "Our charter"
+      "mission": "Mission",
+      "vision": "Vision",
+      "values": "Values",
+      "charter": "Charter"
     },
 
     "istanbul": {
@@ -38,34 +38,6 @@
       "videoGallery": "Video gallery",
       "photoGallery": "Photo gallery",
       "book": "Book about the forum"
-    }
-  },
-
-  "About": {
-    "necessity": {
-      "title": "The Need to Establish a World Union of Azerbaijani Scientists",
-      "part1": "On April 22, 2022, the 5th Congress of World Azerbaijanis was organized in Shusha, the pearl of Karabakh. About 400 of our compatriots from 65 countries participated in this congress, which is considered one of the most important and significant historical events in the history of Azerbaijan's independence. The detailed, multifaceted speech delivered by the Head of State, Supreme Commander-in-Chief of the Armed Forces, Mr. Ilham Aliyev, at the Congress, which is considered one of the largest events organized in our lands liberated from occupation, set a great task and responsibility for the Azerbaijani diaspora, which is developing day by day. It is precisely on the instructions of President Ilham Aliyev that purposeful activities are being carried out today for the more organized development of the diaspora. The presence of scientists and scholars in the Azerbaijani diaspora, which is distinguished by its diversity and richness in terms of its potential, promises great prospects for the further development of our diaspora. Both during the congress and in the periods after the congress, we had the opportunity to get to know new Azerbaijani scientists and scholars closely, and we exchanged views on the possibilities of mutual cooperation in the future.",
-      "part2": "With the support of the State Committee on Work with Diaspora of the Republic of Azerbaijan (SCWD), we, a group of Azerbaijani intellectuals, considering the necessity of organizing scientists represented in our diaspora, set the goal of creating a unified platform that will unite us all. To realize this intention, we gathered in Turkey and laid the foundation of the \"World Union of Azerbaijani Scientists\" (WUAS).",
-      "part3": "The meeting took place on December 9, 2022, in Istanbul, with the participation of representatives of the SCWD and Azerbaijani scholars from various countries."
-    },
-
-    "mission": {
-      "title": "OUR MISSION",
-      "text": "The World Union of Azerbaijani Scientists is a non-governmental organization that operates as a union of Azerbaijani intellectuals living in various countries around the world, supporting Azerbaijan in the preparation and implementation of strategic plans related to science and technology, energy, education, healthcare, social sciences, and culture."
-    },
-
-    "vision": {
-      "title": "OUR VISION",
-      "text": "The World Union of Azerbaijani Scientists aims to be an internationally recognized organization known for excellence in the development of scientific knowledge, promotion of innovations, and activities focused on nurturing scientists, engineers, artists, and healthcare professionals who can make a difference in Azerbaijan and worldwide. We aspire for Azerbaijan to be recognized and accepted as a peaceful state with a rich and deep history on the global stage, investing significantly in creating a prosperous and peaceful future for humanity. The world will benefit from Azerbaijan's participation on the global arena, and in turn, Azerbaijan will continue to build a stronger state for future generations by leveraging international experience."
-    },
-
-    "values": {
-      "title": "OUR VALUES",
-      "text": "ACADEMIC FREEDOM, ACADEMIC ETHICS, INTEGRITY, RESPECT FOR DIFFERENCES, QUALITY, RESPONSIBILITY, EXCELLENCE, DIGNITY, TRANSPARENCY"
-    },
-
-    "charter": {
-      "title": "CHARTER OF THE WORLD UNION OF AZERBAIJANI SCIENTISTS"
     }
   },
 

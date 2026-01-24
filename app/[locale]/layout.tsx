@@ -39,7 +39,7 @@ export default async function RootLayout({ children, params }: Props) {
   return (
     <html lang={locale} suppressHydrationWarning>
       <body
-        className={`${geistSans.variable} ${geistMono.variable} justify-self-center antialiased flex flex-col items-center gap-8 `}
+        className={`${geistSans.variable} ${geistMono.variable} justify-self-center antialiased w-full`}
       >
         <ThemeProvider
           attribute="class"
@@ -48,10 +48,10 @@ export default async function RootLayout({ children, params }: Props) {
           disableTransitionOnChange
         >
           <NextIntlClientProvider>
-            <header className="my-4 flex gap-2">
+            <header className="my-4 flex gap-2 justify-center">
               <Navbar />
             </header>
-            <main className="w-full flex flex-col items-center">
+            <main className="w-full">
               {children}
             </main>
           </NextIntlClientProvider>
