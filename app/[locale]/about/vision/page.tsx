@@ -1,6 +1,24 @@
-import VisionContent from "@/content/az/vision.md";
+const contentLoaders = {
+  az: () => import("@/content/az/vision.md"),
+  en: () => import("@/content/en/vision.md"),
+} as const;
 
-export default async function Vision() {
+type LocaleKey = keyof typeof contentLoaders;
+
+const isSupportedLocale = (locale: string): locale is LocaleKey =>
+  Object.prototype.hasOwnProperty.call(contentLoaders, locale);
+
+type Props = {
+  params: Promise<{ locale: string }>;
+};
+
+export default async function Vision({ params }: Props) {
+  const { locale } = await params;
+  const loader = isSupportedLocale(locale)
+    ? contentLoaders[locale]
+    : contentLoaders.en;
+  const { default: Content } = await loader();
+
   return (
     <section
       id="vision"
@@ -8,9 +26,8 @@ export default async function Vision() {
       className="w-full max-w-4xl mx-auto px-4"
     >
       <div className="space-y-6">
-        <VisionContent />
+        <Content />
       </div>
     </section>
   );
 }
-

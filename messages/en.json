@@ -3,6 +3,10 @@
     "title": "WAAS - World Association of Azerbaijani Scientists",
     "description": "Official website of WAAS"
   },
+  "AboutPage": {
+    "title": "About WAAS",
+    "intro": "Select a section from the sidebar to learn more about our organization."
+  },
   "Navigation": {
     "aboutWaas": "About WAAS",
     "boardOfDirectors": "Board of Directors",

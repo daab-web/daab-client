@@ -3,6 +3,10 @@
     "title": "DAAB - Dünya Azərbaycanlı Alimlər Birliyi",
     "description": "DAAB-ın rəsmi veb saytı"
   },
+  "AboutPage": {
+    "title": "DAAB haqqında",
+    "intro": "Təşkilatımız haqqında daha ətraflı məlumat almaq üçün yan menyudan bölmə seçin."
+  },
   "Navigation": {
     "aboutWaas": "DAAB haqqında",
     "boardOfDirectors": "İdarə heyəti",
