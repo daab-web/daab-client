@@ -48,7 +48,7 @@ export default async function RootLayout({ children, params }: Props) {
           disableTransitionOnChange
         >
           <NextIntlClientProvider>
-            <div className="fixed inset-0 -z-10 bg-transparent from-background to-muted backdrop-blur-xs" />
+            {/* <div className="fixed inset-0 -z-10 bg-transparent from-background to-muted backdrop-blur-xs" /> */}
             <header className="py-4 flex gap-2 justify-center">
               <Navbar />
             </header>

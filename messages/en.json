@@ -149,5 +149,164 @@
         "profileUrl": "#"
       }
     }
+  },
+
+  "Membership": {
+    "title": "DAAB Membership Application",
+    "description": "Please fill out all required fields marked with an asterisk (*)",
+    "successMessage": "Application submitted successfully! Check the console for the data.",
+    "submitting": "Submitting...",
+    "submitButton": "Submit Application",
+
+    "sections": {
+      "personal": "Personal Information",
+      "academic": "Academic Information",
+      "professional": "Professional Information",
+      "scientificFields": "Scientific Fields of Engagement",
+      "additional": "Additional Information"
+    },
+
+    "fields": {
+      "email": "Email",
+      "phoneNumber": "Phone Number",
+      "name": "Name",
+      "surname": "Surname",
+      "city": "City",
+      "residence": "Residence",
+      "universityName": "University Name",
+      "fieldOfStudy": "Field of Study",
+      "almaMater": "Alma Mater",
+      "degreeInstitution": "Degree Institution",
+      "academicDegree": "Academic degree",
+      "academicTitle": "Academic title",
+      "jobPosition": "Current Job Position",
+      "previousJob": "Previous Job",
+      "contributionsToDaab": "Contributions to DAAB",
+      "scientificFieldsSelect": "Select at least one field",
+      "otherFields": "Other (please specify)",
+      "additionalInformation": "Additional Information",
+      "additionalInformationToShare": "Additional Information to Share"
+    },
+
+    "placeholders": {
+      "specifyDegree": "Please specify other degree",
+      "specifyTitle": "Please specify other title",
+      "contributions": "Describe your contributions...",
+      "additionalInfo": "Any additional information you'd like to provide...",
+      "additionalShare": "Any other information you'd like to share...",
+      "otherFields": "Enter other scientific fields..."
+    },
+
+    "academicDegrees": {
+      "bakalavr": "Bakalavr (Bachelor's degree) – BA (Bachelor of Arts), BSc (Bachelor of Science), BEng (Bachelor of Engineering)",
+      "magistr": "Magistr (Master's degree) – MA (Master of Arts), MSc (Master of Science), MEng (Master of Engineering)",
+      "phd": "PhD (Doctor of Philosophy) - Elmlər üzrə Fəlsəfə Doktoru",
+      "dsc": "DSc (Doctor of Science), Dr. Habil. (Habilitation) - Postdoktorantura",
+      "md": "MD (Doctor of Medicine) - Tibb üzrə doktorluq dərəcəsi",
+      "jd": "JD (Juris Doctor) - Hüquq doktoru",
+      "other": "Other:"
+    },
+
+    "academicTitles": {
+      "dosent": "Dosent (Associate Professor) – PhD və müəyyən akademik nailiyyətlərə malik alimlər üçün.",
+      "professor": "Professor (Full Professor) – Ali akademik rütbə, adətən DSc və ya habilətasiyadan sonra verilir.",
+      "fexri": "Fəxri doktor (Honorary Doctor - Dr. h.c.) – Universitet və ya akademiya tərəfindən verilən fəxri elmi dərəcə.",
+      "other": "Other:"
+    },
+
+    "scientificFields": {
+      "1": {
+        "title": "1. Humanities and Social Sciences",
+        "fields": [
+          "Philology (Languages, Literature, Linguistics)",
+          "Philosophy",
+          "History",
+          "Archaeology",
+          "Ethnology and Anthropology",
+          "Political Sciences",
+          "Sociology",
+          "Psychology",
+          "Pedagogy",
+          "Journalism and Mass Communication",
+          "Law",
+          "Economics and Management",
+          "International Relations"
+        ]
+      },
+      "2": {
+        "title": "2. Exact and Applied Sciences",
+        "fields": [
+          "Mathematics (Algebra, Analysis, Topology, Mathematical Statistics)",
+          "Logic and Computational Mathematics",
+          "Cybernetics and Artificial Intelligence",
+          "Physics (Quantum Physics, Nuclear Physics, Astrophysics, Optics)",
+          "Chemistry (General, Inorganic, Organic, Physical, Analytical, Biochemistry)",
+          "Geology and Mineralogy",
+          "Geography and Cartography",
+          "Astronomy"
+        ]
+      },
+      "3": {
+        "title": "3. Engineering and Technical Sciences",
+        "fields": [
+          "Computer Science and Informatics",
+          "Electronics and Communication Technologies",
+          "Automation and Robotics",
+          "Oil and Gas Engineering",
+          "Construction and Architecture",
+          "Energy and Electrical Engineering",
+          "Mechanics and Mechanical Engineering",
+          "Materials Science and Nanotechnology",
+          "Transportation and Logistics",
+          "Aerospace Engineering"
+        ]
+      },
+      "4": {
+        "title": "4. Biological and Medical Sciences",
+        "fields": [
+          "Biology (Genetics, Molecular Biology, Botany, Zoology)",
+          "Medicine (General Medicine, Surgery, Cardiology, Oncology, Neurology)",
+          "Pharmacy and Pharmacology",
+          "Veterinary Sciences",
+          "Ecology and Environmental Sciences",
+          "Biotechnology and Bioengineering"
+        ]
+      },
+      "5": {
+        "title": "5. Agricultural and Earth Sciences",
+        "fields": [
+          "Agronomy and Crop Production",
+          "Soil Science and Agrochemistry",
+          "Fruit Growing and Gardening",
+          "Forestry and Arboriculture",
+          "Water Management and Hydromelioration",
+          "Zooengineering and Animal Husbandry",
+          "Fisheries and Aquaculture"
+        ]
+      },
+      "6": {
+        "title": "6. Arts and Cultural Sciences",
+        "fields": [
+          "Musicology",
+          "Theater and Film Studies",
+          "Fine Arts and Design",
+          "Folk Art and Folklore",
+          "Cultural and Art History"
+        ]
+      }
+    },
+
+    "errors": {
+      "emailRequired": "Email is required",
+      "emailInvalid": "Invalid email address",
+      "nameRequired": "Name is required",
+      "surnameRequired": "Surname is required",
+      "cityRequired": "City is required",
+      "phoneRequired": "Phone number is required",
+      "degreeRequired": "Academic degree is required",
+      "titleRequired": "Academic title is required",
+      "contributionsRequired": "Contributions to DAAB is required",
+      "fieldsRequired": "Select at least one field"
+    }
   }
 }

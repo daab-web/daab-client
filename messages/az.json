@@ -177,5 +177,164 @@
         "profileUrl": "#"
       }
     }
+  },
+
+  "Membership": {
+    "title": "DAAB Üzvlük Ərizəsi",
+    "description": "Zəhmət olmasa ulduzla (*) işarələnmiş bütün tələb olunan sahələri doldurun",
+    "successMessage": "Ərizə uğurla göndərildi! Məlumatları konsolda yoxlayın.",
+    "submitting": "Göndərilir...",
+    "submitButton": "Ərizəni Göndər",
+
+    "sections": {
+      "personal": "Şəxsi Məlumat",
+      "academic": "Akademik Məlumat",
+      "professional": "Peşəkar Məlumat",
+      "scientificFields": "Məşğul Olduğunuz Elmi Sahələr",
+      "additional": "Əlavə Məlumat"
+    },
+
+    "fields": {
+      "email": "E-poçt",
+      "phoneNumber": "Telefon Nömrəsi",
+      "name": "Ad",
+      "surname": "Soyad",
+      "city": "Şəhər",
+      "residence": "Yaşayış yeri",
+      "universityName": "Universitet Adı",
+      "fieldOfStudy": "Təhsil Sahəsi",
+      "almaMater": "Alma Mater",
+      "degreeInstitution": "Dərəcə Müəssisəsi",
+      "academicDegree": "Akademik dərəcəniz",
+      "academicTitle": "Akademik rütbəniz",
+      "jobPosition": "Hazırkı İş Vəzifəsi",
+      "previousJob": "Əvvəlki İş",
+      "contributionsToDaab": "DAAB-a töhfələriniz",
+      "scientificFieldsSelect": "Ən azı bir sahə seçin",
+      "otherFields": "Digər (zəhmət olmasa dəqiqləşdirin)",
+      "additionalInformation": "Əlavə Məlumat",
+      "additionalInformationToShare": "Paylaşmaq İstədiyiniz Əlavə Məlumat"
+    },
+
+    "placeholders": {
+      "specifyDegree": "Zəhmət olmasa digər dərəcəni dəqiqləşdirin",
+      "specifyTitle": "Zəhmət olmasa digər rütbəni dəqiqləşdirin",
+      "contributions": "Töhfələrinizi təsvir edin...",
+      "additionalInfo": "Təqdim etmək istədiyiniz hər hansı əlavə məlumat...",
+      "additionalShare": "Paylaşmaq istədiyiniz hər hansı digər məlumat...",
+      "otherFields": "Digər elmi sahələri daxil edin..."
+    },
+
+    "academicDegrees": {
+      "bakalavr": "Bakalavr (Bachelor's degree) – BA (Bachelor of Arts), BSc (Bachelor of Science), BEng (Bachelor of Engineering)",
+      "magistr": "Magistr (Master's degree) – MA (Master of Arts), MSc (Master of Science), MEng (Master of Engineering)",
+      "phd": "PhD (Doctor of Philosophy) - Elmlər üzrə Fəlsəfə Doktoru",
+      "dsc": "DSc (Doctor of Science), Dr. Habil. (Habilitation) - Postdoktorantura",
+      "md": "MD (Doctor of Medicine) - Tibb üzrə doktorluq dərəcəsi",
+      "jd": "JD (Juris Doctor) - Hüquq doktoru",
+      "other": "Digər:"
+    },
+
+    "academicTitles": {
+      "dosent": "Dosent (Associate Professor) – PhD və müəyyən akademik nailiyyətlərə malik alimlər üçün.",
+      "professor": "Professor (Full Professor) – Ali akademik rütbə, adətən DSc və ya habilətasiyadan sonra verilir.",
+      "fexri": "Fəxri doktor (Honorary Doctor - Dr. h.c.) – Universitet və ya akademiya tərəfindən verilən fəxri elmi dərəcə.",
+      "other": "Digər:"
+    },
+
+    "scientificFields": {
+      "1": {
+        "title": "1. Humanitar və Sosial Elmlər",
+        "fields": [
+          "Filologiya (Dillər, Ədəbiyyat, Dilçilik)",
+          "Fəlsəfə",
+          "Tarix",
+          "Arxeologiya",
+          "Etnologiya və Antropologiya",
+          "Siyasi elmlər",
+          "Sosiologiya",
+          "Psixologiya",
+          "Pedoqogika",
+          "Jurnalistika və Kütləvi Kommunikasiya",
+          "Hüquqşünaslıq",
+          "İqtisadiyyat və Menecment",
+          "Beynəlxalq Münasibətlər"
+        ]
+      },
+      "2": {
+        "title": "2. Dəqiq və Tətbiqi Elmlər",
+        "fields": [
+          "Riyaziyyat (Cəbr, Analiz, Topologiya, Riyazi Statistika)",
+          "Məntiq və Hesablama Riyaziyyatı",
+          "Kibernetika və Süni İntellekt",
+          "Fizika (Kvant Fizikası, Nüvə Fizikası, Astrofizika, Optika)",
+          "Kimya (Ümumi, Anorqanik, Üzvi, Fiziki, Analitik, Biokimya)",
+          "Geologiya və Minerologiya",
+          "Coğrafiya və Kartoqrafiya",
+          "Astronomiya"
+        ]
+      },
+      "3": {
+        "title": "3. Texniki və Mühəndislik Elmləri",
+        "fields": [
+          "İnformatika və Kompüter Elmləri",
+          "Elektronika və Rabitə Texnologiyaları",
+          "Avtomatika və Robototexnika",
+          "Neft və Qaz Mühəndisliyi",
+          "Tikinti və Memarlıq",
+          "Energetika və Elektrik Mühəndisliyi",
+          "Mexanika və Maşınqayırma",
+          "Materialşünaslıq və Nanotexnologiya",
+          "Nəqliyyat və Logistika",
+          "Aerokosmik Mühəndislik"
+        ]
+      },
+      "4": {
+        "title": "4. Biologji və Tibb Elmləri",
+        "fields": [
+          "Biologiya (Genetika, Molekulyar Biologiya, Botanika, Zoologiya)",
+          "Tibb (Ümumi Tibb, Cərrahiyyə, Kardiologiya, Onkologiya, Nevrologiya)",
+          "Dərmanşünaslıq və Farmakologiya",
+          "Baytarlıq Elmləri",
+          "Ekologiya və Ətraf Mühit Elmləri",
+          "Biotexnologiya və Biomühəndislik"
+        ]
+      },
+      "5": {
+        "title": "5. Kənd Təsərrüfatı və Yerlişti Elmlər",
+        "fields": [
+          "Aqronomluq və Bitkiçilik",
+          "Torpaqşünaslıq və Aqrokimya",
+          "Meyvəçilik və Bağçılıq",
+          "Meşəçilik və Ağacçılıq",
+          "Su Təsərrüfatı və Hidromeliorasiya",
+          "Zoominjineriya və Heyvandarlıq",
+          "Balıqçılıq və Akvakultura"
+        ]
+      },
+      "6": {
+        "title": "6. İncəsənət və Mədəniyyət Elmləri",
+        "fields": [
+          "Musiqişünaslıq",
+          "Teatr və Kinoşünaslıq",
+          "Rəssamlıq və Dizayn",
+          "Xalq Yaradıcılığı və Folklor",
+          "Mədəniyyət və Sənət Tarixi"
+        ]
+      }
+    },
+
+    "errors": {
+      "emailRequired": "E-poçt tələb olunur",
+      "emailInvalid": "Etibarsız e-poçt ünvanı",
+      "nameRequired": "Ad tələb olunur",
+      "surnameRequired": "Soyad tələb olunur",
+      "cityRequired": "Şəhər tələb olunur",
+      "phoneRequired": "Telefon nömrəsi tələb olunur",
+      "degreeRequired": "Akademik dərəcə tələb olunur",
+      "titleRequired": "Akademik rütbə tələb olunur",
+      "contributionsRequired": "DAAB-a töhfələr tələb olunur",
+      "fieldsRequired": "Ən azı bir sahə seçin"
+    }
   }
 }
