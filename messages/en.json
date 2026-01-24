@@ -45,6 +45,28 @@
     }
   },
 
+  "Scientists": {
+    "heroTitle": "Scientists Living Abroad",
+    "heroSubtitle": "Our scientists (full name, country, expertise)",
+    "tableHeaders": {
+      "fullname": "FullName",
+      "institution": "Institution",
+      "country": "Country",
+      "areas": "Areas of expertise"
+    },
+    "pagination": {
+      "previous": "Previous",
+      "next": "Next",
+      "page": "Page {page} of {total}"
+    },
+    "detail": {
+      "country": "Country",
+      "areas": "Areas of expertise",
+      "back": "Back to all scientists",
+      "profile": "Profile"
+    }
+  },
+
   "Directors": {
     "title": "Board of Directors",
     "intro": "Meet the leadership team of the World Association of Azerbaijani Scientists.",
