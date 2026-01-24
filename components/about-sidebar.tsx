@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { Link, usePathname } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
@@ -29,7 +28,7 @@ export function AboutSidebar() {
               className={cn(
                 "text-sm transition-colors px-3 py-2 rounded-md text-left",
                 isActive
-                  ? "text-foreground bg-accent font-medium"
+                  ? "text-[#274380] dark:text-[#C9D6F0] bg-accent font-medium"
                   : "text-muted-foreground hover:text-foreground hover:bg-accent",
               )}
             >

@@ -86,20 +86,20 @@ html, body {
   height: 100%;
   margin: 0;
   padding: 0;
-}
-
-body {
   background-image: var(--background-image);
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
+}
+
+body {
   min-height: 100vh;
 }
 
 .dark {
   --background: oklch(0.145 0 0);
-  --background-image: url('/bg-dark.jpg');
+  --background-image: url('/bg-dark2.png');
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
   --card-foreground: oklch(0.985 0 0);
