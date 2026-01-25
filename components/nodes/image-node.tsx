@@ -10,7 +10,6 @@ import type {
 } from "lexical"
 
 import { $applyNodeReplacement, DecoratorNode } from "lexical"
-import * as React from "react"
 import { Suspense } from "react"
 
 export interface ImagePayload {

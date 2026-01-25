@@ -1,28 +1,18 @@
 "use client"
 
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext"
-import { $generateHtmlFromNodes } from "@lexical/html"
 import { useEffect } from "react"
+import { SerializedEditorState } from "lexical"
 
-export function useEditorContent(onChange: (html: string) => void) {
+export function useEditorContent(onChange: (editorState: SerializedEditorState) => void) {
   const [editor] = useLexicalComposerContext()
 
   useEffect(() => {
     return editor.registerUpdateListener(({ editorState }) => {
-      editorState.read(() => {
-        const htmlString = $generateHtmlFromNodes(editor)
-        onChange(htmlString)
-      })
+      const serializedState = editorState.toJSON()
+      onChange(serializedState)
     })
   }, [editor, onChange])
 
   return null
-}
-
-export function getEditorHtml(editor: any): string {
-  let htmlString = ""
-  editor.getEditorState().read(() => {
-    htmlString = $generateHtmlFromNodes(editor)
-  })
-  return htmlString
 }

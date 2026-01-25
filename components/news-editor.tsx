@@ -1,6 +1,5 @@
 "use client"
 
-import { useEffect } from "react"
 import { LexicalComposer } from "@lexical/react/LexicalComposer"
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin"
 import { ContentEditable } from "@lexical/react/LexicalContentEditable"
@@ -20,6 +19,7 @@ import ToolbarPlugin from "./plugins/toolbar-plugin"
 import ImagesPlugin from "./plugins/image-plugin"
 import { ImageNode } from "./nodes/image-node"
 import { useEditorContent } from "./plugins/editor-content-plugin"
+import { SerializedEditorState } from "lexical"
 
 const theme = {
   paragraph: "mb-2 text-base",
@@ -56,7 +56,7 @@ function onError(error: Error) {
 }
 
 interface NewsEditorProps {
-  onContentChange?: (html: string) => void
+  onContentChange?: (editorState: SerializedEditorState) => void
 }
 
 export default function NewsEditor({ onContentChange }: NewsEditorProps = {}) {
@@ -110,7 +110,7 @@ export default function NewsEditor({ onContentChange }: NewsEditorProps = {}) {
   )
 }
 
-function EditorContentPlugin({ onChange }: { onChange: (html: string) => void }) {
+function EditorContentPlugin({ onChange }: { onChange: (editorState: SerializedEditorState) => void }) {
   useEditorContent(onChange)
   return null
 }

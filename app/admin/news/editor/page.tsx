@@ -14,17 +14,19 @@ import {
 } from "@/components/ui/dialog"
 import { Separator } from "@/components/ui/separator"
 import NewsEditor from "@/components/news-editor"
+import NewsViewer from "@/components/news-viewer"
 import { Save, Eye, Calendar, User } from "lucide-react"
+import { SerializedEditorState } from "lexical"
 
 export default function NewsEditorPage() {
   const [title, setTitle] = useState("")
   const [slug, setSlug] = useState("")
-  const [editorContent, setEditorContent] = useState("")
+  const [editorState, setEditorState] = useState<SerializedEditorState | null>(null)
   const [isPreviewOpen, setIsPreviewOpen] = useState(false)
   
   const handleSave = () => {
     // TODO: Implement save functionality
-    console.log("Saving article...", { title, slug, content: editorContent })
+    console.log("Saving article...", { title, slug, editorState })
   }
 
   const handlePreview = () => {
@@ -93,7 +95,7 @@ export default function NewsEditorPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <NewsEditor onContentChange={setEditorContent} />
+          <NewsEditor onContentChange={setEditorState} />
         </CardContent>
       </Card>
 
@@ -126,16 +128,7 @@ export default function NewsEditorPage() {
 
             <Separator />
 
-            <div 
-              className="prose prose-neutral dark:prose-invert max-w-none"
-              dangerouslySetInnerHTML={{ __html: editorContent }}
-            />
-            
-            {!editorContent && (
-              <p className="text-center text-muted-foreground py-8">
-                No content to preview. Start writing in the editor.
-              </p>
-            )}
+            <NewsViewer editorState={editorState} />
           </div>
         </DialogContent>
       </Dialog>
