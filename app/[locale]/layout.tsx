@@ -8,6 +8,9 @@ import * as React from "react";
 import Navbar from "@/components/navbar";
 import { ThemeProvider } from "@/components/theme-provider";
 
+import { SessionProvider } from "next-auth/react";
+import { Session } from "next-auth";
+
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
@@ -21,6 +24,7 @@ const geistMono = Geist_Mono({
 type Props = {
   params: Promise<{ locale: string }>;
   children: React.ReactNode;
+  session: Session;
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -33,8 +37,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   };
 }
 
-export default async function RootLayout({ children, params }: Props) {
-  const { locale } = await params;
+export default async function RootLayout(props: Props) {
+  const { locale } = await props.params;
 
   return (
     <html lang={locale} suppressHydrationWarning>
@@ -47,13 +51,15 @@ export default async function RootLayout({ children, params }: Props) {
           enableSystem
           disableTransitionOnChange
         >
-          <NextIntlClientProvider>
-            {/* <div className="fixed inset-0 -z-10 bg-transparent from-background to-muted backdrop-blur-xs" /> */}
-            <header className="py-4 flex gap-2 justify-center">
-              <Navbar />
-            </header>
-            <main className="w-full h-screen">{children}</main>
-          </NextIntlClientProvider>
+          <SessionProvider session={props.session}>
+            <NextIntlClientProvider>
+              {/* <div className="fixed inset-0 -z-10 bg-transparent from-background to-muted backdrop-blur-xs" /> */}
+              <header className="py-4 flex gap-2 justify-center">
+                <Navbar />
+              </header>
+              <main className="w-full h-screen">{props.children}</main>
+            </NextIntlClientProvider>
+          </SessionProvider>
         </ThemeProvider>
       </body>
     </html>
