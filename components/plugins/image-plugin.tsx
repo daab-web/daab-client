@@ -2,7 +2,7 @@
 
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext"
 import { $insertNodes, COMMAND_PRIORITY_EDITOR, createCommand, LexicalCommand } from "lexical"
-import { useEffect } from "react"
+import { JSX, useEffect } from "react"
 
 import { $createImageNode, ImagePayload } from "../nodes/image-node"
 

@@ -197,7 +197,7 @@ export default function ToolbarPlugin() {
           else if (value === "quote") formatQuote()
         }}
       >
-        <SelectTrigger className="h-8 w-[130px]">
+        <SelectTrigger className="h-8 w-32.5">
           <SelectValue placeholder="Normal" />
         </SelectTrigger>
         <SelectContent>
