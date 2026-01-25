@@ -5,22 +5,37 @@ import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
+import { Separator } from "@/components/ui/separator"
 import NewsEditor from "@/components/news-editor"
-import { Save, Eye } from "lucide-react"
+import { Save, Eye, Calendar, User } from "lucide-react"
 
 export default function NewsEditorPage() {
   const [title, setTitle] = useState("")
   const [slug, setSlug] = useState("")
+  const [editorContent, setEditorContent] = useState("")
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false)
   
   const handleSave = () => {
     // TODO: Implement save functionality
-    console.log("Saving article...", { title, slug })
+    console.log("Saving article...", { title, slug, content: editorContent })
   }
 
   const handlePreview = () => {
-    // TODO: Implement preview functionality
-    console.log("Preview article...", { title, slug })
+    setIsPreviewOpen(true)
   }
+
+  const currentDate = new Date().toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric'
+  })
 
   return (
     <div className="flex-1 space-y-4">
@@ -78,9 +93,52 @@ export default function NewsEditorPage() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <NewsEditor />
+          <NewsEditor onContentChange={setEditorContent} />
         </CardContent>
       </Card>
+
+      <Dialog open={isPreviewOpen} onOpenChange={setIsPreviewOpen}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Article Preview</DialogTitle>
+            <DialogDescription>
+              Preview how your article will appear to readers
+            </DialogDescription>
+          </DialogHeader>
+          
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <h1 className="text-4xl font-bold tracking-tight">
+                {title || "Untitled Article"}
+              </h1>
+              
+              <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                <div className="flex items-center gap-1">
+                  <Calendar className="h-4 w-4" />
+                  <span>{currentDate}</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <User className="h-4 w-4" />
+                  <span>Admin</span>
+                </div>
+              </div>
+            </div>
+
+            <Separator />
+
+            <div 
+              className="prose prose-neutral dark:prose-invert max-w-none"
+              dangerouslySetInnerHTML={{ __html: editorContent }}
+            />
+            
+            {!editorContent && (
+              <p className="text-center text-muted-foreground py-8">
+                No content to preview. Start writing in the editor.
+              </p>
+            )}
+          </div>
+        </DialogContent>
+      </Dialog>
     </div>
   )
 }

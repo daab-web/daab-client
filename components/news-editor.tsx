@@ -19,6 +19,7 @@ import { cn } from "@/lib/utils"
 import ToolbarPlugin from "./plugins/toolbar-plugin"
 import ImagesPlugin from "./plugins/image-plugin"
 import { ImageNode } from "./nodes/image-node"
+import { useEditorContent } from "./plugins/editor-content-plugin"
 
 const theme = {
   paragraph: "mb-2 text-base",
@@ -54,7 +55,11 @@ function onError(error: Error) {
   console.error(error)
 }
 
-export default function NewsEditor() {
+interface NewsEditorProps {
+  onContentChange?: (html: string) => void
+}
+
+export default function NewsEditor({ onContentChange }: NewsEditorProps = {}) {
   const initialConfig = {
     namespace: "NewsEditor",
     theme,
@@ -74,6 +79,7 @@ export default function NewsEditor() {
 
   return (
     <LexicalComposer initialConfig={initialConfig}>
+      {onContentChange && <EditorContentPlugin onChange={onContentChange} />}
       <div className="relative rounded-lg border bg-background">
         <ToolbarPlugin />
         <div className="relative">
@@ -102,4 +108,9 @@ export default function NewsEditor() {
       </div>
     </LexicalComposer>
   )
+}
+
+function EditorContentPlugin({ onChange }: { onChange: (html: string) => void }) {
+  useEditorContent(onChange)
+  return null
 }
