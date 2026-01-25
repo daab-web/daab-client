@@ -56,8 +56,10 @@ function ViewerContent({ editorState }: { editorState: SerializedEditorState | n
 
   useEffect(() => {
     if (editorState) {
-      const parsedState = editor.parseEditorState(editorState)
-      editor.setEditorState(parsedState)
+      queueMicrotask(() => {
+        const parsedState = editor.parseEditorState(editorState)
+        editor.setEditorState(parsedState)
+      })
     }
   }, [editor, editorState])
 
