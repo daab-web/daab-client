@@ -26,7 +26,7 @@ export function DirectorCard({
   profileUrl,
 }: DirectorCardProps) {
   return (
-    <Card className="flex h-full flex-col items-center text-center">
+    <Card className="flex h-full flex-col items-center text-center bg-transparent backdrop-blur-sm">
       <CardHeader className="items-center">
         <div className="relative h-48 w-48 overflow-hidden rounded-lg bg-muted">
           <Image

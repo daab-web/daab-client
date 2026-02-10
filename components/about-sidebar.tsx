@@ -19,7 +19,7 @@ export function AboutSidebar() {
               key={section.id}
               href={section.path}
               className={cn(
-                "text-sm transition-colors px-3 py-2 rounded-md text-left",
+                "text-sm transition-colors px-3 py-2 text-left backdrop-blur-sm first:rounded-t-md last:rounded-b-md",
                 isActive
                   ? "text-[#274380] dark:text-[#C9D6F0] bg-accent font-medium"
                   : "text-muted-foreground hover:text-foreground hover:bg-accent",

@@ -14,7 +14,7 @@ export const NAV_ITEMS: NavItem[] = [
   { key: "aboutWaas", href: "/about" },
   { key: "boardOfDirectors", href: "/directors" },
   { key: "ourScientists", href: "/scientists" },
-  { key: "ourActivities", href: "/news" },
+  { key: "ourActivities", href: "/activities" },
   { key: "membership", href: "/membership" },
 ];
 
