@@ -167,7 +167,7 @@ export default function ApplicationForm() {
 
   return (
     <div className="min-h-screen py-12 px-4">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-4xl mx-auto shadow-lg">
         <Card className="shadow-lg">
           <CardHeader className="space-y-1 rounded-t-lg" style={{
             background: 'hsl(var(--primary))',
