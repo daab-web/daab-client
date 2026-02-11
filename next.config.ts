@@ -6,7 +6,12 @@ const nextConfig: NextConfig = {
   output: "standalone",
   pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
   images: {
-    domains: ["images.unsplash.com"]
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**.unsplash.com"
+      }
+    ]
   }
 };
 
