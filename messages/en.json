@@ -7,6 +7,11 @@
     "title": "About WAAS",
     "intro": "Select a section from the sidebar to learn more about our organization."
   },
+  "ActivitiesPage": {
+    "title": "News & Activities",
+    "description": "Stay updated with the latest news, events, and activities from our association",
+    "noNews": "No news articles available at the moment."
+  },
   "Navigation": {
     "aboutWaas": "About WAAS",
     "boardOfDirectors": "Board of Directors",

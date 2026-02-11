@@ -121,6 +121,7 @@ export default function AuthPage() {
                     <FormLabel>Username</FormLabel>
                     <FormControl>
                       <Input
+                        autoFocus
                         type="text"
                         placeholder="Enter your username"
                         disabled={isLoading}

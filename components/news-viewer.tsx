@@ -11,7 +11,7 @@ import { LinkNode, AutoLinkNode } from "@lexical/link"
 import { ImageNode } from "./nodes/image-node"
 import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext"
 import { useEffect } from "react"
-import { $getRoot, SerializedEditorState } from "lexical"
+import { SerializedEditorState } from "lexical"
 
 const theme = {
   paragraph: "mb-2 text-base",

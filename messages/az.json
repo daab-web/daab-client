@@ -7,6 +7,11 @@
     "title": "DAAB haqqında",
     "intro": "Təşkilatımız haqqında daha ətraflı məlumat almaq üçün yan menyudan bölmə seçin."
   },
+  "ActivitiesPage": {
+    "title": "Xəbərlər və Fəaliyyətlər",
+    "description": "Birliyin ən son xəbərləri, tədbirləri və fəaliyyətləri ilə tanış olun",
+    "noNews": "Hazırda xəbər məqaləsi yoxdur."
+  },
   "Navigation": {
     "aboutWaas": "DAAB haqqında",
     "boardOfDirectors": "İdarə heyəti",
