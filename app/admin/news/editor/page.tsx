@@ -310,7 +310,7 @@ export default function NewsEditorPage() {
                       mode="single"
                       selected={publishedDate}
                       onSelect={(date) => date && setPublishedDate(date)}
-                      initialFocus
+                      autoFocus
                     />
                   </PopoverContent>
                 </Popover>
