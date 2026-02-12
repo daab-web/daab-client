@@ -58,7 +58,6 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           script: |
             set -e
-            echo "${DOCKER_PASSWORD}" | sudo docker login -u "${DOCKER_USERNAME}" --password-stdin
             sudo docker pull ${{ steps.meta.outputs.tags }}
             sudo docker stop daab-client || true
             sudo docker container rm daab-client || true
