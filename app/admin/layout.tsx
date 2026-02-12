@@ -29,7 +29,7 @@ export default async function AdminLayout({
   }
 
   try {
-    var apiResponse = await fetch(`${process.env.SERVER}/admin`, {
+    var apiResponse = await fetch(`${process.env.NEXT_PUBLIC_SERVER}/admin`, {
       credentials: "include",
       headers: {
         Authorization: `Bearer ${token.value}`,
