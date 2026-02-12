@@ -25,7 +25,7 @@ import { useRouter } from "next/navigation";
 import { Spinner } from "@/components/ui/spinner";
 import { SignInFormValues, signInSchema } from "./schema";
 
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5035";
+const API_BASE_URL = process.env.NEXT_PUBLIC_SERVER;
 
 export default function AuthPage() {
   const router = useRouter();

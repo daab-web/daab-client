@@ -33,10 +33,6 @@ jobs:
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
-      - name: Create env
-        run: |
-          echo "${{ secrets.ENV }}" >> .env
-        
       - name: Build and push docker image
         id: push
         uses: docker/build-push-action@v6
@@ -46,6 +42,8 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            NEXT_PUBLIC_SERVER="${{ secrets.NEXT_PUBLIC_SERVER }}"
           
       - name: Generate artifact attestation
         uses: actions/attest-build-provenance@v3
