@@ -43,7 +43,7 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           secrets: |
-            "env_file=${{ secrets.ENV }}"
+            SERVER="${{ secrets.SERVER }}"
           
       - name: Generate artifact attestation
         uses: actions/attest-build-provenance@v3
