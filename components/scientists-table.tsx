@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import { useTranslations } from "next-intl";
 
 import {
@@ -22,10 +21,11 @@ import {
   PaginationEllipsis,
 } from "@/components/ui/pagination";
 import { Link } from "@/i18n/navigation";
-import { SCIENTISTS } from "@/lib/scientists";
 import { cn } from "@/lib/utils";
-
-const PAGE_SIZE = 10;
+import { useQuery } from "@tanstack/react-query";
+import { fetchScientists } from "@/lib/api";
+import { PagedResponse } from "@/types/paged-response";
+import { useState } from "react";
 
 function getPageNumbers(current: number, total: number) {
   if (total <= 1) {
@@ -65,34 +65,29 @@ function getPageNumbers(current: number, total: number) {
   });
 }
 
+export type Scientist = {
+  id: string;
+  userId: string;
+  slug: string;
+  firstName: string;
+  lastName: string;
+  academicTitle: string;
+  description?: string;
+  institution: string;
+  countries: string[];
+  areas: string[];
+};
+
 export function ScientistsTable() {
   const t = useTranslations("Scientists");
-  const [page, setPage] = React.useState(1);
+  const [page, setPage] = useState(1);
 
-  const totalPages = Math.max(1, Math.ceil(SCIENTISTS.length / PAGE_SIZE));
-  const firstItemIndex = (page - 1) * PAGE_SIZE;
-  const pageData = React.useMemo(
-    () => SCIENTISTS.slice(firstItemIndex, firstItemIndex + PAGE_SIZE),
-    [firstItemIndex],
-  );
-
-  React.useEffect(() => {
-    if (page > totalPages) {
-      setPage(totalPages);
-    }
-  }, [page, totalPages]);
-
-  const goToPage = React.useCallback(
-    (nextPage: number) => {
-      setPage(Math.min(Math.max(nextPage, 1), totalPages));
-    },
-    [totalPages],
-  );
-
-  const pagesToRender = React.useMemo(
-    () => getPageNumbers(page, totalPages),
-    [page, totalPages],
-  );
+  const { data, isLoading, isError, error } = useQuery<
+    PagedResponse<Scientist>
+  >({
+    queryKey: [page],
+    queryFn: async () => await fetchScientists(page),
+  });
 
   const headerClass =
     "bg-muted/70 px-6 text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground first:rounded-tl-2xl last:rounded-tr-2xl";
@@ -101,7 +96,16 @@ export function ScientistsTable() {
   const tagClass =
     "rounded-md bg-muted/60 px-2 py-1 text-xs font-medium text-muted-foreground";
 
-  return (
+  const totalPages = data?.metadata.totalPages ?? 1;
+  const pagesToRender = getPageNumbers(page, totalPages);
+
+  const goToPage = (newPage: number) => {
+    if (newPage >= 1 && newPage <= totalPages) {
+      setPage(newPage);
+    }
+  };
+
+  return isLoading ? (<div>Some</div>) : (
     <div className="flex flex-col gap-6">
       <div className="overflow-hidden rounded-2xl border bg-card shadow-sm">
         <Table>
@@ -122,30 +126,30 @@ export function ScientistsTable() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {pageData.map((scientist) => {
+            {data?.items.map((s) => {
               return (
-                <TableRow key={scientist.id} className="divide-x divide-border">
+                <TableRow key={s.id} className="divide-x divide-border">
                   <TableCell className="px-6">
                     <div className="flex flex-col gap-1">
                       <Link
-                        href={`/scientists/${scientist.id}`}
+                        href={`/scientists/${s.id}`}
                         className="text-base font-semibold text-primary transition-colors hover:text-primary/80 hover:underline"
                       >
-                        {scientist.fullName}
+                        {`${s.firstName} ${s.lastName}`}
                       </Link>
                       <span className="text-xs uppercase tracking-wide text-muted-foreground">
-                        {scientist.academicTitle}
+                        {s.academicTitle}
                       </span>
                     </div>
                   </TableCell>
                   <TableCell className="px-6">
                     <p className="text-sm text-muted-foreground">
-                      {scientist.institution}
+                      {s.institution}
                     </p>
                   </TableCell>
                   <TableCell className="px-6">
                     <div className="flex flex-wrap gap-2">
-                      {scientist.countries.map((country) => (
+                      {s.countries.map((country) => (
                         <span key={country} className={pillClass}>
                           {country}
                         </span>
@@ -154,7 +158,7 @@ export function ScientistsTable() {
                   </TableCell>
                   <TableCell className="px-6">
                     <div className="flex flex-wrap gap-2">
-                      {scientist.areas.map((area) => (
+                      {s.areas.map((area) => (
                         <span key={area} className={tagClass}>
                           {area}
                         </span>
@@ -166,7 +170,7 @@ export function ScientistsTable() {
             })}
           </TableBody>
           <TableCaption>
-            {t("pagination.page", { page, total: totalPages })}
+            {t("pagination.page", { page: data?.metadata.currentPage!, total: data?.metadata.totalPages! })}
           </TableCaption>
         </Table>
       </div>
@@ -176,7 +180,7 @@ export function ScientistsTable() {
           <PaginationItem>
             <PaginationPrevious
               onClick={() => goToPage(page - 1)}
-              disabled={page === 1}
+              className={cn(!data?.metadata.hasPrevious && "pointer-events-none opacity-50")}
             />
           </PaginationItem>
 
@@ -198,7 +202,7 @@ export function ScientistsTable() {
           <PaginationItem>
             <PaginationNext
               onClick={() => goToPage(page + 1)}
-              disabled={page === totalPages}
+              className={cn(!data?.metadata.hasNext && "pointer-events-none opacity-50")}
             />
           </PaginationItem>
         </PaginationContent>
