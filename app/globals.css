@@ -83,6 +83,11 @@
   --radius-4xl: calc(var(--radius) + 16px);
 }
 
+html {
+  overflow-y: scroll;
+  scrollbar-gutter: stable;
+}
+
 html, body {
   height: 100%;
   margin: 0;
@@ -91,7 +96,7 @@ html, body {
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
-  background-attachment: fixed;
+  /* background-attachment: fixed; */
 }
 
 body {

@@ -81,6 +81,15 @@
   "Scientists": {
     "heroTitle": "Xaricdə yaşayan azərbaycanlı alimlər",
     "heroSubtitle": "Alimlərimiz (tam ad, ölkə, fəaliyyət sahələri)",
+    "search": {
+      "placeholder": "Alimləri axtar..."
+    },
+    "filter": {
+      "country": "Ölkə:",
+      "area": "Sahə:",
+      "allCountries": "Bütün Ölkələr",
+      "allAreas": "Bütün Sahələr"
+    },
     "tableHeaders": {
       "fullname": "Ad, Soyad",
       "institution": "Təşkilat",

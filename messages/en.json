@@ -53,6 +53,15 @@
   "Scientists": {
     "heroTitle": "Scientists Living Abroad",
     "heroSubtitle": "Our scientists (full name, country, expertise)",
+    "search": {
+      "placeholder": "Search scientists..."
+    },
+    "filter": {
+      "country": "Country:",
+      "area": "Area:",
+      "allCountries": "All Countries",
+      "allAreas": "All Areas"
+    },
     "tableHeaders": {
       "fullname": "FullName",
       "institution": "Institution",

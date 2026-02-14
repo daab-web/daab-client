@@ -27,8 +27,39 @@ export async function fetchAPI(endpoint: string, options?: RequestInit) {
 
 async function refreshToken() {}
 
-export async function fetchScientists(page: number = 1, pageSize: number = 20) {
-  return fetchAPI(`/scientists?page=${page}&pageSize=${pageSize}`);
+export async function fetchScientists(
+  page: number = 1,
+  pageSize: number = 20,
+  search?: string,
+  country?: string,
+  area?: string
+) {
+  const params = new URLSearchParams({
+    page: page.toString(),
+    pageSize: pageSize.toString(),
+  });
+
+  if (search) {
+    params.append("search", search);
+  }
+
+  if (country) {
+    params.append("country", country);
+  }
+
+  if (area) {
+    params.append("area", area);
+  }
+
+  return fetchAPI(`/scientists?${params.toString()}`);
+}
+
+export async function fetchCountries() {
+  return fetchAPI("/countries");
+}
+
+export async function fetchAreas() {
+  return fetchAPI("/areas");
 }
 
 export async function fetchApplications() {
