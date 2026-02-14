@@ -114,7 +114,7 @@ export default async function Activities({ params }: Props) {
                 
                 <div className="flex items-center gap-2 text-xs text-muted-foreground w-full border-t pt-3">
                   <User className="h-3 w-3" />
-                  <span className="truncate">{article.author || "DAAB"}</span>
+                  <span className="truncate">{article.authorName || "DAAB"}</span>
                   <span className="ml-auto text-xs">
                     {formatDate(article.publishedDate, locale)}
                   </span>

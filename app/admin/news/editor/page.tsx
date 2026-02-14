@@ -71,7 +71,7 @@ export default function NewsEditorPage() {
   const [thumbnail, setThumbnail] = useState("")
   const [thumbnailPreview, setThumbnailPreview] = useState("")
   const [category, setCategory] = useState("")
-  const [author, setAuthor] = useState("")
+  const [authorName, setAuthor] = useState("")
   const [tags, setTags] = useState<string[]>([])
   const [tagInput, setTagInput] = useState("")
   const [publishedDate, setPublishedDate] = useState<Date>(new Date())
@@ -85,7 +85,7 @@ export default function NewsEditorPage() {
       excerpt,
       thumbnail,
       category,
-      author,
+      authorName,
       tags,
       publishedDate: publishedDate.toISOString().split('T')[0],
       editorState,
@@ -281,11 +281,11 @@ export default function NewsEditorPage() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="author">Author</Label>
+                <Label htmlFor="authorName">Author</Label>
                 <Input
-                  id="author"
+                  id="authorName"
                   placeholder="Author name"
-                  value={author}
+                  value={authorName}
                   onChange={(e) => setAuthor(e.target.value)}
                 />
               </div>
@@ -426,10 +426,10 @@ export default function NewsEditorPage() {
                   <CalendarIcon className="h-4 w-4" />
                   <span>{format(publishedDate, "PPP")}</span>
                 </div>
-                {author && (
+                {authorName && (
                   <div className="flex items-center gap-1">
                     <User className="h-4 w-4" />
-                    <span>{author}</span>
+                    <span>{authorName}</span>
                   </div>
                 )}
               </div>

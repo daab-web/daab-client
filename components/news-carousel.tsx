@@ -78,7 +78,7 @@ export function NewsCarousel({ articles, locale }: NewsCarouselProps) {
                     </CardDescription>
                     <div className="flex items-center gap-2 text-sm text-muted-foreground">
                       <User className="h-4 w-4" />
-                      <span>{article.author || "DAAB"}</span>
+                      <span>{article.authorName || "DAAB"}</span>
                     </div>
                     {article.tags && article.tags.length > 0 && (
                       <div className="flex flex-wrap gap-1.5 mt-4">
