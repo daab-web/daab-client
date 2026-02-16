@@ -14,14 +14,20 @@ type Props = {
   params: Promise<{ locale: string; "id-or-slug": string }>;
 };
 
-async function getArticleWithContent(idOrSlug: string): Promise<News> {
-  const article: News = await getNewsByIdOrSlug(idOrSlug);
-
-  return article
+async function getArticleWithContent(idOrSlug: string): Promise<News | null> {
+  try {
+    const article: News = await getNewsByIdOrSlug(idOrSlug);
+    return article;
+  } catch (error) {
+    console.error("Error fetching article:", error);
+    return null;
+  }
 }
 
-function formatDate(dateString: string, locale: string) {
+function formatDate(dateString: string | null | undefined, locale: string) {
+  if (!dateString) return "";
   const date = new Date(dateString);
+  if (isNaN(date.getTime())) return dateString; // Return original string if invalid
   return new Intl.DateTimeFormat(locale, {
     year: "numeric",
     month: "long",

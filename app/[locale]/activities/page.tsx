@@ -19,8 +19,10 @@ type Props = {
   params: Promise<{ locale: string }>;
 };
 
-function formatDate(dateString: string, locale: string) {
+function formatDate(dateString: string | null | undefined, locale: string) {
+  if (!dateString) return "";
   const date = new Date(dateString);
+  if (isNaN(date.getTime())) return dateString; // Return original string if invalid
   return new Intl.DateTimeFormat(locale, {
     year: "numeric",
     month: "long",
@@ -28,8 +30,10 @@ function formatDate(dateString: string, locale: string) {
   }).format(date);
 }
 
-function getTimeAgo(dateString: string, locale: string) {
+function getTimeAgo(dateString: string | null | undefined, locale: string) {
+  if (!dateString) return "";
   const date = new Date(dateString);
+  if (isNaN(date.getTime())) return ""; // Return empty string if invalid
   const now = new Date();
   const diffInDays = Math.floor(
     (now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24),

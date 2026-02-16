@@ -20,8 +20,10 @@ interface NewsCarouselProps {
   locale: string;
 }
 
-function formatDate(dateString: string, locale: string) {
+function formatDate(dateString: string | null | undefined, locale: string) {
+  if (!dateString) return "";
   const date = new Date(dateString);
+  if (isNaN(date.getTime())) return dateString; // Return original string if invalid
   return new Intl.DateTimeFormat(locale, {
     year: "numeric",
     month: "long",
