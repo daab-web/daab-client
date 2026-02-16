@@ -106,10 +106,8 @@ export default function NewsEditorPage() {
       publishedDate: publishedDate.toISOString().split("T")[0],
       editorState,
     };
-    // TODO: Implement save functionality
-    console.log("Saving article...", articleData);
-
-    fetch("http://localhost:5035/news", {
+    // TODO: vro, its 5am
+    fetch(`${process.env.NEXT_PUBLIC_SERVER}/news`, {
       method: "POST",
       body: JSON.stringify(articleData),
       headers: {
