@@ -59,7 +59,7 @@ export default async function Activities({ params }: Props) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "ActivitiesPage" });
 
-  const newsResponse: FetchNewsResponse = await fetchNews(1, 10);
+  const newsResponse = await fetchNews(1, 10) as FetchNewsResponse;
   const news = newsResponse.items
 
   console.log(newsResponse)
@@ -115,22 +115,9 @@ export default async function Activities({ params }: Props) {
 
                 <CardHeader className="flex-1">
                   <div className="flex items-center gap-2 text-xs text-muted-foreground mb-2">
-                  <Clock className="h-3 w-3" />
-                  <span>{getTimeAgo(article.publishedDate, locale)}</span>
+                    <Clock className="h-3 w-3" />
+                    <span>{getTimeAgo(article.publishedDate, locale)}</span>
                   </div>
-<<<<<<< HEAD
-                )}
-                
-                <div className="flex items-center gap-2 text-xs text-muted-foreground w-full border-t pt-3">
-                  <User className="h-3 w-3" />
-                  <span className="truncate">{article.authorName || "DAAB"}</span>
-||||||| parent of f0a8fbb (feat: article page)
-                )}
-                
-                <div className="flex items-center gap-2 text-xs text-muted-foreground w-full border-t pt-3">
-                  <User className="h-3 w-3" />
-                  <span className="truncate">{article.author || "DAAB"}</span>
-=======
                   <CardTitle className="text-xl line-clamp-2 group-hover:text-primary transition-colors">
                     {article.title}
                   </CardTitle>
@@ -153,10 +140,9 @@ export default async function Activities({ params }: Props) {
                   <div className="flex items-center gap-2 text-xs text-muted-foreground w-full border-t pt-3">
                     <User className="h-3 w-3" />
                     <span className="truncate">{article.authorName || "DAAB"}</span>
->>>>>>> f0a8fbb (feat: article page)
-                  <span className="ml-auto text-xs">
-                    {formatDate(article.publishedDate, locale)}
-                  </span>
+                    <span className="ml-auto text-xs">
+                      {formatDate(article.publishedDate, locale)}
+                    </span>
                   </div>
                 </CardFooter>
               </Card>
