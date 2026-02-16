@@ -79,42 +79,13 @@ const COMMON_TAGS = [
 ];
 
 export default function NewsEditorPage() {
-<<<<<<< HEAD
-  const [title, setTitle] = useState("")
-  const [slug, setSlug] = useState("")
-  const [excerpt, setExcerpt] = useState("")
-  const [thumbnail, setThumbnail] = useState("")
-  const [thumbnailPreview, setThumbnailPreview] = useState("")
-  const [category, setCategory] = useState("")
-  const [authorName, setAuthor] = useState("")
-  const [tags, setTags] = useState<string[]>([])
-  const [tagInput, setTagInput] = useState("")
-  const [publishedDate, setPublishedDate] = useState<Date>(new Date())
-  const [editorState, setEditorState] = useState<SerializedEditorState | null>(null)
-  const [isPreviewOpen, setIsPreviewOpen] = useState(false)
-  
-||||||| parent of f0a8fbb (feat: article page)
-  const [title, setTitle] = useState("")
-  const [slug, setSlug] = useState("")
-  const [excerpt, setExcerpt] = useState("")
-  const [thumbnail, setThumbnail] = useState("")
-  const [thumbnailPreview, setThumbnailPreview] = useState("")
-  const [category, setCategory] = useState("")
-  const [author, setAuthor] = useState("")
-  const [tags, setTags] = useState<string[]>([])
-  const [tagInput, setTagInput] = useState("")
-  const [publishedDate, setPublishedDate] = useState<Date>(new Date())
-  const [editorState, setEditorState] = useState<SerializedEditorState | null>(null)
-  const [isPreviewOpen, setIsPreviewOpen] = useState(false)
-  
-=======
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
   const [excerpt, setExcerpt] = useState("");
   const [thumbnail, setThumbnail] = useState("");
   const [thumbnailPreview, setThumbnailPreview] = useState("");
   const [category, setCategory] = useState("");
-  const [author, setAuthor] = useState("");
+  const [authorName, setAuthorName] = useState("");
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState("");
   const [publishedDate, setPublishedDate] = useState<Date>(new Date());
@@ -123,7 +94,6 @@ export default function NewsEditorPage() {
   );
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
->>>>>>> f0a8fbb (feat: article page)
   const handleSave = () => {
     const articleData = {
       title,
@@ -340,7 +310,7 @@ export default function NewsEditorPage() {
                   id="authorName"
                   placeholder="Author name"
                   value={authorName}
-                  onChange={(e) => setAuthor(e.target.value)}
+                  onChange={(e) => setAuthorName(e.target.value)}
                 />
               </div>
 
