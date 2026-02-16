@@ -321,7 +321,7 @@ export function ScientistsTable() {
                 <PaginationPrevious
                   onClick={() => goToPage(page - 1)}
                   className={cn(
-                    !data?.metadata.hasPrevious &&
+                    !data?.metadata.hasPreviousPage &&
                       "pointer-events-none opacity-50",
                   )}
                 />
@@ -346,7 +346,7 @@ export function ScientistsTable() {
                 <PaginationNext
                   onClick={() => goToPage(page + 1)}
                   className={cn(
-                    !data?.metadata.hasNext && "pointer-events-none opacity-50",
+                    !data?.metadata.hasNextPage && "pointer-events-none opacity-50",
                   )}
                 />
               </PaginationItem>

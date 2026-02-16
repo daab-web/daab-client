@@ -3,8 +3,8 @@ export type PagedMetadata = {
   pageSize: number;
   totalPages: number;
   totalCount: number;
-  hasPrevious: boolean;
-  hasNext: boolean;
+  hasPreviousPage: boolean;
+  hasNextPage: boolean;
   firstItemIndex: number;
   lastItemIndex: number;
 };
