@@ -11,6 +11,7 @@ import type {
 
 import { $applyNodeReplacement, DecoratorNode } from "lexical"
 import { JSX, Suspense } from "react"
+import ImageComponent from "./image-component"
 
 export interface ImagePayload {
   altText: string
@@ -151,15 +152,14 @@ export class ImageNode extends DecoratorNode<JSX.Element> {
   decorate(): JSX.Element {
     return (
       <Suspense fallback={null}>
-        <img
+        <ImageComponent
           src={this.__src}
-          alt={this.__altText}
-          style={{
-            height: this.__height === "inherit" ? "auto" : this.__height,
-            maxWidth: this.__maxWidth,
-            width: this.__width === "inherit" ? "auto" : this.__width,
-          }}
-          className="max-w-full h-auto rounded-lg my-4"
+          altText={this.__altText}
+          width={this.__width}
+          height={this.__height}
+          maxWidth={this.__maxWidth}
+          nodeKey={this.getKey()}
+          resizable={true}
         />
       </Suspense>
     )
