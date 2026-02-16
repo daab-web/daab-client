@@ -67,5 +67,13 @@ export async function fetchApplications() {
 }
 
 export async function fetchNews(page: number = 1, pageSize: number = 20) {
-  return fetch(`/news?page=${page}&pageSize=${pageSize}`);
+  const params = new URLSearchParams({
+    page: page.toString(),
+    pageSize: pageSize.toString()
+  })
+  return fetchAPI(`/news?${params.toString()}`);
+}
+
+export async function getNewsByIdOrSlug(idOrSlug: string) {
+  return fetchAPI(`/news/${idOrSlug}`)
 }

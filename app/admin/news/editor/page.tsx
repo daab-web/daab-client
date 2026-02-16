@@ -1,39 +1,53 @@
 "use client"
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import { useState } from "react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
+} from "@/components/ui/dialog";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select"
+} from "@/components/ui/select";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
-} from "@/components/ui/popover"
-import { Calendar } from "@/components/ui/calendar"
-import { Separator } from "@/components/ui/separator"
-import { Badge } from "@/components/ui/badge"
-import NewsEditor from "@/components/news-editor"
-import NewsViewer from "@/components/news-viewer"
-import { Save, Eye, Calendar as CalendarIcon, User, Upload, X, Image as ImageIcon } from "lucide-react"
-import { SerializedEditorState } from "lexical"
-import { format } from "date-fns"
-import { cn } from "@/lib/utils"
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
+import NewsEditor from "@/components/news-editor";
+import NewsViewer from "@/components/news-viewer";
+import {
+  Save,
+  Eye,
+  Calendar as CalendarIcon,
+  User,
+  Upload,
+  X,
+  Image as ImageIcon,
+} from "lucide-react";
+import { SerializedEditorState } from "lexical";
+import { format } from "date-fns";
+import { cn } from "@/lib/utils";
 
 const CATEGORIES = [
   "Events",
@@ -42,7 +56,7 @@ const CATEGORIES = [
   "Education",
   "Programs",
   "Announcements",
-]
+];
 
 const COMMON_TAGS = [
   "Assembly",
@@ -62,9 +76,10 @@ const COMMON_TAGS = [
   "Conference",
   "Digital Humanities",
   "Technology",
-]
+];
 
 export default function NewsEditorPage() {
+<<<<<<< HEAD
   const [title, setTitle] = useState("")
   const [slug, setSlug] = useState("")
   const [excerpt, setExcerpt] = useState("")
@@ -78,6 +93,37 @@ export default function NewsEditorPage() {
   const [editorState, setEditorState] = useState<SerializedEditorState | null>(null)
   const [isPreviewOpen, setIsPreviewOpen] = useState(false)
   
+||||||| parent of f0a8fbb (feat: article page)
+  const [title, setTitle] = useState("")
+  const [slug, setSlug] = useState("")
+  const [excerpt, setExcerpt] = useState("")
+  const [thumbnail, setThumbnail] = useState("")
+  const [thumbnailPreview, setThumbnailPreview] = useState("")
+  const [category, setCategory] = useState("")
+  const [author, setAuthor] = useState("")
+  const [tags, setTags] = useState<string[]>([])
+  const [tagInput, setTagInput] = useState("")
+  const [publishedDate, setPublishedDate] = useState<Date>(new Date())
+  const [editorState, setEditorState] = useState<SerializedEditorState | null>(null)
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false)
+  
+=======
+  const [title, setTitle] = useState("");
+  const [slug, setSlug] = useState("");
+  const [excerpt, setExcerpt] = useState("");
+  const [thumbnail, setThumbnail] = useState("");
+  const [thumbnailPreview, setThumbnailPreview] = useState("");
+  const [category, setCategory] = useState("");
+  const [author, setAuthor] = useState("");
+  const [tags, setTags] = useState<string[]>([]);
+  const [tagInput, setTagInput] = useState("");
+  const [publishedDate, setPublishedDate] = useState<Date>(new Date());
+  const [editorState, setEditorState] = useState<SerializedEditorState | null>(
+    null,
+  );
+  const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+
+>>>>>>> f0a8fbb (feat: article page)
   const handleSave = () => {
     const articleData = {
       title,
@@ -87,57 +133,65 @@ export default function NewsEditorPage() {
       category,
       authorName,
       tags,
-      publishedDate: publishedDate.toISOString().split('T')[0],
+      publishedDate: publishedDate.toISOString().split("T")[0],
       editorState,
-    }
+    };
     // TODO: Implement save functionality
-    console.log("Saving article...", articleData)
-  }
+    console.log("Saving article...", articleData);
+
+    fetch("http://localhost:5035/news", {
+      method: "POST",
+      body: JSON.stringify(articleData),
+      headers: {
+        "Content-Type": "application/json"
+      }
+    }).catch((err) => console.log("unable to do shit", err));
+  };
 
   const handlePreview = () => {
-    setIsPreviewOpen(true)
-  }
+    setIsPreviewOpen(true);
+  };
 
   const handleThumbnailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const url = e.target.value
-    setThumbnail(url)
-    setThumbnailPreview(url)
-  }
+    const url = e.target.value;
+    setThumbnail(url);
+    setThumbnailPreview(url);
+  };
 
   const handleAddTag = (tag: string) => {
-    const trimmedTag = tag.trim()
+    const trimmedTag = tag.trim();
     if (trimmedTag && !tags.includes(trimmedTag)) {
-      setTags([...tags, trimmedTag])
-      setTagInput("")
+      setTags([...tags, trimmedTag]);
+      setTagInput("");
     }
-  }
+  };
 
   const handleRemoveTag = (tagToRemove: string) => {
-    setTags(tags.filter(tag => tag !== tagToRemove))
-  }
+    setTags(tags.filter((tag) => tag !== tagToRemove));
+  };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      e.preventDefault()
-      handleAddTag(tagInput)
+    if (e.key === "Enter") {
+      e.preventDefault();
+      handleAddTag(tagInput);
     }
-  }
+  };
 
   // Auto-generate slug from title
   const generateSlug = (text: string) => {
     return text
       .toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/(^-|-$)/g, '')
-  }
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, "");
+  };
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newTitle = e.target.value
-    setTitle(newTitle)
+    const newTitle = e.target.value;
+    setTitle(newTitle);
     if (!slug) {
-      setSlug(generateSlug(newTitle))
+      setSlug(generateSlug(newTitle));
     }
-  }
+  };
 
   return (
     <div className="flex-1 space-y-4 p-8">
@@ -237,9 +291,9 @@ export default function NewsEditorPage() {
               </div>
               {thumbnailPreview && (
                 <div className="relative aspect-video rounded-lg overflow-hidden border bg-muted">
-                  <img 
-                    src={thumbnailPreview} 
-                    alt="Thumbnail preview" 
+                  <img
+                    src={thumbnailPreview}
+                    alt="Thumbnail preview"
                     className="w-full h-full object-cover"
                     onError={() => setThumbnailPreview("")}
                   />
@@ -249,7 +303,9 @@ export default function NewsEditorPage() {
                 <div className="aspect-video rounded-lg border-2 border-dashed flex items-center justify-center bg-muted/10">
                   <div className="text-center">
                     <ImageIcon className="mx-auto h-12 w-12 text-muted-foreground/50" />
-                    <p className="mt-2 text-sm text-muted-foreground">No image yet</p>
+                    <p className="mt-2 text-sm text-muted-foreground">
+                      No image yet
+                    </p>
                   </div>
                 </div>
               )}
@@ -259,9 +315,7 @@ export default function NewsEditorPage() {
           <Card>
             <CardHeader>
               <CardTitle>Metadata</CardTitle>
-              <CardDescription>
-                Additional article information
-              </CardDescription>
+              <CardDescription>Additional article information</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
@@ -298,11 +352,15 @@ export default function NewsEditorPage() {
                       variant="outline"
                       className={cn(
                         "w-full justify-start text-left font-normal",
-                        !publishedDate && "text-muted-foreground"
+                        !publishedDate && "text-muted-foreground",
                       )}
                     >
                       <CalendarIcon className="mr-2 h-4 w-4" />
-                      {publishedDate ? format(publishedDate, "PPP") : <span>Pick a date</span>}
+                      {publishedDate ? (
+                        format(publishedDate, "PPP")
+                      ) : (
+                        <span>Pick a date</span>
+                      )}
                     </Button>
                   </PopoverTrigger>
                   <PopoverContent className="w-auto p-0" align="start">
@@ -336,8 +394,8 @@ export default function NewsEditorPage() {
                     onChange={(e) => setTagInput(e.target.value)}
                     onKeyDown={handleKeyDown}
                   />
-                  <Button 
-                    type="button" 
+                  <Button
+                    type="button"
                     size="sm"
                     onClick={() => handleAddTag(tagInput)}
                   >
@@ -364,20 +422,24 @@ export default function NewsEditorPage() {
               )}
 
               <div className="space-y-2">
-                <Label className="text-xs text-muted-foreground">Quick Add</Label>
+                <Label className="text-xs text-muted-foreground">
+                  Quick Add
+                </Label>
                 <div className="flex flex-wrap gap-1.5">
-                  {COMMON_TAGS.filter(tag => !tags.includes(tag)).slice(0, 8).map((tag) => (
-                    <Button
-                      key={tag}
-                      type="button"
-                      variant="outline"
-                      size="sm"
-                      className="h-7 text-xs"
-                      onClick={() => handleAddTag(tag)}
-                    >
-                      + {tag}
-                    </Button>
-                  ))}
+                  {COMMON_TAGS.filter((tag) => !tags.includes(tag))
+                    .slice(0, 8)
+                    .map((tag) => (
+                      <Button
+                        key={tag}
+                        type="button"
+                        variant="outline"
+                        size="sm"
+                        className="h-7 text-xs"
+                        onClick={() => handleAddTag(tag)}
+                      >
+                        + {tag}
+                      </Button>
+                    ))}
                 </div>
               </div>
             </CardContent>
@@ -393,12 +455,12 @@ export default function NewsEditorPage() {
               Preview how your article will appear to readers
             </DialogDescription>
           </DialogHeader>
-          
+
           <div className="space-y-4">
             {thumbnailPreview && (
               <div className="relative aspect-video rounded-lg overflow-hidden">
-                <img 
-                  src={thumbnailPreview} 
+                <img
+                  src={thumbnailPreview}
                   alt={title}
                   className="w-full h-full object-cover"
                 />
@@ -414,11 +476,9 @@ export default function NewsEditorPage() {
               <h1 className="text-4xl font-bold tracking-tight">
                 {title || "Untitled Article"}
               </h1>
-              
+
               {excerpt && (
-                <p className="text-lg text-muted-foreground">
-                  {excerpt}
-                </p>
+                <p className="text-lg text-muted-foreground">{excerpt}</p>
               )}
 
               <div className="flex items-center gap-4 text-sm text-muted-foreground">
@@ -452,5 +512,5 @@ export default function NewsEditorPage() {
         </DialogContent>
       </Dialog>
     </div>
-  )
+  );
 }

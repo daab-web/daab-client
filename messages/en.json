@@ -12,6 +12,13 @@
     "description": "Stay updated with the latest news, events, and activities from our association",
     "noNews": "No news articles available at the moment."
   },
+  "ArticlePage": {
+    "backToActivities": "Back to Activities",
+    "shareArticle": "Share this article",
+    "shareDescription": "Share with your friends and colleagues",
+    "shareButton": "Share",
+    "relatedArticles": "Related Articles"
+  },
   "Navigation": {
     "aboutWaas": "About WAAS",
     "boardOfDirectors": "Board of Directors",

@@ -12,6 +12,13 @@
     "description": "Birliyin ən son xəbərləri, tədbirləri və fəaliyyətləri ilə tanış olun",
     "noNews": "Hazırda xəbər məqaləsi yoxdur."
   },
+  "ArticlePage": {
+    "backToActivities": "Fəaliyyətlərə qayıt",
+    "shareArticle": "Bu məqaləni paylaş",
+    "shareDescription": "Dostlarınızla paylaşın",
+    "shareButton": "Paylaş",
+    "relatedArticles": "Əlaqəli məqalələr"
+  },
   "Navigation": {
     "aboutWaas": "DAAB haqqında",
     "boardOfDirectors": "İdarə heyəti",

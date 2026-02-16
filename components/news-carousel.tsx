@@ -1,6 +1,5 @@
 "use client";
 
-import { NewsArticle } from "@/lib/news";
 import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import {
@@ -12,10 +11,12 @@ import {
 } from "@/components/ui/carousel";
 import { Calendar, User } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 import Autoplay from "embla-carousel-autoplay";
+import { News } from "@/types/news";
 
 interface NewsCarouselProps {
-  articles: NewsArticle[];
+  articles: News[];
   locale: string;
 }
 
@@ -46,7 +47,8 @@ export function NewsCarousel({ articles, locale }: NewsCarouselProps) {
         <CarouselContent>
           {articles.map((article) => (
             <CarouselItem key={article.id}>
-              <Card className="overflow-hidden border-2 hover:shadow-xl transition-all duration-300">
+              <Link href={`/${locale}/activities/${article.slug}`}>
+                <Card className="overflow-hidden border-2 hover:shadow-xl transition-all duration-300 cursor-pointer">
                 <div className="grid md:grid-cols-2 gap-0">
                   <div className="relative h-64 md:h-auto overflow-hidden">
                     <Image
@@ -96,6 +98,7 @@ export function NewsCarousel({ articles, locale }: NewsCarouselProps) {
                   </CardHeader>
                 </div>
               </Card>
+              </Link>
             </CarouselItem>
           ))}
         </CarouselContent>
