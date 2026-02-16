@@ -91,7 +91,7 @@ export default async function Activities({ params }: Props) {
           {gridArticles.map((article) => (
             <Link
               key={article.id}
-              href={`/${locale}/activities/${article.slug ?? article.id}`}
+              href={`/${locale}/activities/${article.slug || article.id}`}
             >
               <Card className="overflow-hidden hover:shadow-lg transition-all duration-300 flex flex-col group h-full cursor-pointer">
                 <div className="relative h-48 overflow-hidden">

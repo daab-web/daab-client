@@ -47,7 +47,7 @@ export function NewsCarousel({ articles, locale }: NewsCarouselProps) {
         <CarouselContent>
           {articles.map((article) => (
             <CarouselItem key={article.id}>
-              <Link href={`/${locale}/activities/${article.slug}`}>
+              <Link href={`/${locale}/activities/${article.slug || article.id}`}>
                 <Card className="overflow-hidden border-2 hover:shadow-xl transition-all duration-300 cursor-pointer">
                 <div className="grid md:grid-cols-2 gap-0">
                   <div className="relative h-64 md:h-auto overflow-hidden">
