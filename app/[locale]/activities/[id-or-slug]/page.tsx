@@ -9,6 +9,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { getNewsByIdOrSlug } from "@/lib/api";
 import { News } from "@/types/news";
+import { formatDate } from "@/lib/date-utils";
 
 type Props = {
   params: Promise<{ locale: string; "id-or-slug": string }>;
@@ -22,17 +23,6 @@ async function getArticleWithContent(idOrSlug: string): Promise<News | null> {
     console.error("Error fetching article:", error);
     return null;
   }
-}
-
-function formatDate(dateString: string | null | undefined, locale: string) {
-  if (!dateString) return "";
-  const date = new Date(dateString);
-  if (isNaN(date.getTime())) return dateString; // Return original string if invalid
-  return new Intl.DateTimeFormat(locale, {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  }).format(date);
 }
 
 export default async function ArticlePage({ params }: Props) {

@@ -14,21 +14,11 @@ import Image from "next/image";
 import Link from "next/link";
 import Autoplay from "embla-carousel-autoplay";
 import { News } from "@/types/news";
+import { formatDate } from "@/lib/date-utils";
 
 interface NewsCarouselProps {
   articles: News[];
   locale: string;
-}
-
-function formatDate(dateString: string | null | undefined, locale: string) {
-  if (!dateString) return "";
-  const date = new Date(dateString);
-  if (isNaN(date.getTime())) return dateString; // Return original string if invalid
-  return new Intl.DateTimeFormat(locale, {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  }).format(date);
 }
 
 export function NewsCarousel({ articles, locale }: NewsCarouselProps) {
