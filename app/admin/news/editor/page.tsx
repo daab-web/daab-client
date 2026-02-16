@@ -41,7 +41,6 @@ import {
   Eye,
   Calendar as CalendarIcon,
   User,
-  Upload,
   X,
   Image as ImageIcon,
 } from "lucide-react";

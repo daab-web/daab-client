@@ -36,6 +36,7 @@ import { PagedResponse } from "@/types/paged-response";
 import { useState, useEffect } from "react";
 import { Skeleton } from "./ui/skeleton";
 import { Search } from "lucide-react";
+import { Scientist } from "@/types/scientist";
 
 function getPageNumbers(current: number, total: number) {
   if (total <= 1) {
@@ -74,19 +75,6 @@ function getPageNumbers(current: number, total: number) {
     return true;
   });
 }
-
-export type Scientist = {
-  id: string;
-  userId: string;
-  slug: string;
-  firstName: string;
-  lastName: string;
-  academicTitle: string;
-  description?: string;
-  institution: string;
-  countries: string[];
-  areas: string[];
-};
 
 function ScientistsTableSkeleton() {
   return (
