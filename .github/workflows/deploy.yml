@@ -44,6 +44,7 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
             NEXT_PUBLIC_SERVER=${{ secrets.NEXT_PUBLIC_SERVER }}
+            NEXT_PUBLIC_MINIO_HOST=${{ secrets.NEXT_PUBLIC_MINIO_HOST }}
           
       - name: Generate artifact attestation
         uses: actions/attest-build-provenance@v3
