@@ -13,6 +13,10 @@ const nextConfig: NextConfig = {
       },
       {
         hostname: "lh3.googleusercontent.com"
+      },
+      {
+        protocol: "http",
+        hostname: process.env.NEXT_PUBLIC_MINIO_HOST!
       }
     ]
   }
