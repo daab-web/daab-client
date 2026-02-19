@@ -16,7 +16,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "http",
-        hostname: process.env.NEXT_PUBLIC_MINIO_HOST!
+        hostname: process.env.NEXT_PUBLIC_MINIO_HOST ?? "localhost"
       }
     ]
   }
