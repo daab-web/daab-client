@@ -3,7 +3,6 @@ import { getTranslations } from "next-intl/server";
 
 import { Link } from "@/i18n/navigation";
 import { Button } from "@/components/ui/button";
-import { findScientistById } from "@/lib/scientists";
 
 type Props = {
   params: Promise<{ locale: string; id: string }>;
@@ -12,6 +11,26 @@ type Props = {
 export default async function ScientistDetailPage({ params }: Props) {
   const { locale, id } = await params;
   const t = await getTranslations({ locale, namespace: "Scientists" });
+
+  const findScientistById = (
+    _: number,
+  ): {
+    fullName: string;
+    institution: string;
+    countries: string[];
+    areas: string[];
+    academicTitle: string;
+    description: string
+  } => {
+    return {
+      fullName: "Test",
+      institution: "Test",
+      countries: ["Test"],
+      areas: ["Test"],
+      academicTitle: "Test",
+      description: "Test",
+    };
+  };
 
   const scientistId = Number(id);
   const scientist = Number.isInteger(scientistId)
