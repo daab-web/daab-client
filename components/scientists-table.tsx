@@ -12,15 +12,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
-  Pagination,
-  PaginationContent,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-  PaginationEllipsis,
-} from "@/components/ui/pagination";
-import {
   Select,
   SelectContent,
   SelectItem,
@@ -37,44 +28,6 @@ import { useState, useEffect } from "react";
 import { Skeleton } from "./ui/skeleton";
 import { Search } from "lucide-react";
 import { Scientist } from "@/types/scientist";
-
-function getPageNumbers(current: number, total: number) {
-  if (total <= 1) {
-    return [1];
-  }
-
-  const delta = 1;
-  const range: number[] = [];
-  const rangeWithDots: (number | "...")[] = [];
-
-  for (
-    let i = Math.max(2, current - delta);
-    i <= Math.min(total - 1, current + delta);
-    i += 1
-  ) {
-    range.push(i);
-  }
-
-  if (current - delta > 2) {
-    rangeWithDots.push("...");
-  }
-
-  rangeWithDots.push(...range);
-
-  if (current + delta < total - 1) {
-    rangeWithDots.push("...");
-  }
-
-  return [1, ...rangeWithDots, total].filter((value, index, array) => {
-    if (value === "..." && array[index - 1] === "...") {
-      return false;
-    }
-    if (typeof value === "number" && array.indexOf(value) !== index) {
-      return false;
-    }
-    return true;
-  });
-}
 
 function ScientistsTableSkeleton() {
   return (
@@ -130,7 +83,7 @@ export function ScientistsTable() {
     queryFn: async () =>
       await fetchScientists(
         page,
-        20,
+        100,
         debouncedSearch || undefined,
         selectedCountry || undefined,
         selectedArea || undefined,
@@ -143,15 +96,6 @@ export function ScientistsTable() {
     "rounded-full bg-primary/10 px-2 py-1 text-xs font-medium text-primary";
   const tagClass =
     "rounded-md bg-muted/60 px-2 py-1 text-xs font-medium text-muted-foreground";
-
-  const totalPages = data?.metadata.totalPages ?? 1;
-  const pagesToRender = getPageNumbers(page, totalPages);
-
-  const goToPage = (newPage: number) => {
-    if (newPage >= 1 && newPage <= totalPages) {
-      setPage(newPage);
-    }
-  };
 
   const handleCountryChange = (value: string) => {
     setSelectedCountry(value === "all" ? "" : value);
@@ -294,52 +238,8 @@ export function ScientistsTable() {
                   );
                 })}
               </TableBody>
-              <TableCaption>
-                {t("pagination.page", {
-                  page: data?.metadata.currentPage!,
-                  total: data?.metadata.totalPages!,
-                })}
-              </TableCaption>
             </Table>
           </div>
-
-          <Pagination>
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious
-                  onClick={() => goToPage(page - 1)}
-                  className={cn(
-                    !data?.metadata.hasPreviousPage &&
-                      "pointer-events-none opacity-50",
-                  )}
-                />
-              </PaginationItem>
-
-              {pagesToRender.map((value, index) => (
-                <PaginationItem key={`${value}-${index}`}>
-                  {value === "..." ? (
-                    <PaginationEllipsis className="text-muted-foreground" />
-                  ) : (
-                    <PaginationLink
-                      isActive={value === page}
-                      onClick={() => goToPage(value)}
-                    >
-                      {value}
-                    </PaginationLink>
-                  )}
-                </PaginationItem>
-              ))}
-
-              <PaginationItem>
-                <PaginationNext
-                  onClick={() => goToPage(page + 1)}
-                  className={cn(
-                    !data?.metadata.hasNextPage && "pointer-events-none opacity-50",
-                  )}
-                />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
         </div>
       )}
     </>

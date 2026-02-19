@@ -11,9 +11,6 @@ export default async function ScientistsPage() {
         <h1 className="text-3xl font-extrabold uppercase tracking-wide text-primary lg:text-4xl">
           {t("heroTitle")}
         </h1>
-        <p className="mt-4 text-lg font-medium text-muted-foreground lg:text-xl">
-          {t("heroSubtitle")}
-        </p>
       </section>
 
       <ScientistsTable />
