@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react";
+import { useForm, Controller } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -77,42 +78,65 @@ const COMMON_TAGS = [
   "Technology",
 ];
 
+interface NewsFormData {
+  title: string;
+  slug: string;
+  excerpt: string;
+  thumbnail: FileList;
+  category: string;
+  authorName: string;
+  publishedDate: Date;
+}
+
 export default function NewsEditorPage() {
-  const [title, setTitle] = useState("");
-  const [slug, setSlug] = useState("");
-  const [excerpt, setExcerpt] = useState("");
-  const [thumbnail, setThumbnail] = useState("");
+  const { register, handleSubmit, watch, setValue, control, formState: { errors } } = useForm<NewsFormData>({
+    defaultValues: {
+      title: "",
+      slug: "",
+      excerpt: "",
+      category: "",
+      authorName: "",
+      publishedDate: new Date(),
+    }
+  });
+
   const [thumbnailPreview, setThumbnailPreview] = useState("");
-  const [category, setCategory] = useState("");
-  const [authorName, setAuthorName] = useState("");
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState("");
-  const [publishedDate, setPublishedDate] = useState<Date>(new Date());
   const [editorState, setEditorState] = useState<SerializedEditorState | null>(
     null,
   );
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
-  const handleSave = () => {
-    const articleData = {
-      title,
-      slug,
-      excerpt,
-      thumbnail,
-      category,
-      authorName,
-      tags,
-      publishedDate: publishedDate.toISOString().split("T")[0],
-      editorState,
-    };
+  // Watch form values for preview and slug generation
+  const watchTitle = watch("title");
+  const watchThumbnail = watch("thumbnail");
+  const watchPublishedDate = watch("publishedDate");
+
+  const onSubmit = async (data: NewsFormData) => {
+    const formData = new FormData();
+    formData.append("title", data.title);
+    formData.append("slug", data.slug);
+    formData.append("excerpt", data.excerpt);
+    formData.append("category", data.category);
+    formData.append("authorName", data.authorName);
+    formData.append("tags", JSON.stringify(tags));
+    formData.append("publishedDate", data.publishedDate.toISOString().split("T")[0]);
+    formData.append("editorState", JSON.stringify(editorState));
+    
+    if (data.thumbnail?.[0]) {
+      formData.append("thumbnail", data.thumbnail[0]);
+    }
+
     // TODO: vro, its 5am
-    fetch(`${process.env.NEXT_PUBLIC_SERVER}/news`, {
-      method: "POST",
-      body: JSON.stringify(articleData),
-      headers: {
-        "Content-Type": "application/json"
-      }
-    }).catch((err) => console.log("unable to do shit", err));
+    try {
+      await fetch(`${process.env.NEXT_PUBLIC_SERVER}/news`, {
+        method: "POST",
+        body: formData,
+      });
+    } catch (err) {
+      console.log("unable to do shit", err);
+    }
   };
 
   const handlePreview = () => {
@@ -120,9 +144,34 @@ export default function NewsEditorPage() {
   };
 
   const handleThumbnailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const url = e.target.value;
-    setThumbnail(url);
-    setThumbnailPreview(url);
+    const file = e.target.files?.[0];
+    if (file) {
+      // Validate file type
+      if (!file.type.startsWith("image/")) {
+        alert("Please select an image file");
+        e.target.value = "";
+        return;
+      }
+      
+      // Validate file size (e.g., max 5MB)
+      if (file.size > 5 * 1024 * 1024) {
+        alert("File size must be less than 5MB");
+        e.target.value = "";
+        return;
+      }
+      
+      // Generate preview
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setThumbnailPreview(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleRemoveThumbnail = () => {
+    setValue("thumbnail", {} as FileList);
+    setThumbnailPreview("");
   };
 
   const handleAddTag = (tag: string) => {
@@ -154,9 +203,9 @@ export default function NewsEditorPage() {
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newTitle = e.target.value;
-    setTitle(newTitle);
-    if (!slug) {
-      setSlug(generateSlug(newTitle));
+    setValue("title", newTitle);
+    if (!watch("slug")) {
+      setValue("slug", generateSlug(newTitle));
     }
   };
 
@@ -172,7 +221,7 @@ export default function NewsEditorPage() {
             <Eye className="mr-2 h-4 w-4" />
             Preview
           </Button>
-          <Button onClick={handleSave}>
+          <Button onClick={handleSubmit(onSubmit)}>
             <Save className="mr-2 h-4 w-4" />
             Save
           </Button>
@@ -195,18 +244,23 @@ export default function NewsEditorPage() {
                 <Input
                   id="title"
                   placeholder="Enter article title"
-                  value={title}
+                  {...register("title", { required: "Title is required" })}
                   onChange={handleTitleChange}
                 />
+                {errors.title && (
+                  <p className="text-xs text-destructive">{errors.title.message}</p>
+                )}
               </div>
               <div className="space-y-2">
                 <Label htmlFor="slug">Slug *</Label>
                 <Input
                   id="slug"
                   placeholder="article-url-slug"
-                  value={slug}
-                  onChange={(e) => setSlug(e.target.value)}
+                  {...register("slug", { required: "Slug is required" })}
                 />
+                {errors.slug && (
+                  <p className="text-xs text-destructive">{errors.slug.message}</p>
+                )}
                 <p className="text-xs text-muted-foreground">
                   Auto-generated from title, but you can edit it
                 </p>
@@ -216,8 +270,7 @@ export default function NewsEditorPage() {
                 <Textarea
                   id="excerpt"
                   placeholder="A brief summary of the article (1-2 sentences)"
-                  value={excerpt}
-                  onChange={(e) => setExcerpt(e.target.value)}
+                  {...register("excerpt")}
                   rows={3}
                 />
               </div>
@@ -248,22 +301,38 @@ export default function NewsEditorPage() {
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="thumbnail">Image URL</Label>
+                <Label htmlFor="thumbnail">Upload Image</Label>
                 <Input
                   id="thumbnail"
-                  placeholder="https://example.com/image.jpg"
-                  value={thumbnail}
+                  type="file"
+                  accept="image/*"
+                  {...register("thumbnail")}
                   onChange={handleThumbnailChange}
+                  className="cursor-pointer"
                 />
+                <p className="text-xs text-muted-foreground">
+                  Max file size: 5MB. Accepted formats: JPG, PNG, GIF, WebP
+                </p>
               </div>
               {thumbnailPreview && (
-                <div className="relative aspect-video rounded-lg overflow-hidden border bg-muted">
-                  <img
-                    src={thumbnailPreview}
-                    alt="Thumbnail preview"
-                    className="w-full h-full object-cover"
-                    onError={() => setThumbnailPreview("")}
-                  />
+                <div className="space-y-2">
+                  <div className="relative aspect-video rounded-lg overflow-hidden border bg-muted">
+                    <img
+                      src={thumbnailPreview}
+                      alt="Thumbnail preview"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={handleRemoveThumbnail}
+                    className="w-full"
+                  >
+                    <X className="mr-2 h-4 w-4" />
+                    Remove Image
+                  </Button>
                 </div>
               )}
               {!thumbnailPreview && (
@@ -287,18 +356,24 @@ export default function NewsEditorPage() {
             <CardContent className="space-y-4">
               <div className="space-y-2">
                 <Label htmlFor="category">Category</Label>
-                <Select value={category} onValueChange={setCategory}>
-                  <SelectTrigger id="category">
-                    <SelectValue placeholder="Select a category" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {CATEGORIES.map((cat) => (
-                      <SelectItem key={cat} value={cat}>
-                        {cat}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                <Controller
+                  name="category"
+                  control={control}
+                  render={({ field }) => (
+                    <Select value={field.value} onValueChange={field.onChange}>
+                      <SelectTrigger id="category">
+                        <SelectValue placeholder="Select a category" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {CATEGORIES.map((cat) => (
+                          <SelectItem key={cat} value={cat}>
+                            {cat}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
               </div>
 
               <div className="space-y-2">
@@ -306,39 +381,44 @@ export default function NewsEditorPage() {
                 <Input
                   id="authorName"
                   placeholder="Author name"
-                  value={authorName}
-                  onChange={(e) => setAuthorName(e.target.value)}
+                  {...register("authorName")}
                 />
               </div>
 
               <div className="space-y-2">
                 <Label>Published Date</Label>
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <Button
-                      variant="outline"
-                      className={cn(
-                        "w-full justify-start text-left font-normal",
-                        !publishedDate && "text-muted-foreground",
-                      )}
-                    >
-                      <CalendarIcon className="mr-2 h-4 w-4" />
-                      {publishedDate ? (
-                        format(publishedDate, "PPP")
-                      ) : (
-                        <span>Pick a date</span>
-                      )}
-                    </Button>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-auto p-0" align="start">
-                    <Calendar
-                      mode="single"
-                      selected={publishedDate}
-                      onSelect={(date) => date && setPublishedDate(date)}
-                      autoFocus
-                    />
-                  </PopoverContent>
-                </Popover>
+                <Controller
+                  name="publishedDate"
+                  control={control}
+                  render={({ field }) => (
+                    <Popover>
+                      <PopoverTrigger asChild>
+                        <Button
+                          variant="outline"
+                          className={cn(
+                            "w-full justify-start text-left font-normal",
+                            !field.value && "text-muted-foreground",
+                          )}
+                        >
+                          <CalendarIcon className="mr-2 h-4 w-4" />
+                          {field.value ? (
+                            format(field.value, "PPP")
+                          ) : (
+                            <span>Pick a date</span>
+                          )}
+                        </Button>
+                      </PopoverTrigger>
+                      <PopoverContent className="w-auto p-0" align="start">
+                        <Calendar
+                          mode="single"
+                          selected={field.value}
+                          onSelect={(date) => date && field.onChange(date)}
+                          autoFocus
+                        />
+                      </PopoverContent>
+                    </Popover>
+                  )}
+                />
               </div>
             </CardContent>
           </Card>
@@ -428,12 +508,12 @@ export default function NewsEditorPage() {
               <div className="relative aspect-video rounded-lg overflow-hidden">
                 <img
                   src={thumbnailPreview}
-                  alt={title}
+                  alt={watchTitle}
                   className="w-full h-full object-cover"
                 />
-                {category && (
+                {watch("category") && (
                   <div className="absolute top-4 left-4">
-                    <Badge className="text-sm px-3 py-1">{category}</Badge>
+                    <Badge className="text-sm px-3 py-1">{watch("category")}</Badge>
                   </div>
                 )}
               </div>
@@ -441,22 +521,22 @@ export default function NewsEditorPage() {
 
             <div className="space-y-2">
               <h1 className="text-4xl font-bold tracking-tight">
-                {title || "Untitled Article"}
+                {watchTitle || "Untitled Article"}
               </h1>
 
-              {excerpt && (
-                <p className="text-lg text-muted-foreground">{excerpt}</p>
+              {watch("excerpt") && (
+                <p className="text-lg text-muted-foreground">{watch("excerpt")}</p>
               )}
 
               <div className="flex items-center gap-4 text-sm text-muted-foreground">
                 <div className="flex items-center gap-1">
                   <CalendarIcon className="h-4 w-4" />
-                  <span>{format(publishedDate, "PPP")}</span>
+                  <span>{format(watchPublishedDate, "PPP")}</span>
                 </div>
-                {authorName && (
+                {watch("authorName") && (
                   <div className="flex items-center gap-1">
                     <User className="h-4 w-4" />
-                    <span>{authorName}</span>
+                    <span>{watch("authorName")}</span>
                   </div>
                 )}
               </div>
