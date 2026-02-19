@@ -2,11 +2,6 @@ import type { NextConfig } from "next";
 import createNextIntlPlugin from "next-intl/plugin";
 import createMDX from "@next/mdx";
 
-const minioHost = process.env.NEXT_PUBLIC_MINIO_HOST;
-if (!minioHost) {
-  throw new Error("NEXT_PUBLIC_MINIO_HOST is not set");
-}
-
 const nextConfig: NextConfig = {
   output: "standalone",
   pageExtensions: ["js", "jsx", "md", "mdx", "ts", "tsx"],
@@ -21,7 +16,7 @@ const nextConfig: NextConfig = {
       },
       {
         protocol: "http",
-        hostname: minioHost,
+        hostname: "95.217.17.141",
       },
     ],
   },
