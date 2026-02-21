@@ -68,7 +68,7 @@ export default function AuthPage() {
 
       if (data.accessToken) {
         // Store the access token in localStorage
-        localStorage.setItem("accessToken", data.accesToken);
+        localStorage.setItem("accessToken", data.accessToken);
         
         setSuccess("Successfully signed in!");
         setTimeout(() => {
