@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useState } from "react";
 import { useForm, Controller } from "react-hook-form";
@@ -48,6 +48,7 @@ import {
 import { SerializedEditorState } from "lexical";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
+import { toast } from "sonner";
 
 const CATEGORIES = [
   "Events",
@@ -89,7 +90,14 @@ interface NewsFormData {
 }
 
 export default function NewsEditorPage() {
-  const { register, handleSubmit, watch, setValue, control, formState: { errors } } = useForm<NewsFormData>({
+  const {
+    register,
+    handleSubmit,
+    watch,
+    setValue,
+    control,
+    formState: { errors },
+  } = useForm<NewsFormData>({
     defaultValues: {
       title: "",
       slug: "",
@@ -97,7 +105,7 @@ export default function NewsEditorPage() {
       category: "",
       authorName: "",
       publishedDate: new Date(),
-    }
+    },
   });
 
   const [thumbnailPreview, setThumbnailPreview] = useState("");
@@ -121,21 +129,53 @@ export default function NewsEditorPage() {
     formData.append("category", data.category);
     formData.append("authorName", data.authorName);
     formData.append("tags", JSON.stringify(tags));
-    formData.append("publishedDate", data.publishedDate.toISOString().split("T")[0]);
+    formData.append(
+      "publishedDate",
+      data.publishedDate.toISOString().split("T")[0],
+    );
     formData.append("editorState", JSON.stringify(editorState));
-    
+
     if (data.thumbnail?.[0]) {
       formData.append("thumbnail", data.thumbnail[0]);
     }
 
     // TODO: vro, its 5am
     try {
-      await fetch(`${process.env.NEXT_PUBLIC_SERVER}/news`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER}/news`, {
         method: "POST",
         body: formData,
       });
+      if (!response.ok) {
+        let errorMessage = "Please try again or check the server response.";
+        try {
+          const errorData = await response.json();
+          if (errorData.message) {
+            errorMessage = errorData.message;
+          }
+          if (errorData.errors) {
+            if (Array.isArray(errorData.errors)) {
+              errorMessage = errorData.errors.join(", ");
+            } else {
+              errorMessage = Object.values(errorData.errors).flat().join(", ");
+            }
+          }
+        } catch {
+          errorMessage = `Server error: ${response.status} ${response.statusText}`;
+        }
+        toast.error("Save failed", {
+          description: errorMessage,
+        });
+        return;
+      }
+
+      toast.success("Article saved", {
+        description: "Your news article was saved successfully.",
+      });
     } catch (err) {
       console.log("unable to do shit", err);
+      toast.error("Save failed", {
+        description: "Network error. Please try again.",
+      });
     }
   };
 
@@ -152,14 +192,14 @@ export default function NewsEditorPage() {
         e.target.value = "";
         return;
       }
-      
+
       // Validate file size (e.g., max 5MB)
       if (file.size > 5 * 1024 * 1024) {
         alert("File size must be less than 5MB");
         e.target.value = "";
         return;
       }
-      
+
       // Generate preview
       const reader = new FileReader();
       reader.onloadend = () => {
@@ -248,7 +288,9 @@ export default function NewsEditorPage() {
                   onChange={handleTitleChange}
                 />
                 {errors.title && (
-                  <p className="text-xs text-destructive">{errors.title.message}</p>
+                  <p className="text-xs text-destructive">
+                    {errors.title.message}
+                  </p>
                 )}
               </div>
               <div className="space-y-2">
@@ -259,7 +301,9 @@ export default function NewsEditorPage() {
                   {...register("slug", { required: "Slug is required" })}
                 />
                 {errors.slug && (
-                  <p className="text-xs text-destructive">{errors.slug.message}</p>
+                  <p className="text-xs text-destructive">
+                    {errors.slug.message}
+                  </p>
                 )}
                 <p className="text-xs text-muted-foreground">
                   Auto-generated from title, but you can edit it
@@ -513,7 +557,9 @@ export default function NewsEditorPage() {
                 />
                 {watch("category") && (
                   <div className="absolute top-4 left-4">
-                    <Badge className="text-sm px-3 py-1">{watch("category")}</Badge>
+                    <Badge className="text-sm px-3 py-1">
+                      {watch("category")}
+                    </Badge>
                   </div>
                 )}
               </div>
@@ -525,7 +571,9 @@ export default function NewsEditorPage() {
               </h1>
 
               {watch("excerpt") && (
-                <p className="text-lg text-muted-foreground">{watch("excerpt")}</p>
+                <p className="text-lg text-muted-foreground">
+                  {watch("excerpt")}
+                </p>
               )}
 
               <div className="flex items-center gap-4 text-sm text-muted-foreground">

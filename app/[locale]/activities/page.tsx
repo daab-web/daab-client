@@ -14,7 +14,7 @@ import { NewsCarousel } from "@/components/news-carousel";
 import { fetchNews } from "@/lib/api";
 import { PagedResponse } from "@/types/paged-response";
 import { News } from "@/types/news";
-import { formatDate, getTimeAgo } from "@/lib/date-utils"
+import { formatDate, getTimeAgo } from "@/lib/date-utils";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -26,8 +26,8 @@ export default async function Activities({ params }: Props) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "ActivitiesPage" });
 
-  const newsResponse = await fetchNews(1, 10) as FetchNewsResponse;
-  const news = newsResponse.items
+  const newsResponse = (await fetchNews(1, 10)) as FetchNewsResponse;
+  const news = newsResponse.items;
 
   // Get top 3 articles for carousel
   const carouselArticles = news.slice(0, 3);
@@ -60,12 +60,14 @@ export default async function Activities({ params }: Props) {
             >
               <Card className="overflow-hidden hover:shadow-lg transition-all duration-300 flex flex-col group h-full cursor-pointer">
                 <div className="relative h-48 overflow-hidden">
-                  <Image
-                    src={article.thumbnail}
-                    alt={article.title}
-                    fill
-                    className="object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
+                  {article.thumbnail ? (
+                    <Image
+                      src={article.thumbnail}
+                      alt={article.title}
+                      fill
+                      className="object-cover group-hover:scale-105 transition-transform duration-300"
+                    />
+                  ) : null}
                   {article.category && (
                     <div className="absolute top-3 left-3">
                       <Badge
@@ -104,7 +106,9 @@ export default async function Activities({ params }: Props) {
 
                   <div className="flex items-center gap-2 text-xs text-muted-foreground w-full border-t pt-3">
                     <User className="h-3 w-3" />
-                    <span className="truncate">{article.authorName || "DAAB"}</span>
+                    <span className="truncate">
+                      {article.authorName || "DAAB"}
+                    </span>
                     <span className="ml-auto text-xs">
                       {formatDate(article.publishedDate, locale)}
                     </span>
