@@ -66,7 +66,7 @@ export default function AuthPage() {
 
       const data = await response.json();
 
-      if (data.accesToken) {
+      if (data.accessToken) {
         // Store the access token in localStorage
         localStorage.setItem("accessToken", data.accesToken);
         
