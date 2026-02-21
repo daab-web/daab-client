@@ -203,7 +203,9 @@
   "Membership": {
     "title": "DAAB Üzvlük Ərizəsi",
     "description": "Zəhmət olmasa ulduzla (*) işarələnmiş bütün tələb olunan sahələri doldurun",
-    "successMessage": "Ərizə uğurla göndərildi! Məlumatları konsolda yoxlayın.",
+    "successMessage": "Ərizə uğurla göndərildi!",
+    "successDescription": "Sizin ərizəniz nəzərdən keçirilir.",
+    "errorMessage": "Ərizə göndərilmədi. Zəhmət olmasa yenidən cəhd edin.",
     "submitting": "Göndərilir...",
     "submitButton": "Ərizəni Göndər",
 

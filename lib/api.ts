@@ -32,7 +32,7 @@ export async function fetchScientists(
   pageSize: number = 20,
   search?: string,
   country?: string,
-  area?: string
+  area?: string,
 ) {
   const params = new URLSearchParams({
     page: page.toString(),
@@ -62,18 +62,45 @@ export async function fetchAreas() {
   return fetchAPI("/areas");
 }
 
-export async function fetchApplications() {
-  return fetchAPI("/applications");
+export async function fetchApplications(
+  page: number = 1,
+  pageSize: number = 20,
+) {
+  const params = new URLSearchParams({
+    page: page.toString(),
+    pageSize: pageSize.toString(),
+  });
+  return fetchAPI(`/applications?${params.toString()}`);
+}
+
+export async function fetchApplicationById(applicationId: string) {
+  return fetchAPI(`/applications/${applicationId}`);
+}
+
+export async function approveApplication(applicationId: string) {
+  return fetchAPI(`/applications/${applicationId}/approve`, {
+    method: "PUT",
+  });
+}
+
+export async function submitApplication(data: any) {
+  return fetchAPI("/applications", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
 }
 
 export async function fetchNews(page: number = 1, pageSize: number = 20) {
   const params = new URLSearchParams({
     page: page.toString(),
-    pageSize: pageSize.toString()
-  })
+    pageSize: pageSize.toString(),
+  });
   return fetchAPI(`/news?${params.toString()}`);
 }
 
 export async function getNewsByIdOrSlug(idOrSlug: string) {
-  return fetchAPI(`/news/${idOrSlug}`)
+  return fetchAPI(`/news/${idOrSlug}`);
 }
