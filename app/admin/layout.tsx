@@ -21,19 +21,9 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const jar = await cookies();
-  const token = jar.get("daab.accessToken");
-
-  if (!token) {
-    return <ErrorDisplay type="401" />;
-  }
-
   try {
     var apiResponse = await fetch(`${process.env.NEXT_PUBLIC_SERVER}/admin`, {
       credentials: "include",
-      headers: {
-        Authorization: `Bearer ${token.value}`,
-      },
       cache: "no-cache",
     });
 
