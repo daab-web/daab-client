@@ -104,3 +104,33 @@ export async function fetchNews(page: number = 1, pageSize: number = 20) {
 export async function getNewsByIdOrSlug(idOrSlug: string) {
   return fetchAPI(`/news/${idOrSlug}`);
 }
+
+export async function fetchScientistById(idOrSlug: string) {
+  return fetchAPI(`/scientists/${idOrSlug}`);
+}
+
+export async function createScientist(data: any) {
+  return fetchAPI("/scientists", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+}
+
+export async function updateScientist(id: string, data: any) {
+  return fetchAPI(`/scientists/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+}
+
+export async function deleteScientist(id: string) {
+  return fetchAPI(`/scientists/${id}`, {
+    method: "DELETE",
+  });
+}

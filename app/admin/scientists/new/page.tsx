@@ -27,6 +27,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, X } from "lucide-react";
+import { createScientist } from "@/lib/api";
 
 const scientistSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
@@ -131,20 +132,19 @@ export default function AddScientistPage() {
     setSuccess(null);
     setIsSaving(true);
 
-    setTimeout(() => {
-      const newScientist = {
-        id: String(Date.now()),
-        userId: `user${Date.now()}`,
-        ...values,
-      };
-      console.log("Mock create:", newScientist);
+    try {
+      await createScientist(values);
       setSuccess("Scientist created successfully!");
-      setIsSaving(false);
 
       setTimeout(() => {
         router.push("/admin/scientists");
       }, 1500);
-    }, 500);
+    } catch (err) {
+      console.error("Failed to create scientist:", err);
+      setError("Failed to create scientist. Please try again.");
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   return (

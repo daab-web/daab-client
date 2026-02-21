@@ -28,73 +28,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, X } from "lucide-react";
 import { Scientist } from "@/types/scientist";
-
-// Mock data for testing - synced with list page
-const MOCK_SCIENTISTS: Scientist[] = [
-  {
-    id: "1",
-    userId: "user1",
-    slug: "john-smith",
-    firstName: "John",
-    lastName: "Smith",
-    academicTitle: "Professor",
-    description:
-      "Renowned physicist specializing in quantum mechanics and particle physics. Published over 100 papers in leading journals.",
-    institution: "MIT",
-    countries: ["USA", "UK"],
-    areas: ["Physics", "Quantum Mechanics"],
-  },
-  {
-    id: "2",
-    userId: "user2",
-    slug: "maria-garcia",
-    firstName: "Maria",
-    lastName: "Garcia",
-    academicTitle: "Dr.",
-    description:
-      "Leading research in artificial intelligence and machine learning applications in healthcare.",
-    institution: "Stanford University",
-    countries: ["USA", "Spain"],
-    areas: ["Computer Science", "AI", "Healthcare"],
-  },
-  {
-    id: "3",
-    userId: "user3",
-    slug: "ahmed-hassan",
-    firstName: "Ahmed",
-    lastName: "Hassan",
-    academicTitle: "Associate Professor",
-    description:
-      "Expert in renewable energy systems and sustainable development.",
-    institution: "Cairo University",
-    countries: ["Egypt", "Germany"],
-    areas: ["Engineering", "Renewable Energy", "Sustainability"],
-  },
-  {
-    id: "4",
-    userId: "user4",
-    slug: "yuki-tanaka",
-    firstName: "Yuki",
-    lastName: "Tanaka",
-    academicTitle: "Professor",
-    institution: "Tokyo University",
-    countries: ["Japan", "USA"],
-    areas: ["Biotechnology", "Genetics"],
-  },
-  {
-    id: "5",
-    userId: "user5",
-    slug: "sarah-johnson",
-    firstName: "Sarah",
-    lastName: "Johnson",
-    academicTitle: "Dr.",
-    description:
-      "Pioneering research in climate change and environmental policy.",
-    institution: "Oxford University",
-    countries: ["UK", "Canada"],
-    areas: ["Environmental Science", "Climate Change", "Policy"],
-  },
-];
+import { fetchScientistById, updateScientist } from "@/lib/api";
 
 const scientistSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
@@ -205,14 +139,8 @@ export default function EditScientistPage() {
     setIsLoading(true);
     setError(null);
 
-    setTimeout(() => {
-      const data = MOCK_SCIENTISTS.find((s) => s.id === scientistId);
-
-      if (!data) {
-        setError("Scientist not found");
-        setIsLoading(false);
-        return;
-      }
+    try {
+      const data: Scientist = await fetchScientistById(scientistId as string);
 
       form.reset({
         firstName: data.firstName,
@@ -224,8 +152,12 @@ export default function EditScientistPage() {
         countries: data.countries,
         areas: data.areas,
       });
+    } catch (err) {
+      console.error("Failed to fetch scientist:", err);
+      setError("Failed to load scientist. Please try again.");
+    } finally {
       setIsLoading(false);
-    }, 500);
+    }
   };
 
   const onSubmit = async (values: ScientistFormData) => {
@@ -233,15 +165,19 @@ export default function EditScientistPage() {
     setSuccess(null);
     setIsSaving(true);
 
-    setTimeout(() => {
-      console.log("Mock update:", values);
+    try {
+      await updateScientist(scientistId as string, values);
       setSuccess("Scientist updated successfully!");
-      setIsSaving(false);
 
       setTimeout(() => {
         router.push("/admin/scientists");
       }, 1500);
-    }, 500);
+    } catch (err) {
+      console.error("Failed to update scientist:", err);
+      setError("Failed to update scientist. Please try again.");
+    } finally {
+      setIsSaving(false);
+    }
   };
 
   if (isLoading) {
