@@ -175,7 +175,9 @@
   "Membership": {
     "title": "DAAB Membership Application",
     "description": "Please fill out all required fields marked with an asterisk (*)",
-    "successMessage": "Application submitted successfully! Check the console for the data.",
+    "successMessage": "Application submitted successfully!",
+    "successDescription": "Your application is now under review.",
+    "errorMessage": "Failed to submit application. Please try again.",
     "submitting": "Submitting...",
     "submitButton": "Submit Application",
 

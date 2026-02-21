@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import {
   Sidebar,
@@ -12,10 +12,10 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarTrigger,
-} from "@/components/ui/sidebar"
-import { ModeToggle } from "@/components/mode-toggle"
-import Link from "next/link"
-import { Home, FileText, Users, Settings } from "lucide-react"
+} from "@/components/ui/sidebar";
+import { ModeToggle } from "@/components/mode-toggle";
+import Link from "next/link";
+import { Home, FileText, Users, Settings, ClipboardList } from "lucide-react";
 
 export default function AdminSidebar() {
   return (
@@ -59,9 +59,17 @@ export default function AdminSidebar() {
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
-                  <Link href="/admin/users">
+                  <Link href="/admin/applications">
+                    <ClipboardList className="mr-2 h-4 w-4" />
+                    Applications
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <Link href="/admin/scientists">
                     <Users className="mr-2 h-4 w-4" />
-                    Users
+                    Scientists
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
@@ -85,5 +93,5 @@ export default function AdminSidebar() {
         </div>
       </SidebarFooter>
     </Sidebar>
-  )
+  );
 }
