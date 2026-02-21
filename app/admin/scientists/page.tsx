@@ -37,73 +37,8 @@ import {
   Plus,
 } from "lucide-react";
 import { Scientist } from "@/types/scientist";
-
-// Mock data for testing
-const MOCK_SCIENTISTS: Scientist[] = [
-  {
-    id: "1",
-    userId: "user1",
-    slug: "john-smith",
-    firstName: "John",
-    lastName: "Smith",
-    academicTitle: "Professor",
-    description:
-      "Renowned physicist specializing in quantum mechanics and particle physics. Published over 100 papers in leading journals.",
-    institution: "MIT",
-    countries: ["USA", "UK"],
-    areas: ["Physics", "Quantum Mechanics"],
-  },
-  {
-    id: "2",
-    userId: "user2",
-    slug: "maria-garcia",
-    firstName: "Maria",
-    lastName: "Garcia",
-    academicTitle: "Dr.",
-    description:
-      "Leading research in artificial intelligence and machine learning applications in healthcare.",
-    institution: "Stanford University",
-    countries: ["USA", "Spain"],
-    areas: ["Computer Science", "AI", "Healthcare"],
-  },
-  {
-    id: "3",
-    userId: "user3",
-    slug: "ahmed-hassan",
-    firstName: "Ahmed",
-    lastName: "Hassan",
-    academicTitle: "Associate Professor",
-    description:
-      "Expert in renewable energy systems and sustainable development.",
-    institution: "Cairo University",
-    countries: ["Egypt", "Germany"],
-    areas: ["Engineering", "Renewable Energy", "Sustainability"],
-  },
-  {
-    id: "4",
-    userId: "user4",
-    slug: "yuki-tanaka",
-    firstName: "Yuki",
-    lastName: "Tanaka",
-    academicTitle: "Professor",
-    institution: "Tokyo University",
-    countries: ["Japan", "USA"],
-    areas: ["Biotechnology", "Genetics"],
-  },
-  {
-    id: "5",
-    userId: "user5",
-    slug: "sarah-johnson",
-    firstName: "Sarah",
-    lastName: "Johnson",
-    academicTitle: "Dr.",
-    description:
-      "Pioneering research in climate change and environmental policy.",
-    institution: "Oxford University",
-    countries: ["UK", "Canada"],
-    areas: ["Environmental Science", "Climate Change", "Policy"],
-  },
-];
+import { fetchScientists, deleteScientist } from "@/lib/api";
+import type { PagedResponse } from "@/types/paged-response";
 
 export default function ScientistsPage() {
   const router = useRouter();
@@ -117,17 +52,22 @@ export default function ScientistsPage() {
   );
 
   useEffect(() => {
-    fetchScientists();
+    loadScientists();
   }, []);
 
-  const fetchScientists = async () => {
+  const loadScientists = async () => {
     setIsLoading(true);
     setError(null);
 
-    setTimeout(() => {
-      setScientists(MOCK_SCIENTISTS);
+    try {
+      const response: PagedResponse<Scientist> = await fetchScientists(1, 100);
+      setScientists(response.items);
+    } catch (err) {
+      console.error("Failed to fetch scientists:", err);
+      setError("Failed to load scientists. Please try again.");
+    } finally {
       setIsLoading(false);
-    }, 500);
+    }
   };
 
   const handleEdit = (scientistId: string) => {
@@ -149,11 +89,16 @@ export default function ScientistsPage() {
     setDeletingId(scientistToDelete.id);
     setDeleteDialogOpen(false);
 
-    setTimeout(() => {
+    try {
+      await deleteScientist(scientistToDelete.id);
       setScientists(scientists.filter((s) => s.id !== scientistToDelete.id));
+    } catch (err) {
+      console.error("Failed to delete scientist:", err);
+      setError("Failed to delete scientist. Please try again.");
+    } finally {
       setDeletingId(null);
       setScientistToDelete(null);
-    }, 500);
+    }
   };
 
   const cancelDelete = () => {
@@ -171,7 +116,7 @@ export default function ScientistsPage() {
             Add Scientist
           </Button>
           <Button
-            onClick={fetchScientists}
+            onClick={loadScientists}
             variant="outline"
             disabled={isLoading}
           >
