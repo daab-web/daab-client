@@ -6,9 +6,9 @@ import {
 import AdminSidebar from "./admin-sidebar";
 import { Metadata } from "next";
 import { Separator } from "@/components/ui/separator";
-import { cookies } from "next/headers";
 import ErrorDisplay from "@/components/error-display";
 import "../globals.css";
+import { cookies } from "next/headers";
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -21,9 +21,19 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const jar = await cookies();
+  const token = jar.get("daab.accessToken");
+
+  if (!token) {
+    return <ErrorDisplay type="401" />;
+  }
+
   try {
     var apiResponse = await fetch(`${process.env.NEXT_PUBLIC_SERVER}/admin`, {
       credentials: "include",
+      headers: {
+        Authorization: `Bearer ${token.value}`,
+      },
       cache: "no-cache",
     });
 
