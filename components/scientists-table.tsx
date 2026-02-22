@@ -5,7 +5,6 @@ import { useTranslations } from "next-intl";
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -41,6 +40,8 @@ function ScientistsTableSkeleton() {
 
 export function ScientistsTable() {
   const t = useTranslations("Scientists");
+  const c = useTranslations("countries")
+  const a = useTranslations("areas")
   const [page, setPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
@@ -109,6 +110,8 @@ export function ScientistsTable() {
 
   return (
     <>
+      {/* Search and Filter Controls */}
+
       <div className="flex gap-4">
         <div className="relative flex-1">
           <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -138,7 +141,7 @@ export function ScientistsTable() {
                 </SelectItem>
                 {countries?.map((country: string) => (
                   <SelectItem key={country} value={country}>
-                    {country}
+                    {c(country)}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -161,7 +164,7 @@ export function ScientistsTable() {
                 </SelectItem>
                 {areas?.map((area: string) => (
                   <SelectItem key={area} value={area}>
-                    {area}
+                    {a(area)}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -174,8 +177,6 @@ export function ScientistsTable() {
         <ScientistsTableSkeleton />
       ) : (
         <div className="flex flex-col gap-6">
-          {/* Search and Filter Controls */}
-
           <div className="overflow-hidden rounded-2xl border bg-card shadow-sm">
             <Table>
               <TableHeader className="[&_tr]:bg-muted/40 [&_tr]:backdrop-blur">
@@ -220,7 +221,7 @@ export function ScientistsTable() {
                         <div className="flex flex-wrap gap-2">
                           {s.countries.map((country) => (
                             <span key={country} className={pillClass}>
-                              {country}
+                              {c(country)}
                             </span>
                           ))}
                         </div>
@@ -229,7 +230,7 @@ export function ScientistsTable() {
                         <div className="flex flex-wrap gap-2">
                           {s.areas.map((area) => (
                             <span key={area} className={tagClass}>
-                              {area}
+                              {a(area)}
                             </span>
                           ))}
                         </div>
