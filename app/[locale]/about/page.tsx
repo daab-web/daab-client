@@ -19,9 +19,6 @@ export default async function About({ params }: Props) {
       <div className="space-y-5 md:space-y-7">
         <Card className="border-border/70 bg-card/90 backdrop-blur-sm">
           <CardHeader className="pb-4 text-center">
-            <p className="text-xs font-medium uppercase tracking-[0.18em] text-muted-foreground">
-              DAAB
-            </p>
             <CardTitle className="text-3xl font-extrabold md:text-4xl">
               {t("title")}
             </CardTitle>
