@@ -55,7 +55,7 @@ export function NewsCarousel({ articles, locale }: NewsCarouselProps) {
                           src={article.thumbnail}
                           alt={article.title}
                           fill
-                          className="h-full w-full object-cover hover:scale-105 transition-transform duration-300"
+                          className="h-full w-full object-contain hover:scale-105 transition-transform duration-300"
                           sizes="(min-width: 768px) 50vw, 100vw"
                         />
                       ) : null}

@@ -68,8 +68,8 @@ export default function AuthPage() {
 
       if (data.accessToken) {
         // Store the access token in localStorage
-        localStorage.setItem("accessToken", data.accessToken);
-        
+        localStorage.setItem("accessToken", data.accesToken);
+
         setSuccess("Successfully signed in!");
         setTimeout(() => {
           router.push("/admin");
@@ -78,7 +78,9 @@ export default function AuthPage() {
         throw new Error("No access token received");
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "An unexpected error occurred");
+      setError(
+        err instanceof Error ? err.message : "An unexpected error occurred",
+      );
       console.error("Sign in error:", err);
     } finally {
       setIsLoading(false);

@@ -101,17 +101,6 @@ export default async function ArticlePage({ params }: Props) {
         <Separator />
 
         {/* Featured Image */}
-        {article.thumbnail && (
-          <div className="relative aspect-video rounded-xl overflow-hidden border bg-muted">
-            <Image
-              src={article.thumbnail}
-              alt={article.title}
-              fill
-              className="object-cover"
-              priority
-            />
-          </div>
-        )}
 
         {/* Article Content */}
         <div className="prose prose-lg dark:prose-invert max-w-none">
@@ -123,9 +112,7 @@ export default async function ArticlePage({ params }: Props) {
         {/* Share Section */}
         <div className="flex items-center justify-between bg-muted/30 rounded-lg p-6">
           <div>
-            <h3 className="font-semibold text-lg mb-1">
-              {t("shareArticle")}
-            </h3>
+            <h3 className="font-semibold text-lg mb-1">{t("shareArticle")}</h3>
             <p className="text-sm text-muted-foreground">
               {t("shareDescription")}
             </p>
