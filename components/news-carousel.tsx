@@ -28,7 +28,7 @@ interface NewsCarouselProps {
 
 export function NewsCarousel({ articles, locale }: NewsCarouselProps) {
   return (
-    <div className="mb-12 px-12">
+    <div className="mb-12 px-4 md:px-12">
       <Carousel
         opts={{
           align: "start",
@@ -49,13 +49,14 @@ export function NewsCarousel({ articles, locale }: NewsCarouselProps) {
               >
                 <Card className="overflow-hidden border-2 hover:shadow-xl transition-all duration-300 cursor-pointer h-full flex flex-col">
                   <div className="grid md:grid-cols-2 gap-0 h-full">
-                    <div className="relative h-64 md:h-64 overflow-hidden">
+                    <div className="relative w-full aspect-video overflow-hidden bg-muted">
                       {article.thumbnail ? (
                         <Image
                           src={article.thumbnail}
                           alt={article.title}
                           fill
-                          className="object-cover hover:scale-105 transition-transform duration-300"
+                          className="h-full w-full object-cover hover:scale-105 transition-transform duration-300"
+                          sizes="(min-width: 768px) 50vw, 100vw"
                         />
                       ) : null}
                       {article.category && (
