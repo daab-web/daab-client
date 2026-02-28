@@ -6,9 +6,9 @@ import {
 import AdminSidebar from "./admin-sidebar";
 import { Metadata } from "next";
 import { Separator } from "@/components/ui/separator";
-import { cookies } from "next/headers";
 import ErrorDisplay from "@/components/error-display";
 import "../globals.css";
+import { cookies } from "next/headers";
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
