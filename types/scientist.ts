@@ -6,7 +6,7 @@ export type Scientist = {
   lastName: string;
   academicTitle: string;
   description?: string;
-  institution: string;
+  institution: string[];
   countries: string[];
   areas: string[];
 };
