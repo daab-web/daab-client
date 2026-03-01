@@ -1,31 +1,54 @@
+import { Application } from "@/types/application";
+import { PagedResponse } from "@/types/paged-response";
+import { Scientist } from "@/types/scientist";
+
 const apiBase = process.env.NEXT_PUBLIC_SERVER;
 
-export async function fetchAPI(endpoint: string, options?: RequestInit) {
-  let res = await fetch(`${apiBase}${endpoint}`, {
-    ...options,
+export async function fetchAPI(
+  endpoint: string,
+  options?: RequestInit,
+): Promise<Response> {
+  const buildRequest = (): RequestInit => {
+    const headers = new Headers(options?.headers);
+    
+    // Only add Content-Type for requests with a body
+    if (options?.body) {
+      headers.set("Content-Type", "application/json");
+    }
+    
+    return {
+      ...options,
+      credentials: "include",
+      headers,
+    };
+  };
+
+  let res = await fetch(`${apiBase}${endpoint}`, buildRequest());
+
+  if (res.status === 401) {
+    const refreshed = await refreshToken(options?.headers);
+
+    if (!refreshed) {
+    }
+
+    res = await fetch(`${apiBase}${endpoint}`, buildRequest());
+  }
+
+  return res;
+}
+
+async function refreshToken(headers?: HeadersInit): Promise<boolean> {
+  const res = await fetch(`${apiBase}/auth/refresh-token`, {
+    method: "POST",
+    cache: "no-cache",
     credentials: "include",
     headers: {
-      ...options?.headers,
+      ...headers,
     },
   });
 
-  if (res.status === 401) {
-    // TODO: This does nothing
-    await refreshToken();
-
-    res = await fetch(`${apiBase}${endpoint}`, {
-      ...options,
-      credentials: "include",
-      headers: {
-        ...options?.headers,
-      },
-    });
-  }
-
-  return res.json();
+  return res.ok;
 }
-
-async function refreshToken() {}
 
 export async function fetchScientists(
   page: number = 1,
@@ -33,7 +56,7 @@ export async function fetchScientists(
   search?: string,
   country?: string,
   area?: string,
-) {
+): Promise<PagedResponse<Scientist>> {
   const params = new URLSearchParams({
     page: page.toString(),
     pageSize: pageSize.toString(),
@@ -51,46 +74,43 @@ export async function fetchScientists(
     params.append("area", area);
   }
 
-  return fetchAPI(`/scientists?${params.toString()}`);
+  const res = await fetchAPI(`/scientists?${params.toString()}`);
+
+  const data: PagedResponse<Scientist> = await res.json();
+
+  return data;
 }
 
-export async function fetchCountries() {
-  return fetchAPI("/countries");
+export async function fetchCountries(): Promise<string[]> {
+  const res = await fetchAPI("/countries");
+
+  const data: { countries: string[] } = await res.json();
+
+  return data.countries;
 }
 
-export async function fetchAreas() {
-  return fetchAPI("/areas");
+export async function fetchAreas(): Promise<string[]> {
+  const res = await fetchAPI("/areas");
+
+  const data: { areas: string[] } = await res.json();
+
+  return data.areas;
 }
 
 export async function fetchApplications(
   page: number = 1,
   pageSize: number = 20,
-) {
+): Promise<PagedResponse<Application>> {
   const params = new URLSearchParams({
     page: page.toString(),
     pageSize: pageSize.toString(),
   });
-  return fetchAPI(`/applications?${params.toString()}`);
-}
 
-export async function fetchApplicationById(applicationId: string) {
-  return fetchAPI(`/applications/${applicationId}`);
-}
+  const res = await fetchAPI(`/applications?${params.toString()}`);
 
-export async function approveApplication(applicationId: string) {
-  return fetchAPI(`/applications/${applicationId}/approve`, {
-    method: "PUT",
-  });
-}
+  const data = await res.json();
 
-export async function submitApplication(data: any) {
-  return fetchAPI("/applications", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  });
+  return data;
 }
 
 export async function fetchNews(page: number = 1, pageSize: number = 20) {
@@ -103,34 +123,4 @@ export async function fetchNews(page: number = 1, pageSize: number = 20) {
 
 export async function getNewsByIdOrSlug(idOrSlug: string) {
   return fetchAPI(`/news/${idOrSlug}`);
-}
-
-export async function fetchScientistById(idOrSlug: string) {
-  return fetchAPI(`/scientists/${idOrSlug}`);
-}
-
-export async function createScientist(data: any) {
-  return fetchAPI("/scientists", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  });
-}
-
-export async function updateScientist(id: string, data: any) {
-  return fetchAPI(`/scientists/${id}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(data),
-  });
-}
-
-export async function deleteScientist(id: string) {
-  return fetchAPI(`/scientists/${id}`, {
-    method: "DELETE",
-  });
 }

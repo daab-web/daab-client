@@ -9,6 +9,7 @@ import { Separator } from "@/components/ui/separator";
 import ErrorDisplay from "@/components/error-display";
 import "../globals.css";
 import { cookies } from "next/headers";
+import { fetchAPI } from "@/lib/api";
 
 export async function generateMetadata(): Promise<Metadata> {
   return {
@@ -29,13 +30,15 @@ export default async function AdminLayout({
   }
 
   try {
-    var apiResponse = await fetch(`${process.env.NEXT_PUBLIC_SERVER}/admin`, {
+    var apiResponse = await fetchAPI("/admin", {
       credentials: "include",
       headers: {
         Authorization: `Bearer ${token.value}`,
       },
       cache: "no-cache",
     });
+
+    console.log(apiResponse.statusText)
 
     if (!apiResponse.ok) {
       if (apiResponse.status === 403) {
