@@ -20,13 +20,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { Link } from "@/i18n/navigation";
 import { cn } from "@/lib/utils";
-import { useQuery } from "@tanstack/react-query";
-import { fetchScientists, fetchCountries, fetchAreas } from "@/lib/api";
-import { PagedResponse } from "@/types/paged-response";
 import { useState, useEffect } from "react";
 import { Skeleton } from "./ui/skeleton";
 import { Search } from "lucide-react";
-import { Scientist } from "@/types/scientist";
+import { useAreas, useCoutnries, useScientists } from "@/hooks/use-scientists";
 
 function ScientistsTableSkeleton() {
   return (
@@ -40,56 +37,32 @@ function ScientistsTableSkeleton() {
 
 export function ScientistsTable() {
   const t = useTranslations("Scientists");
-  const c = useTranslations("countries")
-  const a = useTranslations("areas")
+  const c = useTranslations("countries");
+  const a = useTranslations("areas");
+
   const [page, setPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [selectedCountry, setSelectedCountry] = useState<string>("");
   const [selectedArea, setSelectedArea] = useState<string>("");
 
-  // Debounce search input
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearch(searchQuery);
-      setPage(1); // Reset to first page when search changes
+      setPage(1);
     }, 500);
 
     return () => clearTimeout(timer);
   }, [searchQuery]);
 
-  // Fetch countries
-  const { data: countriesData } = useQuery<{ countries: string[] } | string[]>({
-    queryKey: ["countries"],
-    queryFn: fetchCountries,
-  });
-
-  // Fetch areas
-  const { data: areasData } = useQuery<{ areas: string[] } | string[]>({
-    queryKey: ["areas"],
-    queryFn: fetchAreas,
-  });
-
-  // Handle different response formats
-  const countries = Array.isArray(countriesData)
-    ? countriesData
-    : countriesData?.countries || [];
-
-  const areas = Array.isArray(areasData) ? areasData : areasData?.areas || [];
-
-  const { data, isLoading, isError, error } = useQuery<
-    PagedResponse<Scientist>
-  >({
-    queryKey: [page, debouncedSearch, selectedCountry, selectedArea],
-    queryFn: async () =>
-      await fetchScientists(
-        page,
-        100,
-        debouncedSearch || undefined,
-        selectedCountry || undefined,
-        selectedArea || undefined,
-      ),
-  });
+  const { data: countries } = useCoutnries();
+  const { data: areas } = useAreas();
+  const {
+    data: scientists,
+    isLoading,
+    isError,
+    error,
+  } = useScientists(page, debouncedSearch, selectedCountry, selectedArea);
 
   const headerClass =
     "bg-muted/70 px-6 text-[11px] font-semibold uppercase tracking-[0.2em] text-muted-foreground first:rounded-tl-2xl last:rounded-tr-2xl";
@@ -196,7 +169,7 @@ export function ScientistsTable() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {data?.items.map((s) => {
+                {scientists?.items.map((s) => {
                   return (
                     <TableRow key={s.id} className="divide-x divide-border">
                       <TableCell className="px-6">
