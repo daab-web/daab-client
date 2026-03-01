@@ -1,4 +1,5 @@
 import { Application } from "@/types/application";
+import { News } from "@/types/news";
 import { PagedResponse } from "@/types/paged-response";
 import { Scientist } from "@/types/scientist";
 
@@ -10,12 +11,7 @@ export async function fetchAPI(
 ): Promise<Response> {
   const buildRequest = (): RequestInit => {
     const headers = new Headers(options?.headers);
-    
-    // Only add Content-Type for requests with a body
-    if (options?.body) {
-      headers.set("Content-Type", "application/json");
-    }
-    
+
     return {
       ...options,
       credentials: "include",
@@ -113,14 +109,72 @@ export async function fetchApplications(
   return data;
 }
 
-export async function fetchNews(page: number = 1, pageSize: number = 20) {
+export async function submitApplication(data: any) {
+  return fetchAPI("/applications", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+}
+
+export async function approveApplication(applicationId: string) {
+  return fetchAPI(`/applications/${applicationId}/approve`, {
+    method: "PUT",
+  });
+}
+
+export async function fetchNews(
+  page: number = 1,
+  pageSize: number = 20,
+): Promise<PagedResponse<News>> {
   const params = new URLSearchParams({
     page: page.toString(),
     pageSize: pageSize.toString(),
   });
-  return fetchAPI(`/news?${params.toString()}`);
+  const response = await fetchAPI(`/news?${params.toString()}`);
+  const data: PagedResponse<News> = await response.json();
+
+  return data;
 }
 
 export async function getNewsByIdOrSlug(idOrSlug: string) {
-  return fetchAPI(`/news/${idOrSlug}`);
+  const response = await fetchAPI(`/news/${idOrSlug}`);
+  const news: News = await response.json();
+
+  return news;
+}
+
+export async function fetchScientistById(idOrSlug: string) {
+  const response = await fetchAPI(`/scientists/${idOrSlug}`);
+  const scientist: Scientist = await response.json();
+
+  return scientist;
+}
+
+export async function createScientist(data: any) {
+  return fetchAPI("/scientists", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+}
+
+export async function updateScientist(id: string, data: any) {
+  return fetchAPI(`/scientists/${id}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+}
+
+export async function deleteScientist(id: string) {
+  return fetchAPI(`/scientists/${id}`, {
+    method: "DELETE",
+  });
 }
