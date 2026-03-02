@@ -19,6 +19,16 @@
     "shareButton": "Paylaş",
     "relatedArticles": "Əlaqəli məqalələr"
   },
+  "HomePage": {
+    "missionExcerpt": "Dünyanın müxtəlif ölkələrində yaşayan azərbaycanlı alimləri birləşdirir, elm, texnologiya, təhsil, səhiyyə və mədəniyyət sahələrində strateji inkişafa dəstək oluruq.",
+    "visionExcerpt": "Məqsədimiz innovasiyanı gücləndirən, Azərbaycanın elmi töhfəsini qlobal səviyyədə artıran beynəlxalq nüfuzlu platforma olmaqdır.",
+    "latestTitle": "Xəbər lenti",
+    "latestDescription": "Son nəşrlər, tədbirlər və elanlar.",
+    "joinTitle": "Qlobal elmi şəbəkəmizə qoşulun",
+    "joinDescription": "Təcrübənizi bölüşün, sərhədlərarası əməkdaşlıq qurun və DAAB təşəbbüslərinə dəstək verin.",
+    "readArticle": "Məqaləni oxu",
+    "readSection": "Bölməni oxu"
+  },
   "Navigation": {
     "aboutWaas": "DAAB haqqında",
     "boardOfDirectors": "İdarə heyəti",
