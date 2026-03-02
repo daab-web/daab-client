@@ -19,6 +19,16 @@
     "shareButton": "Share",
     "relatedArticles": "Related Articles"
   },
+  "HomePage": {
+    "missionExcerpt": "We connect Azerbaijani scholars globally and support strategic development in science, technology, education, healthcare, and culture.",
+    "visionExcerpt": "We aim to be an internationally respected platform that advances innovation and strengthens Azerbaijan's scientific contribution worldwide.",
+    "latestTitle": "News Feed",
+    "latestDescription": "Recent publications, events, and announcements.",
+    "joinTitle": "Join our global scientific network",
+    "joinDescription": "Contribute your expertise, collaborate across borders, and support DAAB initiatives.",
+    "readArticle": "Read article",
+    "readSection": "Read section"
+  },
   "Navigation": {
     "aboutWaas": "About WAAS",
     "boardOfDirectors": "Board of Directors",
