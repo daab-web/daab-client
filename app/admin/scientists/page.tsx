@@ -172,9 +172,13 @@ export default function ScientistsPage() {
                             <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1">
                               Institution
                             </p>
-                            <p className="text-sm font-semibold wrap-break-word">
-                              {scientist.institution}
-                            </p>
+                            <div className="flex flex-wrap gap-1">
+                              {scientist.institutions.map((institution, idx) => (
+                                <Badge key={idx} variant="secondary">
+                                  {institution}
+                                </Badge>
+                              ))}
+                            </div>
                           </div>
                         </div>
 

@@ -34,7 +34,7 @@ const scientistSchema = z.object({
   firstName: z.string().min(1, "First name is required"),
   lastName: z.string().min(1, "Last name is required"),
   academicTitle: z.string().min(1, "Academic title is required"),
-  institution: z.string().min(1, "Institution is required"),
+  institutions: z.array(z.string()),
   description: z.string().optional(),
   slug: z.string().min(1, "Slug is required"),
   countries: z.array(z.string()).min(1, "At least one country is required"),
@@ -123,7 +123,7 @@ export default function EditScientistPage() {
       firstName: "",
       lastName: "",
       academicTitle: "",
-      institution: "",
+      institutions: [],
       description: "",
       slug: "",
       countries: [],
@@ -146,7 +146,7 @@ export default function EditScientistPage() {
         firstName: data.firstName,
         lastName: data.lastName,
         academicTitle: data.academicTitle,
-        institution: data.institution,
+        institutions: data.institutions,
         description: data.description || "",
         slug: data.slug,
         countries: data.countries,
@@ -279,15 +279,16 @@ export default function EditScientistPage() {
 
               <FormField
                 control={form.control}
-                name="institution"
+                name="institutions"
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>Institution</FormLabel>
                     <FormControl>
-                      <Input
-                        placeholder="Institution name"
+                      <TagInput
+                        value={field.value}
+                        onChange={field.onChange}
+                        placeholder="Type and press Enter"
                         disabled={isSaving}
-                        {...field}
                       />
                     </FormControl>
                     <FormMessage />

@@ -184,7 +184,7 @@ export function ScientistsTable() {
                       </TableCell>
                       <TableCell className="px-6">
                         <div className="flex flex-wrap gap-2">
-                          {s.institution.map((inst) => {
+                          {s.institutions.map((inst) => {
                             return <Badge variant="secondary">{i(inst)}</Badge>;
                           })}
                         </div>
