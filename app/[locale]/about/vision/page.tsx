@@ -1,6 +1,5 @@
 import { getTranslations } from "next-intl/server";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
+import { AboutSectionWrapper } from "@/components/about-section-wrapper";
 
 const contentLoaders = {
   az: () => import("@/content/az/vision.md"),
@@ -25,24 +24,10 @@ export default async function Vision({ params }: Props) {
   const tNav = await getTranslations({ locale, namespace: "Navigation.about" });
 
   return (
-    <section
-      id="vision"
-      data-section="vision"
-      className="mx-auto w-full max-w-4xl px-2 py-4 md:py-6"
-    >
-      <Card className="border-border/70 bg-card/90 backdrop-blur-sm">
-        <CardHeader className="pb-3">
-          <CardTitle className="text-2xl font-bold md:text-3xl">
-            {tNav("vision")}
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="space-y-5">
-          <Separator />
-          <div className="space-y-5 [&_h1]:hidden [&_p]:mb-0 [&_p]:text-base [&_p]:leading-8 [&_p]:text-foreground/90 md:[&_p]:text-lg">
-            <Content />
-          </div>
-        </CardContent>
-      </Card>
-    </section>
+    <AboutSectionWrapper sectionId="vision" title={tNav("vision")}>
+      <div className="space-y-5 [&_h1]:hidden [&_p]:mb-0 [&_p]:text-base [&_p]:leading-8 [&_p]:text-foreground/90 md:[&_p]:text-lg">
+        <Content />
+      </div>
+    </AboutSectionWrapper>
   );
 }
