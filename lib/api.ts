@@ -1,6 +1,7 @@
 import { Application } from "@/types/application";
 import { News } from "@/types/news";
 import { PagedResponse } from "@/types/paged-response";
+import { Publication } from "@/types/publication";
 import { Scientist } from "@/types/scientist";
 
 const apiBase = process.env.NEXT_PUBLIC_SERVER;
@@ -151,6 +152,15 @@ export async function fetchScientistById(idOrSlug: string) {
   const scientist: Scientist = await response.json();
 
   return scientist;
+}
+
+export async function fetchPublicationsByScientistId(
+  id: string,
+): Promise<Publication[]> {
+  const response = await fetchAPI(`/scientists/${id}/publications`);
+  if (!response.ok) return [];
+  const publications: Publication[] = await response.json();
+  return publications;
 }
 
 export async function createScientist(data: any) {

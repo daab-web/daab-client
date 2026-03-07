@@ -94,7 +94,14 @@
       "country": "Ölkə",
       "areas": "Fəaliyyət sahələri",
       "back": "Alimlər siyahısına qayıt",
-      "profile": "Profil"
+      "profile": "Profil",
+      "institution": "Təşkilat",
+      "publications": "Nəşrlər",
+      "links": "Keçidlər",
+      "linkedIn": "LinkedIn",
+      "orcid": "ORCID",
+      "website": "Veb sayt",
+      "noPhoto": "Şəkil mövcud deyil"
     }
   },
 

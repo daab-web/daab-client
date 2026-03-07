@@ -94,7 +94,14 @@
       "country": "Country",
       "areas": "Areas of expertise",
       "back": "Back to all scientists",
-      "profile": "Profile"
+      "profile": "Profile",
+      "institution": "Institution",
+      "publications": "Publications",
+      "links": "Links",
+      "linkedIn": "LinkedIn",
+      "orcid": "ORCID",
+      "website": "Website",
+      "noPhoto": "No photo available"
     }
   },
 

@@ -172,7 +172,7 @@ export function ScientistsTable() {
                       <TableCell className="px-6">
                         <div className="flex flex-col gap-1">
                           <Link
-                            href={`/scientists/${s.slug ?? s.id}`}
+                            href={`/scientists/${s.id}`}
                             className="text-base font-semibold text-primary transition-colors hover:text-primary/80 hover:underline"
                           >
                             {`${s.firstName} ${s.lastName}`}

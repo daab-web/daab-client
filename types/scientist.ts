@@ -9,4 +9,8 @@ export type Scientist = {
   institutions: string[];
   countries: string[];
   areas: string[];
+  photoUrl?: string;
+  linkedIn?: string;
+  orcid?: string;
+  website?: string;
 };
