@@ -173,11 +173,13 @@ export default function ScientistsPage() {
                               Institution
                             </p>
                             <div className="flex flex-wrap gap-1">
-                              {scientist.institutions.map((institution, idx) => (
-                                <Badge key={idx} variant="secondary">
-                                  {institution}
-                                </Badge>
-                              ))}
+                              {scientist.institutions.map(
+                                (institution, idx) => (
+                                  <Badge key={idx} variant="secondary">
+                                    {institution}
+                                  </Badge>
+                                ),
+                              )}
                             </div>
                           </div>
                         </div>
