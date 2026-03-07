@@ -2,11 +2,12 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardHeader,
   CardTitle,
 } from "@/components/ui/card";
 import Image from "next/image";
 import Link from "next/link";
+import { Separator } from "./ui/separator";
+import { MapPin } from "lucide-react";
 
 export type DirectorCardProps = {
   name: string;
@@ -26,20 +27,18 @@ export function DirectorCard({
   profileUrl,
 }: DirectorCardProps) {
   return (
-    <Card className="flex h-full flex-col items-center text-center bg-transparent backdrop-blur-sm">
-      <CardHeader className="items-center">
-        <div className="relative h-48 w-48 overflow-hidden rounded-lg bg-muted">
-          <Image
-            src={imageSrc}
-            alt={name}
-            fill
-            sizes="(max-width: 640px) 12rem, 12rem"
-            className="object-cover"
-            priority={false}
-          />
-        </div>
-      </CardHeader>
-      <CardContent className="flex flex-1 flex-col items-center gap-2">
+    <Card className="flex h-full flex-col items-center text-center bg-transparent backdrop-blur-sm overflow-hidden border border-[#1e3a6e]">
+      <div className="relative w-full aspect-square bg-muted">
+        <Image
+          src={imageSrc}
+          alt={name}
+          fill
+          sizes="(max-width: 640px) 100vw, 25vw"
+          className="object-cover"
+          priority={false}
+        />
+      </div>
+      <CardContent className="flex flex-1 justify-between flex-col items-center gap-2 pt-4 w-full">
         <CardTitle className="text-lg font-semibold text-primary">
           {profileUrl ? (
             <Link
@@ -54,15 +53,20 @@ export function DirectorCard({
             name
           )}
         </CardTitle>
-        <CardDescription className="text-sm text-foreground">
+        <CardDescription className="text-sm text-foreground flex-1">
           {role}
         </CardDescription>
         {subtitle ? (
-          <CardDescription className="text-sm text-foreground">
+          <CardDescription className="text-sm text-foreground flex-1">
             {subtitle}
           </CardDescription>
         ) : null}
-        <CardDescription className="text-sm">{country}</CardDescription>
+
+        <Separator />
+        <CardDescription className="text-sm self-start flex gap-2 text-end">
+          <MapPin className="h-4 w-4"/>
+          {country}
+        </CardDescription>
       </CardContent>
     </Card>
   );
