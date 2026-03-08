@@ -3,6 +3,8 @@ import Image from "next/image";
 import { Calendar, ChevronRight } from "lucide-react";
 
 import { Link } from "@/i18n/navigation";
+import { fetchNews } from "@/lib/api";
+import { ScrollReveal } from "@/components/scroll-reveal";
 import { fetchNews } from "@/lib/api/news";
 import { formatDate } from "@/lib/date-utils";
 import { PagedResponse } from "@/types/paged-response";
@@ -51,12 +53,14 @@ export default async function Home({ params }: Props) {
   const feed = rest.slice(2, 8);
 
   return (
-    <div className="mx-auto w-full max-w-7xl px-4 py-8 md:py-12">
-      <section className="mb-10 space-y-4 border-b pb-8">
-        <h1 className="max-w-5xl text-4xl font-extrabold leading-tight tracking-tight md:text-6xl">
+    <>
+      <ScrollReveal />
+      <div className="mx-auto w-full max-w-7xl px-4 py-8 md:py-12">
+        <section className="mb-10 space-y-4 border-b pb-8">
+        <h1 className="max-w-5xl text-4xl font-extrabold leading-tight tracking-tight md:text-6xl fade-in">
           {tGlobal("title")}
         </h1>
-        <p className="max-w-3xl text-base text-muted-foreground md:text-lg">
+        <p className="max-w-3xl text-base text-muted-foreground md:text-lg fade-in-delay">
           {tActivities("description")}
         </p>
       </section>
@@ -65,7 +69,7 @@ export default async function Home({ params }: Props) {
         {featured ? (
           <Link
             href={`/activities/${featured.slug || featured.id}`}
-            className="lg:col-span-8"
+            className="lg:col-span-8 reveal"
           >
             <Card className="group h-full overflow-hidden border transition-colors hover:border-primary/40">
               <div className="relative aspect-video overflow-hidden bg-muted">
@@ -108,10 +112,11 @@ export default async function Home({ params }: Props) {
 
         <div className="grid gap-5 lg:col-span-4">
           {secondary.length > 0 ? (
-            secondary.map((article) => (
+            secondary.map((article, index) => (
               <Link
                 key={article.id}
                 href={`/activities/${article.slug || article.id}`}
+                className={`reveal reveal-delay-${index + 1}`}
               >
                 <Card className="group h-full border transition-colors hover:border-primary/40">
                   <CardHeader className="space-y-2">
@@ -140,7 +145,7 @@ export default async function Home({ params }: Props) {
       </section>
 
       <section className="mb-12 grid gap-5 md:grid-cols-2">
-        <Card className="border-border/70 flex flex-col">
+        <Card className="border-border/70 flex flex-col reveal reveal-from-left transition-all duration-300 hover:border-primary/50 hover:shadow-lg">
           <CardHeader className="space-y-3 grow">
             <CardTitle className="text-2xl">{tAboutNav("mission")}</CardTitle>
             <CardDescription className="text-sm leading-6 md:text-base">
@@ -148,16 +153,16 @@ export default async function Home({ params }: Props) {
             </CardDescription>
           </CardHeader>
           <CardContent className="pt-0">
-            <Button asChild variant="link" className="w-fit px-0">
+            <Button asChild variant="link" className="group w-fit px-0">
               <Link href="/about/mission">
                 {tHome("readSection")}
-                <ChevronRight className="h-4 w-4" />
+                <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Link>
             </Button>
           </CardContent>
         </Card>
 
-        <Card className="border-border/70 flex flex-col">
+        <Card className="border-border/70 flex flex-col reveal reveal-from-right transition-all duration-300 hover:border-primary/50 hover:shadow-lg">
           <CardHeader className="space-y-3 grow">
             <CardTitle className="text-2xl">{tAboutNav("vision")}</CardTitle>
             <CardDescription className="text-sm leading-6 md:text-base">
@@ -165,10 +170,10 @@ export default async function Home({ params }: Props) {
             </CardDescription>
           </CardHeader>
           <CardContent className="pt-0">
-            <Button asChild variant="link" className="w-fit px-0">
+            <Button asChild variant="link" className="group w-fit px-0">
               <Link href="/about/vision">
                 {tHome("readSection")}
-                <ChevronRight className="h-4 w-4" />
+                <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
               </Link>
             </Button>
           </CardContent>
@@ -176,7 +181,7 @@ export default async function Home({ params }: Props) {
       </section>
 
       <section className="mb-12 space-y-5">
-        <div className="space-y-2">
+        <div className="space-y-2 reveal">
           <h2 className="text-3xl font-bold tracking-tight">
             {tHome("latestTitle")}
           </h2>
@@ -185,12 +190,13 @@ export default async function Home({ params }: Props) {
 
         {feed.length > 0 ? (
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
-            {feed.map((article) => (
+            {feed.map((article, index) => (
               <Link
                 key={article.id}
                 href={`/activities/${article.slug || article.id}`}
+                className={`reveal reveal-delay-${(index % 3) + 1}`}
               >
-                <Card className="group h-full border transition-colors hover:border-primary/40">
+                <Card className="group h-full border transition-all duration-300 hover:border-primary/40 hover:scale-105">
                   <CardHeader className="space-y-2">
                     <div className="flex items-center gap-2 text-xs text-muted-foreground">
                       <Calendar className="h-3.5 w-3.5" />
@@ -219,20 +225,21 @@ export default async function Home({ params }: Props) {
         )}
       </section>
 
-      <section className="rounded-2xl border bg-muted/20 px-6 py-10 text-center md:px-10">
+      <section className="rounded-2xl border bg-muted/20 px-6 py-10 text-center md:px-10 reveal">
         <h2 className="text-2xl font-bold md:text-3xl">{tHome("joinTitle")}</h2>
         <p className="mx-auto mt-3 max-w-2xl text-muted-foreground">
           {tHome("joinDescription")}
         </p>
         <div className="mt-6 flex justify-center gap-3">
-          <Button asChild size="lg">
+          <Button asChild size="lg" className="transition-all hover:scale-105 hover:shadow-lg">
             <Link href="/membership">{tNav("membership")}</Link>
           </Button>
-          <Button asChild size="lg" variant="outline">
+          <Button asChild size="lg" variant="outline" className="transition-all hover:scale-105 hover:border-primary/50">
             <Link href="/about">{tAbout("title")}</Link>
           </Button>
         </div>
       </section>
     </div>
+    </>
   );
 }

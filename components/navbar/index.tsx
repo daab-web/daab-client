@@ -1,14 +1,15 @@
-import { Separator } from "../ui/separator";
 import { BottomNavigationMenu } from "./bottom";
-import { TopNavigation } from "./top";
+import { LogoSection, ControlsSection } from "./top";
 
-export default function Navbar() {
+export default async function Navbar() {
   return (
-    <div className="flex flex-col gap-4">
-      <TopNavigation />
-      <Separator className="hidden lg:block" />
-      <div className="hidden lg:block">
-        <BottomNavigationMenu />
+    <div className="w-full max-w-7xl px-4">
+      <div className="flex items-center justify-between">
+        <LogoSection />
+        <div className="hidden lg:flex flex-1 justify-center px-8">
+          <BottomNavigationMenu />
+        </div>
+        <ControlsSection />
       </div>
     </div>
   );
