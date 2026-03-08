@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   Accordion,
@@ -18,7 +18,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Spinner } from "@/components/ui/spinner";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
   Dialog,
   DialogContent,
@@ -38,37 +38,21 @@ import {
 } from "lucide-react";
 import { Scientist } from "@/types/scientist";
 import { fetchScientists, deleteScientist } from "@/lib/api";
-import type { PagedResponse } from "@/types/paged-response";
+import { useQuery } from "@tanstack/react-query";
 
 export default function ScientistsPage() {
   const router = useRouter();
-  const [scientists, setScientists] = useState<Scientist[]>([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [scientistToDelete, setScientistToDelete] = useState<Scientist | null>(
     null,
   );
 
-  useEffect(() => {
-    loadScientists();
-  }, []);
-
-  const loadScientists = async () => {
-    setIsLoading(true);
-    setError(null);
-
-    try {
-      const response: PagedResponse<Scientist> = await fetchScientists(1, 100);
-      setScientists(response.items);
-    } catch (err) {
-      console.error("Failed to fetch scientists:", err);
-      setError("Failed to load scientists. Please try again.");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const { data, isLoading, error, refetch } = useQuery({
+    queryKey: ["scientists"],
+    queryFn: async () => await fetchScientists(1, 100)
+  })
+  const scientists = data?.items
 
   const handleEdit = (scientistId: string) => {
     router.push(`/admin/scientists/${scientistId}/edit`);
@@ -91,10 +75,8 @@ export default function ScientistsPage() {
 
     try {
       await deleteScientist(scientistToDelete.id);
-      setScientists(scientists.filter((s) => s.id !== scientistToDelete.id));
     } catch (err) {
       console.error("Failed to delete scientist:", err);
-      setError("Failed to delete scientist. Please try again.");
     } finally {
       setDeletingId(null);
       setScientistToDelete(null);
@@ -116,7 +98,7 @@ export default function ScientistsPage() {
             Add Scientist
           </Button>
           <Button
-            onClick={loadScientists}
+            onClick={() => refetch()}
             variant="outline"
             disabled={isLoading}
           >
@@ -127,7 +109,8 @@ export default function ScientistsPage() {
 
       {error && (
         <Alert variant="destructive">
-          <AlertDescription>{error}</AlertDescription>
+          <AlertTitle>{error.name}</AlertTitle>
+          <AlertDescription>{error.message}</AlertDescription>
         </Alert>
       )}
 
@@ -144,13 +127,13 @@ export default function ScientistsPage() {
               <Spinner />
               <span className="ml-2">Loading...</span>
             </div>
-          ) : scientists.length === 0 ? (
+          ) : scientists?.length === 0 ? (
             <div className="text-center py-8 text-muted-foreground">
               No scientists found
             </div>
           ) : (
             <Accordion type="single" collapsible className="w-full">
-              {scientists.map((scientist) => (
+              {scientists?.map((scientist) => (
                 <AccordionItem key={scientist.id} value={scientist.id}>
                   <AccordionTrigger className="hover:no-underline">
                     <div className="flex items-center gap-3">
