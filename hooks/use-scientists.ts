@@ -1,7 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { PagedResponse } from "@/types/paged-response";
 import { Scientist } from "@/types/scientist";
-import { fetchAreas, fetchCountries, fetchScientists } from "@/lib/api";
+import { fetchScientists } from "@/lib/api/scientists";
+import { fetchAreas, fetchCountries } from "@/lib/api/index";
 
 export function useScientists(
   page: number,

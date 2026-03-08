@@ -5,9 +5,8 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Button } from "@/components/ui/button";
 import { Calendar, User, Tag, ArrowLeft, Share2 } from "lucide-react";
-import Image from "next/image";
 import Link from "next/link";
-import { getNewsByIdOrSlug } from "@/lib/api";
+import { getNewsByIdOrSlug } from "@/lib/api/news";
 import { News } from "@/types/news";
 import { formatDate } from "@/lib/date-utils";
 

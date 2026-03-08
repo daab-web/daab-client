@@ -37,7 +37,7 @@ import {
   Plus,
 } from "lucide-react";
 import { Scientist } from "@/types/scientist";
-import { fetchScientists, deleteScientist } from "@/lib/api";
+import { fetchScientists, deleteScientist } from "@/lib/api/scientists";
 import { useQuery } from "@tanstack/react-query";
 
 export default function ScientistsPage() {

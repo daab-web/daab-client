@@ -11,7 +11,7 @@ import { User, Clock } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { NewsCarousel } from "@/components/news-carousel";
-import { fetchNews } from "@/lib/api";
+import { fetchNews } from "@/lib/api/news";
 import { PagedResponse } from "@/types/paged-response";
 import { News } from "@/types/news";
 import { formatDate, getTimeAgo } from "@/lib/date-utils";
