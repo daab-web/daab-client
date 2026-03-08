@@ -38,7 +38,7 @@ import {
   XCircle,
 } from "lucide-react";
 import { Application } from "@/types/application";
-import { fetchApplications, approveApplication } from "@/lib/api";
+import { fetchApplications, approveApplication } from "@/lib/api/applications";
 import { PagedResponse } from "@/types/paged-response";
 
 export default function ApplicationsPage() {

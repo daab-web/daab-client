@@ -28,7 +28,7 @@ import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { ArrowLeft, X } from "lucide-react";
 import { Scientist } from "@/types/scientist";
-import { fetchScientistById, updateScientist } from "@/lib/api";
+import { fetchScientistById, updateScientist } from "@/lib/api/scientists";
 
 const scientistSchema = z.object({
   firstName: z.string().min(1, "First name is required"),

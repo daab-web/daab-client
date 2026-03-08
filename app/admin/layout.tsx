@@ -23,32 +23,6 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const jar = await cookies();
-  const token = jar.get("daab.accessToken");
-
-  if (!token) {
-    return <ErrorDisplay type="401" />;
-  }
-
-  try {
-    var apiResponse = await fetchAPI("/admin", {
-      credentials: "include",
-      headers: {
-        Authorization: `Bearer ${token.value}`,
-      },
-      cache: "no-cache",
-    });
-
-    if (!apiResponse.ok) {
-      if (apiResponse.status === 403) {
-        return <ErrorDisplay type="403" />;
-      }
-      return <ErrorDisplay type="500" />;
-    }
-  } catch (err) {
-    return <ErrorDisplay type="500" />;
-  }
-
   return (
     <QueryProvider>
       <SidebarProvider>

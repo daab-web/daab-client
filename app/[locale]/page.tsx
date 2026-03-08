@@ -3,7 +3,7 @@ import Image from "next/image";
 import { Calendar, ChevronRight } from "lucide-react";
 
 import { Link } from "@/i18n/navigation";
-import { fetchNews } from "@/lib/api";
+import { fetchNews } from "@/lib/api/news";
 import { formatDate } from "@/lib/date-utils";
 import { PagedResponse } from "@/types/paged-response";
 import { News } from "@/types/news";

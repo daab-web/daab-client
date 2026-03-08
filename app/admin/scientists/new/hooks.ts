@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createScientist } from "@/lib/api";
+import { createScientist } from "@/lib/api/scientists";
 import { toast } from "sonner";
 import { ScientistFormData } from "./types";
 

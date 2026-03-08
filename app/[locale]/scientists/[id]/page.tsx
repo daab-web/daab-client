@@ -8,7 +8,10 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
-import { fetchPublicationsByScientistId, fetchScientistById } from "@/lib/api";
+import {
+  fetchPublicationsByScientistId,
+  fetchScientistById,
+} from "@/lib/api/scientists";
 
 type Props = {
   params: Promise<{ locale: string; id: string }>;

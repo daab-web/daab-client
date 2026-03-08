@@ -23,7 +23,7 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Checkbox } from "@/components/ui/checkbox";
 import { CheckCircle2, AlertCircle } from "lucide-react";
 
-import { submitApplication } from "@/lib/api";
+import { submitApplication } from "@/lib/api/applications";
 
 type FormData = z.infer<ReturnType<typeof createFormSchema>>;
 
@@ -39,10 +39,7 @@ interface SelectOption {
 
 const createFormSchema = (t: any) =>
   z.object({
-    email: z
-      .string()
-      .min(1, t("errors.emailRequired"))
-      .email(t("errors.emailInvalid")),
+    email: z.email("errors.emailInvalid"),
     name: z.string().min(1, t("errors.nameRequired")),
     surname: z.string().min(1, t("errors.surnameRequired")),
     residence: z.string().optional(),
