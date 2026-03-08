@@ -1,6 +1,6 @@
 services:
   backend:
-    image: tng1/daabsrv:dev
+    image: tng1/daab-server:master
     pull_policy: always
     ports:
       - 5035:8080

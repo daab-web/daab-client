@@ -49,12 +49,12 @@ export default async function DirectorsPage() {
   });
 
   return (
-    <section className="mx-auto flex w-full max-w-6xl flex-col items-center gap-8 text-center">
-      <div className="flex flex-col items-center gap-3">
-        <h1 className="text-3xl font-extrabold">
+    <section className="mx-auto pt-12 flex w-full max-w-6xl flex-col items-center gap-8 text-center">
+      <div className="text-center mb-12 md:mb-16">
+        <h1 className="text-[30px] md:text-4xl lg:text-5xl font-extrabold text-foreground mb-3">
           {navigation("boardOfDirectors")}
         </h1>
-        <p className="max-w-3xl text-lg text-muted-foreground">
+        <p className="text-muted-foreground text-lg md:text-xl max-w-2xl mx-auto">
           {directorsT("intro")}
         </p>
       </div>

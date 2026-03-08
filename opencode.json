@@ -9,6 +9,11 @@
         "mcp"
       ],
       "enabled": true
+    },
+    "figma-mcp": {
+      "type": "remote",
+      "url": "https://mcp.figma.com/mcp",
+      "enabled": true
     }
   }
 }
