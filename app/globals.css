@@ -6,7 +6,7 @@
 @custom-variant dark (&:is(.dark *));
 
 :root {
-  --background-image: url('/bg-light.jpg');
+  --background-image: url("/bg-light.jpg");
   --radius: 0.625rem;
   --card: oklch(1 0 0);
   --card-foreground: oklch(0.145 0 0);
@@ -89,7 +89,8 @@ html {
   scrollbar-gutter: stable;
 }
 
-html, body {
+html,
+body {
   height: 100%;
   margin: 0;
   padding: 0;
@@ -106,13 +107,13 @@ body {
 
 .dark {
   --background: oklch(0.145 0 0);
-  --background-image: url('/bg-dark2.png');
+  --background-image: url("/bg-dark2.png");
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
   --card-foreground: oklch(0.985 0 0);
   --popover: oklch(0.205 0 0);
   --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.87 0.00 0);
+  --primary: oklch(0.87 0 0);
   --primary-foreground: oklch(0.205 0 0);
   --secondary: oklch(0.269 0 0);
   --secondary-foreground: oklch(0.985 0 0);
@@ -148,5 +149,132 @@ body {
   }
   html {
     @apply font-sans;
+  }
+}
+
+/* Sticky Navbar with scroll effect */
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+header {
+  background-color: transparent;
+  animation: slideDown 0.4s ease-out;
+  transition:
+    background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    backdrop-filter 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+header.scrolled {
+  background-color: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px) saturate(180%);
+  box-shadow:
+    0 1px 3px rgba(0, 0, 0, 0.1),
+    0 4px 8px rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+.dark header.scrolled {
+  background-color: rgba(13, 13, 13, 0.8);
+  backdrop-filter: blur(12px) saturate(180%);
+  box-shadow:
+    0 1px 3px rgba(255, 255, 255, 0.05),
+    0 4px 8px rgba(255, 255, 255, 0.02);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  header {
+    animation: none;
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition:
+      opacity 0.6s ease-out,
+      transform 0.6s ease-out;
+  }
+
+  .reveal-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .reveal-delay-1 {
+    transition-delay: 0.1s;
+  }
+
+  .reveal-delay-2 {
+    transition-delay: 0.2s;
+  }
+
+  .reveal-delay-3 {
+    transition-delay: 0.3s;
+  }
+
+  .reveal-delay-4 {
+    transition-delay: 0.4s;
+  }
+
+  .reveal-delay-5 {
+    transition-delay: 0.5s;
+  }
+
+  .reveal-delay-6 {
+    transition-delay: 0.6s;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .fade-in {
+    opacity: 0;
+    animation: fadeIn 0.8s ease-out forwards;
+  }
+
+  .fade-in-delay {
+    opacity: 0;
+    animation: fadeIn 0.8s ease-out 0.2s forwards;
+  }
+
+  .reveal-from-left {
+    opacity: 0;
+    transform: translateX(-40px);
+    transition:
+      opacity 0.7s ease-out,
+      transform 0.7s ease-out;
+  }
+
+  .reveal-from-right {
+    opacity: 0;
+    transform: translateX(40px);
+    transition:
+      opacity 0.7s ease-out,
+      transform 0.7s ease-out;
+  }
+
+  .reveal-from-left.reveal-visible,
+  .reveal-from-right.reveal-visible {
+    opacity: 1;
+    transform: translateX(0);
   }
 }

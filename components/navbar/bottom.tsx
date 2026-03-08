@@ -20,14 +20,16 @@ export function BottomNavigationMenu() {
 
   return (
     <NavigationMenu viewport={isMobile}>
-      <NavigationMenuList className="flex-wrap">
+      <NavigationMenuList className="gap-1">
         {NAV_ITEMS.map((item) => (
           <NavigationMenuItem key={item.key}>
             <NavigationMenuLink
               asChild
               className={navigationMenuTriggerStyle()}
             >
-              <Link href={item.href}>{t(item.key)}</Link>
+              <Link href={item.href} className="text-sm px-3">
+                {t(item.key)}
+              </Link>
             </NavigationMenuLink>
           </NavigationMenuItem>
         ))}

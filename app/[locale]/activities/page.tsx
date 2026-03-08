@@ -29,9 +29,8 @@ export default async function Activities({ params }: Props) {
   const newsResponse = (await fetchNews(1, 10)) as FetchNewsResponse;
   const news = newsResponse.items;
 
-  // Get top 3 articles for carousel
   const carouselArticles = news.slice(0, 3);
-  const gridArticles = news.slice(3);
+  const gridArticles = news;
 
   return (
     <div className="container mx-auto px-4 py-12 max-w-7xl">
