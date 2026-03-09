@@ -27,7 +27,7 @@ export function DirectorCard({
   profileUrl,
 }: DirectorCardProps) {
   return (
-    <Card className="group flex h-full flex-col items-center text-center bg-card/80 backdrop-blur-sm overflow-hidden border border-border/40 shadow-md hover:shadow-2xl hover:border-[#1e3a6e]/60 transition-all duration-500 ease-out hover:-translate-y-2 hover:scale-[1.02]">
+    <Card className="group flex h-full flex-col items-center text-center bg-card/80 backdrop-blur-sm overflow-hidden border border-border/40 shadow-md hover:shadow-2xl hover:border-[#3B5998]/60 transition-all duration-500 ease-out hover:-translate-y-2 hover:scale-[1.02]">
       <div className="relative w-full aspect-square bg-muted overflow-hidden">
         <div className="absolute inset-0 bg-linear-to-t from-background/90 via-background/20 to-transparent z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
@@ -42,7 +42,7 @@ export function DirectorCard({
       </div>
       <CardContent className="flex flex-1 justify-between flex-col items-center gap-3 pt-5 pb-4 px-4 w-full">
         <div className="space-y-2 w-full">
-          <CardTitle className="text-lg font-bold text-foreground leading-tight group-hover:text-[#1e3a6e] transition-colors duration-300">
+          <CardTitle className="text-lg font-bold text-foreground leading-tight group-hover:text-[#3B5998] transition-colors duration-300">
             {profileUrl ? (
               <Link
                 href={profileUrl}
@@ -57,8 +57,8 @@ export function DirectorCard({
             )}
           </CardTitle>
 
-          <div className="inline-block px-3 py-1 rounded-full bg-[#1e3a6e]/10 border border-[#1e3a6e]/30 group-hover:bg-[#1e3a6e]/20 transition-colors duration-300">
-            <CardDescription className="text-xs font-semibold text-[#1e3a6e] uppercase tracking-wide">
+          <div className="inline-block px-3 py-1 rounded-full bg-[#3B5998]/10 border border-[#3B5998]/30 group-hover:bg-[#3B5998]/20 transition-colors duration-300">
+            <CardDescription className="text-xs font-semibold text-[#3B5998] uppercase tracking-wide">
               {role}
             </CardDescription>
           </div>
@@ -75,7 +75,7 @@ export function DirectorCard({
         <Separator className="my-1" />
 
         <div className="w-full flex items-center gap-2 text-muted-foreground group-hover:text-foreground transition-colors duration-300">
-          <MapPin className="h-4 w-4 shrink-0 group-hover:text-[#1e3a6e] transition-colors duration-300" />
+          <MapPin className="h-4 w-4 shrink-0 group-hover:text-[#3B5998] transition-colors duration-300" />
           <CardDescription className="text-sm font-medium">
             {country}
           </CardDescription>

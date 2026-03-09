@@ -15,6 +15,7 @@ import { fetchNews } from "@/lib/api/news";
 import { PagedResponse } from "@/types/paged-response";
 import { News } from "@/types/news";
 import { formatDate, getTimeAgo } from "@/lib/date-utils";
+import { ScrollReveal } from "@/components/scroll-reveal";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -34,8 +35,10 @@ export default async function Activities({ params }: Props) {
 
   return (
     <div className="container mx-auto px-4 py-12 max-w-7xl">
+      <ScrollReveal />
+
       {/* Header */}
-      <div className="mb-12 text-center bg-muted/30 py-12 border rounded-2xl">
+      <div className="mb-12 text-center bg-muted/30 py-12 border rounded-2xl reveal">
         <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
           {t("title")}
         </h1>
@@ -46,16 +49,19 @@ export default async function Activities({ params }: Props) {
 
       {/* Carousel */}
       {carouselArticles.length > 0 && (
-        <NewsCarousel articles={carouselArticles} locale={locale} />
+        <div className="reveal reveal-delay-1">
+          <NewsCarousel articles={carouselArticles} locale={locale} />
+        </div>
       )}
 
       {/* News Grid */}
       {gridArticles.length > 0 && (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {gridArticles.map((article) => (
+          {gridArticles.map((article, index) => (
             <Link
               key={article.id}
               href={`/${locale}/activities/${article.slug || article.id}`}
+              className={`reveal reveal-delay-${Math.min((index % 6) + 1, 6)}`}
             >
               <Card className="overflow-hidden hover:shadow-lg transition-all duration-300 flex flex-col group h-full cursor-pointer">
                 <div className="relative h-48 overflow-hidden">
@@ -121,7 +127,7 @@ export default async function Activities({ params }: Props) {
 
       {/* Empty State */}
       {news.length === 0 && (
-        <div className="text-center py-20">
+        <div className="text-center py-20 reveal">
           <p className="text-muted-foreground text-lg">{t("noNews")}</p>
         </div>
       )}
