@@ -21,14 +21,11 @@ export default async function ScientistDetailPage({ params }: Props) {
   const { locale, id } = await params;
   const t = await getTranslations({ locale, namespace: "Scientists" });
 
-  const [scientist, publications] = await Promise.all([
-    fetchScientistById(id),
-    fetchPublicationsByScientistId(id),
-  ]);
-
+  const scientist = await fetchScientistById(id);
   if (!scientist) {
     notFound();
   }
+  const publications = await fetchPublicationsByScientistId(scientist.id);
 
   const hasLinks = scientist.linkedIn || scientist.orcid || scientist.website;
   const hasPublications = publications.length > 0;

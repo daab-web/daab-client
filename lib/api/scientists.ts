@@ -46,8 +46,21 @@ export async function fetchPublicationsByScientistId(
 ): Promise<Publication[]> {
   const response = await fetchAPI(`/scientists/${id}/publications`);
   if (!response.ok) return [];
-  const publications: Publication[] = await response.json();
-  return publications;
+  const data = await response.json();
+
+  if (Array.isArray(data)) {
+    return data as Publication[];
+  }
+
+  if (Array.isArray(data?.publications)) {
+    return data.publications as Publication[];
+  }
+
+  if (Array.isArray(data?.items)) {
+    return data.items as Publication[];
+  }
+
+  return [];
 }
 
 export async function createScientist(data: any) {
@@ -72,6 +85,6 @@ export async function updateScientist(id: string, data: any) {
 
 export async function deleteScientist(id: string) {
   return fetchAPI(`/scientists/${id}`, {
-    method: "DELETE"
+    method: "DELETE",
   });
 }
