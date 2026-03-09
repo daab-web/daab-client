@@ -9,6 +9,7 @@ import Link from "next/link";
 import { getNewsByIdOrSlug } from "@/lib/api/news";
 import { News } from "@/types/news";
 import { formatDate } from "@/lib/date-utils";
+import { ScrollReveal } from "@/components/scroll-reveal";
 
 type Props = {
   params: Promise<{ locale: string; "id-or-slug": string }>;
@@ -36,8 +37,10 @@ export default async function ArticlePage({ params }: Props) {
 
   return (
     <div className="container mx-auto px-4 py-12 max-w-5xl bg-muted/30 rounded-2xl border">
+      <ScrollReveal />
+
       {/* Back Button */}
-      <div className="mb-8">
+      <div className="mb-8 reveal">
         <Link href={`/${locale}/activities`}>
           <Button variant="ghost" size="sm">
             <ArrowLeft className="mr-2 h-4 w-4" />
@@ -50,7 +53,7 @@ export default async function ArticlePage({ params }: Props) {
       <article className="space-y-8">
         {/* Category Badge */}
         {article.category && (
-          <div>
+          <div className="reveal reveal-delay-1">
             <Badge variant="default" className="text-sm px-3 py-1">
               {article.category}
             </Badge>
@@ -58,19 +61,19 @@ export default async function ArticlePage({ params }: Props) {
         )}
 
         {/* Title */}
-        <h1 className="text-4xl md:text-5xl font-bold tracking-tight leading-tight">
+        <h1 className="text-4xl md:text-5xl font-bold tracking-tight leading-tight reveal reveal-delay-2">
           {article.title}
         </h1>
 
         {/* Excerpt */}
         {article.excerpt && (
-          <p className="text-xl text-muted-foreground leading-relaxed">
+          <p className="text-xl text-muted-foreground leading-relaxed reveal reveal-delay-3">
             {article.excerpt}
           </p>
         )}
 
         {/* Metadata */}
-        <div className="flex flex-wrap items-center gap-6 text-sm text-muted-foreground">
+        <div className="flex flex-wrap items-center gap-6 text-sm text-muted-foreground reveal reveal-delay-4">
           {article.authorName && (
             <div className="flex items-center gap-2">
               <User className="h-4 w-4" />
@@ -85,7 +88,7 @@ export default async function ArticlePage({ params }: Props) {
 
         {/* Tags */}
         {article.tags && article.tags.length > 0 && (
-          <div className="flex items-start gap-2">
+          <div className="flex items-start gap-2 reveal reveal-delay-5">
             <Tag className="h-4 w-4 mt-1 text-muted-foreground" />
             <div className="flex flex-wrap gap-2">
               {article.tags.map((tag) => (
@@ -97,19 +100,19 @@ export default async function ArticlePage({ params }: Props) {
           </div>
         )}
 
-        <Separator />
+        <Separator className="reveal reveal-delay-6" />
 
         {/* Featured Image */}
 
         {/* Article Content */}
-        <div className="prose prose-lg dark:prose-invert max-w-none">
+        <div className="prose prose-lg dark:prose-invert max-w-none reveal">
           <NewsViewer editorState={article.editorState} />
         </div>
 
-        <Separator />
+        <Separator className="reveal" />
 
         {/* Share Section */}
-        <div className="flex items-center justify-between bg-muted/30 rounded-lg p-6">
+        <div className="flex items-center justify-between bg-muted/30 rounded-lg p-6 reveal">
           <div>
             <h3 className="font-semibold text-lg mb-1">{t("shareArticle")}</h3>
             <p className="text-sm text-muted-foreground">

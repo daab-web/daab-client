@@ -54,10 +54,9 @@ export function AboutSectionWrapper({ sectionId, title, children }: Props) {
               key={i}
               className={
                 i === currentIndex
-                  ? "h-2 w-6 rounded-full bg-[#1e3a6e] animate-in zoom-in duration-300"
+                  ? "h-2 w-6 rounded-full bg-[#1e3a6e] transition-all duration-300"
                   : "h-2 w-2 rounded-full bg-muted-foreground/30"
               }
-              style={{ animationDelay: `${600 + i * 50}ms` }}
             />
           ))}
         </div>

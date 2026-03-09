@@ -6,6 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import { toast } from "sonner";
 import * as z from "zod";
+import { ScrollReveal } from "@/components/scroll-reveal";
 
 import {
   Card,
@@ -244,7 +245,8 @@ export default function ApplicationForm() {
 
   return (
     <div className="min-h-screen py-12 px-4">
-      <div className="max-w-4xl mx-auto">
+      <ScrollReveal />
+      <div className="max-w-4xl mx-auto reveal">
         <Card className="shadow-lg">
           <CardHeader className="space-y-1 rounded-t-lg bg-[#274380] text-white dark:bg-[#274380]">
             <CardTitle className="text-3xl font-bold">{t("title")}</CardTitle>
