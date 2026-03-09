@@ -49,8 +49,8 @@ export default async function DirectorsPage() {
   });
 
   return (
-    <section className="mx-auto pt-12 flex w-full max-w-6xl flex-col items-center gap-8 text-center">
-      <div className="text-center mb-12 md:mb-16">
+    <section className="mx-auto pt-12 flex w-full max-w-6xl flex-col items-center gap-8 text-center px-4">
+      <div className="text-center mb-12 md:mb-16 animate-in fade-in slide-in-from-bottom-4 duration-700">
         <h1 className="text-[30px] md:text-4xl lg:text-5xl font-extrabold text-foreground mb-3">
           {navigation("boardOfDirectors")}
         </h1>
@@ -58,17 +58,22 @@ export default async function DirectorsPage() {
           {directorsT("intro")}
         </p>
       </div>
-      <div className="grid w-full gap-8 sm:grid-cols-2 xl:grid-cols-4">
-        {directors.map((director) => (
-          <DirectorCard
+      <div className="grid w-full gap-6 sm:grid-cols-2 xl:grid-cols-4">
+        {directors.map((director, index) => (
+          <div
             key={director.key}
-            name={director.name}
-            role={director.role}
-            subtitle={director.subtitle}
-            country={director.country}
-            imageSrc={director.imageSrc}
-            profileUrl={director.profileUrl}
-          />
+            className="animate-in fade-in slide-in-from-bottom-8 duration-700"
+            style={{ animationDelay: `${index * 100}ms` }}
+          >
+            <DirectorCard
+              name={director.name}
+              role={director.role}
+              subtitle={director.subtitle}
+              country={director.country}
+              imageSrc={director.imageSrc}
+              profileUrl={director.profileUrl}
+            />
+          </div>
         ))}
       </div>
     </section>
