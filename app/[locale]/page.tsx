@@ -3,9 +3,8 @@ import Image from "next/image";
 import { Calendar, ChevronRight } from "lucide-react";
 
 import { Link } from "@/i18n/navigation";
-import { fetchNews } from "@/lib/api";
-import { ScrollReveal } from "@/components/scroll-reveal";
 import { fetchNews } from "@/lib/api/news";
+import { ScrollReveal } from "@/components/scroll-reveal";
 import { formatDate } from "@/lib/date-utils";
 import { PagedResponse } from "@/types/paged-response";
 import { News } from "@/types/news";
