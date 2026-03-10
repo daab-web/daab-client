@@ -36,8 +36,6 @@ export default async function Activities({ params }: Props) {
   return (
     <div className="container mx-auto px-4 py-12 max-w-7xl">
       <ScrollReveal />
-
-      {/* Header */}
       <div className="mb-12 text-center bg-muted/30 py-12 border rounded-2xl reveal">
         <h1 className="text-4xl md:text-5xl font-bold tracking-tight mb-4">
           {t("title")}
@@ -47,14 +45,12 @@ export default async function Activities({ params }: Props) {
         </p>
       </div>
 
-      {/* Carousel */}
       {carouselArticles.length > 0 && (
         <div className="reveal reveal-delay-1">
           <NewsCarousel articles={carouselArticles} locale={locale} />
         </div>
       )}
 
-      {/* News Grid */}
       {gridArticles.length > 0 && (
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {gridArticles.map((article, index) => (
@@ -64,13 +60,13 @@ export default async function Activities({ params }: Props) {
               className={`reveal reveal-delay-${Math.min((index % 6) + 1, 6)}`}
             >
               <Card className="overflow-hidden hover:shadow-lg transition-all duration-300 flex flex-col group h-full cursor-pointer">
-                <div className="relative h-48 overflow-hidden">
+                <div className="relative h-48 overflow-hidden bg-muted">
                   {article.thumbnail ? (
                     <Image
                       src={article.thumbnail}
                       alt={article.title}
                       fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-300"
+                      className="object-contain group-hover:scale-105 transition-transform duration-300"
                     />
                   ) : null}
                   {article.category && (
@@ -125,7 +121,6 @@ export default async function Activities({ params }: Props) {
         </div>
       )}
 
-      {/* Empty State */}
       {news.length === 0 && (
         <div className="text-center py-20 reveal">
           <p className="text-muted-foreground text-lg">{t("noNews")}</p>

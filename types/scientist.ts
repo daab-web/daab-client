@@ -10,7 +10,10 @@ export type Scientist = {
   countries: string[];
   areas: string[];
   photoUrl?: string;
-  linkedIn?: string;
+  linkedInUrl?: string;
   orcid?: string;
   website?: string;
+  email?: string;
+  phoneNumber?: string;
+  publications?: Array<{ id?: string; title: string; url?: string }>;
 };
