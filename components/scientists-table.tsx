@@ -145,7 +145,10 @@ export function ScientistsTable() {
       {isLoading ? (
         <ScientistsTableSkeleton />
       ) : (
-        <div className="flex flex-col gap-6">
+        <div
+          key={`${debouncedSearch}-${selectedCountry}-${selectedArea}-${page}`}
+          className="flex flex-col gap-6 animate-in fade-in-50 duration-500"
+        >
           <div className="overflow-hidden rounded-2xl border bg-card shadow-sm">
             <Table>
               <TableHeader className="[&_tr]:bg-muted/40 [&_tr]:backdrop-blur">
