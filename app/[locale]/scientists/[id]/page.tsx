@@ -27,7 +27,8 @@ export default async function ScientistDetailPage({ params }: Props) {
   }
   const publications = await fetchPublicationsByScientistId(scientist.id);
 
-  const hasLinks = scientist.linkedIn || scientist.orcid || scientist.website;
+  const hasLinks =
+    scientist.linkedInUrl || scientist.orcid || scientist.website;
   const hasPublications = publications.length > 0;
 
   return (
@@ -65,9 +66,9 @@ export default async function ScientistDetailPage({ params }: Props) {
                 {t("detail.links")}
               </p>
               <div className="flex flex-col gap-1.5">
-                {scientist.linkedIn && (
+                {scientist.linkedInUrl && (
                   <a
-                    href={scientist.linkedIn}
+                    href={scientist.linkedInUrl}
                     target="_blank"
                     rel="noopener noreferrer"
                     className="flex items-center gap-2 text-sm text-primary hover:underline"
