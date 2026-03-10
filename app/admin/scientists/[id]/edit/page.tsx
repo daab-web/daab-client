@@ -2,9 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { useForm } from "react-hook-form";
+import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
 import {
   Card,
   CardContent,
@@ -25,87 +24,11 @@ import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Badge } from "@/components/ui/badge";
-import { ArrowLeft, X } from "lucide-react";
+import { ArrowLeft, Plus, Trash2 } from "lucide-react";
 import { Scientist } from "@/types/scientist";
 import { fetchScientistById, updateScientist } from "@/lib/api/scientists";
-
-const scientistSchema = z.object({
-  firstName: z.string().min(1, "First name is required"),
-  lastName: z.string().min(1, "Last name is required"),
-  academicTitle: z.string().min(1, "Academic title is required"),
-  institutions: z.array(z.string()),
-  description: z.string().optional(),
-  slug: z.string().min(1, "Slug is required"),
-  countries: z.array(z.string()).min(1, "At least one country is required"),
-  areas: z.array(z.string()).min(1, "At least one research area is required"),
-});
-
-type ScientistFormData = z.infer<typeof scientistSchema>;
-
-interface TagInputProps {
-  value: string[];
-  onChange: (value: string[]) => void;
-  placeholder?: string;
-  disabled?: boolean;
-}
-
-function TagInput({ value, onChange, placeholder, disabled }: TagInputProps) {
-  const [inputValue, setInputValue] = useState("");
-
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Enter" || e.key === ",") {
-      e.preventDefault();
-      addTag();
-    } else if (e.key === "Backspace" && !inputValue && value.length > 0) {
-      removeTag(value.length - 1);
-    }
-  };
-
-  const addTag = () => {
-    const trimmedValue = inputValue.trim().replace(/,$/, "");
-    if (trimmedValue && !value.includes(trimmedValue)) {
-      onChange([...value, trimmedValue]);
-      setInputValue("");
-    }
-  };
-
-  const removeTag = (index: number) => {
-    onChange(value.filter((_, i) => i !== index));
-  };
-
-  return (
-    <div className="flex min-h-10 w-full flex-wrap items-center gap-2 rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2">
-      {value.map((tag, index) => (
-        <Badge
-          key={index}
-          variant="secondary"
-          className="gap-1 pr-1.5 font-normal"
-        >
-          <span>{tag}</span>
-          <button
-            type="button"
-            className="ml-1 rounded-full outline-none hover:bg-muted"
-            onClick={() => removeTag(index)}
-            disabled={disabled}
-          >
-            <X className="h-3 w-3" />
-          </button>
-        </Badge>
-      ))}
-      <input
-        type="text"
-        value={inputValue}
-        onChange={(e) => setInputValue(e.target.value)}
-        onKeyDown={handleKeyDown}
-        onBlur={addTag}
-        placeholder={value.length === 0 ? placeholder : ""}
-        disabled={disabled}
-        className="flex-1 bg-transparent outline-none placeholder:text-muted-foreground disabled:cursor-not-allowed disabled:opacity-50 min-w-30"
-      />
-    </div>
-  );
-}
+import { ScientistFormData, scientistSchema } from "../../new/types";
+import TagInput from "../../new/tag-input";
 
 export default function EditScientistPage() {
   const router = useRouter();
@@ -128,7 +51,19 @@ export default function EditScientistPage() {
       slug: "",
       countries: [],
       areas: [],
+      email: "",
+      phoneNumber: "",
+      linkedInUrl: "",
+      orcId: "",
+      website: "",
+      photo: null,
+      publications: [],
     },
+  });
+
+  const { fields, append, remove } = useFieldArray({
+    control: form.control,
+    name: "publications",
   });
 
   useEffect(() => {
@@ -151,6 +86,13 @@ export default function EditScientistPage() {
         slug: data.slug,
         countries: data.countries,
         areas: data.areas,
+        email: data.email || "",
+        phoneNumber: data.phoneNumber || "",
+        linkedInUrl: data.linkedInUrl || "",
+        orcId: data.orcid || "",
+        website: data.website || "",
+        photo: null,
+        publications: data.publications || [],
       });
     } catch (err) {
       console.error("Failed to fetch scientist:", err);
@@ -370,6 +312,190 @@ export default function EditScientistPage() {
                   </FormItem>
                 )}
               />
+
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="email"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Email (optional)</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="email"
+                          placeholder="email@example.com"
+                          disabled={isSaving}
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="phoneNumber"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Phone Number (optional)</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="tel"
+                          placeholder="+1234567890"
+                          disabled={isSaving}
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <FormField
+                control={form.control}
+                name="linkedInUrl"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>LinkedIn URL (optional)</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="url"
+                        placeholder="https://linkedin.com/in/..."
+                        disabled={isSaving}
+                        {...field}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <div className="grid grid-cols-2 gap-4">
+                <FormField
+                  control={form.control}
+                  name="orcId"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>ORCID (optional)</FormLabel>
+                      <FormControl>
+                        <Input
+                          placeholder="0000-0000-0000-0000"
+                          disabled={isSaving}
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+                <FormField
+                  control={form.control}
+                  name="website"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Website (optional)</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="url"
+                          placeholder="https://example.com"
+                          disabled={isSaving}
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+
+              <FormField
+                control={form.control}
+                name="photo"
+                render={({ field: { value, onChange, ...field } }) => (
+                  <FormItem>
+                    <FormLabel>Photo (optional)</FormLabel>
+                    <FormControl>
+                      <Input
+                        type="file"
+                        accept="image/*"
+                        disabled={isSaving}
+                        {...field}
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          onChange(file || null);
+                        }}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <FormLabel>Publications (optional)</FormLabel>
+                  <Button
+                    type="button"
+                    variant="outline"
+                    size="sm"
+                    onClick={() => append({ title: "", url: "" })}
+                    disabled={isSaving}
+                  >
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add Publication
+                  </Button>
+                </div>
+                {fields.map((field, index) => (
+                  <div key={field.id} className="flex gap-2 items-start">
+                    <div className="flex-1 space-y-2">
+                      <FormField
+                        control={form.control}
+                        name={`publications.${index}.title`}
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormControl>
+                              <Input
+                                placeholder="Publication title"
+                                disabled={isSaving}
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                      <FormField
+                        control={form.control}
+                        name={`publications.${index}.url`}
+                        render={({ field }) => (
+                          <FormItem>
+                            <FormControl>
+                              <Input
+                                type="url"
+                                placeholder="Publication URL (optional)"
+                                disabled={isSaving}
+                                {...field}
+                              />
+                            </FormControl>
+                            <FormMessage />
+                          </FormItem>
+                        )}
+                      />
+                    </div>
+                    <Button
+                      type="button"
+                      variant="destructive"
+                      size="icon"
+                      onClick={() => remove(index)}
+                      disabled={isSaving}
+                      className="mt-1"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </div>
+                ))}
+              </div>
 
               <div className="flex gap-2 pt-4">
                 <Button type="submit" disabled={isSaving}>
