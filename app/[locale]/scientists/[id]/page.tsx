@@ -33,8 +33,7 @@ export default async function ScientistDetailPage({ params }: Props) {
 
   return (
     <div className="mx-auto flex w-full max-w-5xl flex-col gap-8 px-4 py-8">
-      {/* Back button */}
-      <div>
+      <div className="animate-in fade-in slide-in-from-top-4 duration-500">
         <Button variant="outline" asChild>
           <Link href="/scientists">{t("detail.back")}</Link>
         </Button>
@@ -43,7 +42,7 @@ export default async function ScientistDetailPage({ params }: Props) {
       {/* Hero: two-column */}
       <div className="flex flex-col gap-8 lg:flex-row lg:items-start">
         {/* Left column: photo + links */}
-        <div className="flex shrink-0 flex-col items-center gap-4 lg:w-56">
+        <div className="flex shrink-0 flex-col items-center gap-4 lg:w-56 animate-in fade-in slide-in-from-left-6 duration-700 delay-150">
           <div className="relative h-52 w-52 overflow-hidden rounded-2xl border bg-muted shadow-sm">
             {scientist.photoUrl ? (
               <Image
@@ -107,7 +106,7 @@ export default async function ScientistDetailPage({ params }: Props) {
         </div>
 
         {/* Right column: name, meta, description, areas */}
-        <div className="flex flex-1 flex-col gap-6">
+        <div className="flex flex-1 flex-col gap-6 animate-in fade-in slide-in-from-right-6 duration-700 delay-300">
           {/* Name & title */}
           <div>
             <h1 className="text-3xl font-bold tracking-tight lg:text-4xl">
@@ -183,15 +182,15 @@ export default async function ScientistDetailPage({ params }: Props) {
 
       {/* Publications */}
       {hasPublications && (
-        <Card>
+        <Card className="animate-in fade-in slide-in-from-bottom-6 duration-700 delay-500">
           <CardContent className="p-6">
             <h2 className="mb-4 text-lg font-semibold">
               {t("detail.publications")}
             </h2>
             <ol className="flex flex-col gap-3">
               {publications.map((pub, index) => (
-                <li key={index} className="flex items-start gap-3">
-                  <span className="mt-0.5 shrink-0 text-sm tabular-nums text-muted-foreground">
+                <li key={index} className="flex items-baseline gap-3">
+                  <span className="shrink-0 text-sm tabular-nums text-muted-foreground">
                     {index + 1}.
                   </span>
                   {pub.url ? (
