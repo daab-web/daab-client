@@ -115,6 +115,7 @@ export default function NewsEditorPage() {
     null,
   );
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [isSlugManuallyEdited, setIsSlugManuallyEdited] = useState(false);
 
   // Watch form values for preview and slug generation
   const watchTitle = watch("title");
@@ -244,7 +245,7 @@ export default function NewsEditorPage() {
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const newTitle = e.target.value;
     setValue("title", newTitle);
-    if (!watch("slug")) {
+    if (!isSlugManuallyEdited) {
       setValue("slug", generateSlug(newTitle));
     }
   };
@@ -298,7 +299,10 @@ export default function NewsEditorPage() {
                 <Input
                   id="slug"
                   placeholder="article-url-slug"
-                  {...register("slug", { required: "Slug is required" })}
+                  {...register("slug", {
+                    required: "Slug is required",
+                    onChange: () => setIsSlugManuallyEdited(true),
+                  })}
                 />
                 {errors.slug && (
                   <p className="text-xs text-destructive">
