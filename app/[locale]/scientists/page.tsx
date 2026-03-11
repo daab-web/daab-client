@@ -15,7 +15,7 @@ export default async function ScientistsPage() {
         </h1>
       </section>
 
-      <div className="reveal reveal-delay-1">
+      <div className="reveal ">
         <ScientistsTable />
       </div>
     </div>

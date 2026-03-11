@@ -149,20 +149,20 @@ export function ScientistsTable() {
           key={`${debouncedSearch}-${selectedCountry}-${selectedArea}-${page}`}
           className="flex flex-col gap-6 animate-in fade-in-50 duration-500"
         >
-          <div className="overflow-hidden rounded-2xl border bg-card shadow-sm">
-            <Table>
+          <div className="overflow-x-auto rounded-2xl border bg-card shadow-sm">
+            <Table className="table-auto">
               <TableHeader className="[&_tr]:bg-muted/40 [&_tr]:backdrop-blur">
                 <TableRow className="divide-x divide-border">
-                  <TableHead className={cn(headerClass, "min-w-55")}>
+                  <TableHead className={cn(headerClass, "w-1/4")}>
                     {t("tableHeaders.fullname")}
                   </TableHead>
-                  <TableHead className={cn(headerClass, "min-w-50")}>
+                  <TableHead className={cn(headerClass, "w-1/4")}>
                     {t("tableHeaders.institution")}
                   </TableHead>
-                  <TableHead className={cn(headerClass, "min-w-45")}>
+                  <TableHead className={cn(headerClass, "w-1/4")}>
                     {t("tableHeaders.country")}
                   </TableHead>
-                  <TableHead className={cn(headerClass, "min-w-55")}>
+                  <TableHead className={cn(headerClass, "w-1/4")}>
                     {t("tableHeaders.areas")}
                   </TableHead>
                 </TableRow>
@@ -187,7 +187,14 @@ export function ScientistsTable() {
                       <TableCell className="px-6">
                         <div className="flex flex-wrap gap-2">
                           {s.institutions.map((inst) => {
-                            return <Badge variant="secondary">{i(inst)}</Badge>;
+                            return (
+                              <Badge
+                                variant="secondary"
+                                className="wrap-break-word"
+                              >
+                                {i(inst)}
+                              </Badge>
+                            );
                           })}
                         </div>
                       </TableCell>
