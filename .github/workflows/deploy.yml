@@ -64,12 +64,10 @@ jobs:
             sudo docker pull ${{ steps.meta.outputs.tags }}
             sudo docker stop daab-client || true
             sudo docker container rm daab-client || true
-            sudo mkdir -p /opt/daab/data
-            sudo chown -R 1001:1001 /opt/daab/data
             sudo docker run -d --name daab-client -p 80:3000 \
               --restart unless-stopped \
               -e BETTER_AUTH_SECRET=${{ secrets.BETTER_AUTH_SECRET }} \
               -e BETTER_AUTH_URL=${{ secrets.BETTER_AUTH_URL }} \
-              -e AUTH_DB_PATH=./sqlite.db \
+              -v /home/${{ secrets.VPS_USERNAME }}/daab-data/client:/app/data \
               ${{ steps.meta.outputs.tags }}
             sudo docker logout
