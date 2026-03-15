@@ -7,6 +7,8 @@ const dbPath = process.env.AUTH_DB_PATH
   ? path.resolve(process.env.AUTH_DB_PATH)
   : path.resolve("./sqlite.db")
 
+const host = process.env.NEXT_PUBLIC_SERVER
+
 export const auth = betterAuth({
     database: new Database(dbPath),
     plugins: [
@@ -16,9 +18,9 @@ export const auth = betterAuth({
             providerId: "backend",
             clientId: "test-client-id",
             clientSecret: "test-client-secret",
-            authorizationUrl: "http://localhost:5035/authorize",
-            tokenUrl: "http://localhost:5035/token",
-            userInfoUrl: "http://localhost:5035/userinfo",
+            authorizationUrl: `${host}/authorize`,
+            tokenUrl: `${host}/token`,
+            userInfoUrl: `${host}/userinfo`,
             pkce: true,
           }
         ]
