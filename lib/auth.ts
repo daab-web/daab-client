@@ -3,7 +3,7 @@ import { genericOAuth } from "better-auth/plugins"
 import Database from "better-sqlite3";
 
 export const auth = betterAuth({
-    database: new Database(process.env.DB_PATH ?? "./sqlite.db"),
+    database: new Database(process.env.AUTH_DB_PATH ?? "./sqlite.db"),
     plugins: [
       genericOAuth({
         config: [
