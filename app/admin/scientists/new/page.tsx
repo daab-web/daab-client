@@ -25,7 +25,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { ArrowLeft, Plus, Trash2 } from "lucide-react";
 import TagInput from "./tag-input";
 import { ScientistFormData, scientistSchema } from "./types";
-import { useScientistMutation } from "../../../../hooks/use-news";
+import { useScientistMutation } from "./hooks";
 
 export default function AddScientistPage() {
   const router = useRouter();
