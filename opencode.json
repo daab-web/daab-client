@@ -8,11 +8,16 @@
         "shadcn@latest",
         "mcp"
       ],
-      "enabled": true
+      "enabled": false
     },
     "figma-mcp": {
       "type": "remote",
       "url": "https://mcp.figma.com/mcp",
+      "enabled": false
+    },
+    "better-auth": {
+      "type": "remote",
+      "url": "https://context7.com/better-auth/better-auth",
       "enabled": true
     }
   }
