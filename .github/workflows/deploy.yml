@@ -65,6 +65,7 @@ jobs:
             sudo docker stop daab-client || true
             sudo docker container rm daab-client || true
             sudo mkdir -p /opt/daab/data
+            sudo chown -R 1001:1001 /opt/daab/data
             sudo docker run -d --name daab-client -p 80:3000 \
               --restart unless-stopped \
               -v /opt/daab/data:/app/data \
