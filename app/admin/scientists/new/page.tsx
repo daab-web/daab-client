@@ -25,7 +25,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { ArrowLeft, Plus, Trash2 } from "lucide-react";
 import TagInput from "./tag-input";
 import { ScientistFormData, scientistSchema } from "./types";
-import { useScientistMutation } from "./hooks";
+import { useScientistMutation } from "../../../../hooks/use-news";
 
 export default function AddScientistPage() {
   const router = useRouter();
@@ -80,7 +80,14 @@ export default function AddScientistPage() {
         <CardContent>
           <Form {...form}>
             <form
-              onSubmit={form.handleSubmit((data) => mutate(data))}
+              onSubmit={form.handleSubmit((data) =>
+                mutate(data, {
+                  onSuccess: () => {
+                    router.push("/admin/scientists");
+                    router.refresh();
+                  },
+                }),
+              )}
               className="space-y-4"
             >
               <div className="grid grid-cols-2 gap-4">

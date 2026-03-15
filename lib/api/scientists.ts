@@ -3,6 +3,17 @@ import { Scientist } from "@/types/scientist";
 import { fetchAPI } from ".";
 import { Publication } from "@/types/publication";
 
+async function readErrorMessage(response: Response, fallback: string) {
+  try {
+    const body = await response.json();
+    if (typeof body?.message === "string" && body.message.length > 0) {
+      return body.message;
+    }
+  } catch {}
+
+  return fallback;
+}
+
 export async function fetchScientists(
   page: number = 1,
   pageSize: number = 20,
@@ -87,10 +98,18 @@ export async function createScientist(data: any) {
     formData.append("photo", photo);
   }
 
-  return fetchAPI("/scientists", {
+  const response = await fetchAPI("/scientists", {
     method: "POST",
     body: formData,
   });
+
+  if (!response.ok) {
+    throw new Error(
+      await readErrorMessage(response, "Failed to create scientist"),
+    );
+  }
+
+  return (await response.json()) as Scientist;
 }
 
 export async function updateScientist(id: string, data: any) {
@@ -124,7 +143,15 @@ export async function updateScientist(id: string, data: any) {
 }
 
 export async function deleteScientist(id: string) {
-  return fetchAPI(`/scientists/${id}`, {
+  const response = await fetchAPI(`/scientists/${id}`, {
     method: "DELETE",
   });
+
+  if (!response.ok) {
+    throw new Error(
+      await readErrorMessage(response, "Failed to delete scientist"),
+    );
+  }
+
+  return response;
 }
