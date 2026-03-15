@@ -68,9 +68,8 @@ jobs:
             sudo chown -R 1001:1001 /opt/daab/data
             sudo docker run -d --name daab-client -p 80:3000 \
               --restart unless-stopped \
-              -v /opt/daab/data:/app/data \
               -e BETTER_AUTH_SECRET=${{ secrets.BETTER_AUTH_SECRET }} \
               -e BETTER_AUTH_URL=${{ secrets.BETTER_AUTH_URL }} \
-              -e AUTH_DB_PATH=/app/data/sqlite.db \
+              -e AUTH_DB_PATH=./sqlite.db \
               ${{ steps.meta.outputs.tags }}
             sudo docker logout
