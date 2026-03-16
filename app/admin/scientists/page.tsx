@@ -38,10 +38,11 @@ import {
 } from "lucide-react";
 import { Scientist } from "@/types/scientist";
 import { fetchScientists, deleteScientist } from "@/lib/api/scientists";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 export default function ScientistsPage() {
   const router = useRouter();
+  const queryClient = useQueryClient();
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [scientistToDelete, setScientistToDelete] = useState<Scientist | null>(
@@ -50,9 +51,11 @@ export default function ScientistsPage() {
 
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ["scientists"],
-    queryFn: async () => await fetchScientists(1, 100)
-  })
-  const scientists = data?.items
+    queryFn: async () => await fetchScientists(1, 100),
+    staleTime: 0,
+    refetchOnMount: "always",
+  });
+  const scientists = data?.items;
 
   const handleEdit = (scientistId: string) => {
     router.push(`/admin/scientists/${scientistId}/edit`);
@@ -75,6 +78,7 @@ export default function ScientistsPage() {
 
     try {
       await deleteScientist(scientistToDelete.id);
+      await queryClient.invalidateQueries({ queryKey: ["scientists"] });
     } catch (err) {
       console.error("Failed to delete scientist:", err);
     } finally {

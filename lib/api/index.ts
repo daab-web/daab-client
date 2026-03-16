@@ -1,10 +1,15 @@
 const apiBase = process.env.NEXT_PUBLIC_SERVER;
 
 export async function fetchAPI(path: string, options?: RequestInit) {
-  const makeRequest = () => fetch(apiBase + path, {
-    ...options,
-    credentials: "include",
-  });
+  const method = (options?.method ?? "GET").toUpperCase();
+  const cache = options?.cache ?? (method === "GET" ? "no-store" : undefined);
+
+  const makeRequest = () =>
+    fetch(apiBase + path, {
+      ...options,
+      credentials: "include",
+      cache,
+    });
 
   let res = await makeRequest();
 
