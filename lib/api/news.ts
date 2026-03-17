@@ -22,3 +22,23 @@ export async function getNewsByIdOrSlug(idOrSlug: string) {
 
   return news;
 }
+
+export async function createNews(formData: FormData) {
+  return fetchAPI("/news", {
+    method: "POST",
+    body: formData,
+  });
+}
+
+export async function updateNews(id: string, formData: FormData) {
+  return fetchAPI(`/news/${id}`, {
+    method: "PUT",
+    body: formData,
+  });
+}
+
+export async function deleteNews(id: string) {
+  return fetchAPI(`/news/${id}`, {
+    method: "DELETE",
+  });
+}

@@ -57,13 +57,15 @@ function onError(error: Error) {
 
 interface NewsEditorProps {
   onContentChange?: (editorState: SerializedEditorState) => void
+  initialEditorState?: SerializedEditorState | null
 }
 
-export default function NewsEditor({ onContentChange }: NewsEditorProps = {}) {
+export default function NewsEditor({ onContentChange, initialEditorState }: NewsEditorProps = {}) {
   const initialConfig = {
     namespace: "NewsEditor",
     theme,
     onError,
+    editorState: initialEditorState ? JSON.stringify(initialEditorState) : undefined,
     nodes: [
       HeadingNode,
       ListNode,
