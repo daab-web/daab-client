@@ -59,6 +59,14 @@ export default function AdminSidebar() {
             <SidebarMenu>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
+                  <Link href="/admin/news/management">
+                    <FileText className="mr-2 h-4 w-4" />
+                    News
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
                   <Link href="/admin/applications">
                     <ClipboardList className="mr-2 h-4 w-4" />
                     Applications

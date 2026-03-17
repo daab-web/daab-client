@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -37,7 +37,10 @@ import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
 import NewsEditor from "@/components/news-editor";
 import NewsViewer from "@/components/news-viewer";
+import { createNews, getNewsByIdOrSlug, updateNews } from "@/lib/api/news";
 import {
+  Loader2,
+  Plus,
   Save,
   Eye,
   Calendar as CalendarIcon,
@@ -49,6 +52,7 @@ import { SerializedEditorState } from "lexical";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const CATEGORIES = [
   "Events",
@@ -83,99 +87,200 @@ interface NewsFormData {
   title: string;
   slug: string;
   excerpt: string;
-  thumbnail: FileList;
+  thumbnail?: FileList;
   category: string;
   authorName: string;
   publishedDate: Date;
 }
 
+const DEFAULT_FORM_VALUES: Omit<NewsFormData, "thumbnail"> = {
+  title: "",
+  slug: "",
+  excerpt: "",
+  category: "",
+  authorName: "",
+  publishedDate: new Date(),
+};
+
 export default function NewsEditorPage() {
+  const router = useRouter();
+  const [editId, setEditId] = useState<string | null>(null);
+
   const {
     register,
     handleSubmit,
     watch,
     setValue,
+    reset,
     control,
     formState: { errors },
   } = useForm<NewsFormData>({
-    defaultValues: {
-      title: "",
-      slug: "",
-      excerpt: "",
-      category: "",
-      authorName: "",
-      publishedDate: new Date(),
-    },
+    defaultValues: DEFAULT_FORM_VALUES,
   });
 
   const [thumbnailPreview, setThumbnailPreview] = useState("");
+  const [originalThumbnailPreview, setOriginalThumbnailPreview] = useState("");
+  const [hasNewThumbnail, setHasNewThumbnail] = useState(false);
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState("");
   const [editorState, setEditorState] = useState<SerializedEditorState | null>(
     null,
   );
+  const [editorKey, setEditorKey] = useState(0);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [isLoadingArticle, setIsLoadingArticle] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
+  const [editingNewsId, setEditingNewsId] = useState<string | null>(null);
 
-  // Watch form values for preview and slug generation
   const watchTitle = watch("title");
-  const watchThumbnail = watch("thumbnail");
   const watchPublishedDate = watch("publishedDate");
 
+  const extractErrorMessage = async (response: Response) => {
+    let errorMessage = "Please try again or check the server response.";
+    try {
+      const errorData = await response.json();
+      if (errorData.message) {
+        errorMessage = errorData.message;
+      }
+      if (errorData.errors) {
+        if (Array.isArray(errorData.errors)) {
+          errorMessage = errorData.errors.join(", ");
+        } else {
+          errorMessage = Object.values(
+            errorData.errors as Record<string, string[]>,
+          )
+            .flat()
+            .join(", ");
+        }
+      }
+    } catch {
+      errorMessage = `Server error: ${response.status} ${response.statusText}`;
+    }
+    return errorMessage;
+  };
+
+  const resetFormForCreate = () => {
+    reset(DEFAULT_FORM_VALUES);
+    setTags([]);
+    setTagInput("");
+    setEditorState(null);
+    setThumbnailPreview("");
+    setOriginalThumbnailPreview("");
+    setHasNewThumbnail(false);
+    setEditingNewsId(null);
+    setEditorKey((prev) => prev + 1);
+  };
+
+  const loadNewsForEdit = async (id: string) => {
+    setIsLoadingArticle(true);
+    try {
+      const article = await getNewsByIdOrSlug(id);
+      setEditingNewsId(article.id);
+      setValue("title", article.title);
+      setValue("slug", article.slug ?? "");
+      setValue("excerpt", article.excerpt ?? "");
+      setValue("category", article.category ?? "");
+      setValue("authorName", article.authorName ?? "");
+      setValue(
+        "publishedDate",
+        article.publishedDate ? new Date(article.publishedDate) : new Date(),
+      );
+      setTags(Array.isArray(article.tags) ? article.tags : []);
+      setEditorState(article.editorState ?? null);
+      const existingThumbnail = article.thumbnail ?? "";
+      setThumbnailPreview(existingThumbnail);
+      setOriginalThumbnailPreview(existingThumbnail);
+      setHasNewThumbnail(false);
+      setEditorKey((prev) => prev + 1);
+      toast.success("Edit mode enabled", {
+        description: `You are now editing \"${article.title}\".`,
+      });
+    } catch {
+      toast.error("Could not open article", {
+        description: "Please try again.",
+      });
+    } finally {
+      setIsLoadingArticle(false);
+    }
+  };
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    setEditId(params.get("editId"));
+  }, []);
+
+  useEffect(() => {
+    if (!editId) {
+      return;
+    }
+
+    void loadNewsForEdit(editId);
+  }, [editId]);
+
   const onSubmit = async (data: NewsFormData) => {
+    if (!editorState) {
+      toast.error("Content is required", {
+        description: "Please add article content before saving.",
+      });
+      return;
+    }
+
     const formData = new FormData();
     formData.append("title", data.title);
-    formData.append("slug", data.slug);
-    formData.append("excerpt", data.excerpt);
-    formData.append("category", data.category);
-    formData.append("authorName", data.authorName);
+    if (data.slug) {
+      formData.append("slug", data.slug);
+    }
+    if (data.excerpt) {
+      formData.append("excerpt", data.excerpt);
+    }
+    if (data.category) {
+      formData.append("category", data.category);
+    }
+    if (data.authorName) {
+      formData.append("authorName", data.authorName);
+    }
     formData.append("tags", JSON.stringify(tags));
-    formData.append(
-      "publishedDate",
-      data.publishedDate.toISOString().split("T")[0],
-    );
+    if (data.publishedDate) {
+      formData.append(
+        "publishedDate",
+        data.publishedDate.toISOString().split("T")[0],
+      );
+    }
     formData.append("editorState", JSON.stringify(editorState));
 
     if (data.thumbnail?.[0]) {
       formData.append("thumbnail", data.thumbnail[0]);
     }
 
-    // TODO: vro, its 5am
+    setIsSaving(true);
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_SERVER}/news`, {
-        method: "POST",
-        body: formData,
-      });
+      const response = editingNewsId
+        ? await updateNews(editingNewsId, formData)
+        : await createNews(formData);
+
       if (!response.ok) {
-        let errorMessage = "Please try again or check the server response.";
-        try {
-          const errorData = await response.json();
-          if (errorData.message) {
-            errorMessage = errorData.message;
-          }
-          if (errorData.errors) {
-            if (Array.isArray(errorData.errors)) {
-              errorMessage = errorData.errors.join(", ");
-            } else {
-              errorMessage = Object.values(errorData.errors).flat().join(", ");
-            }
-          }
-        } catch {
-          errorMessage = `Server error: ${response.status} ${response.statusText}`;
-        }
+        const errorMessage = await extractErrorMessage(response);
         toast.error("Save failed", {
           description: errorMessage,
         });
         return;
       }
 
-      toast.success("Article saved", {
-        description: "Your news article was saved successfully.",
+      toast.success(editingNewsId ? "Article updated" : "Article created", {
+        description: editingNewsId
+          ? "Your changes were saved successfully."
+          : "Your news article was saved successfully.",
       });
-    } catch (err) {
-      console.log("unable to do shit", err);
+
+      if (!editingNewsId) {
+        resetFormForCreate();
+      }
+    } catch {
       toast.error("Save failed", {
         description: "Network error. Please try again.",
       });
+    } finally {
+      setIsSaving(false);
     }
   };
 
@@ -186,32 +291,35 @@ export default function NewsEditorPage() {
   const handleThumbnailChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      // Validate file type
       if (!file.type.startsWith("image/")) {
-        alert("Please select an image file");
+        toast.error("Invalid file", {
+          description: "Please select an image file.",
+        });
         e.target.value = "";
         return;
       }
 
-      // Validate file size (e.g., max 5MB)
       if (file.size > 5 * 1024 * 1024) {
-        alert("File size must be less than 5MB");
+        toast.error("Invalid file", {
+          description: "File size must be less than 5MB.",
+        });
         e.target.value = "";
         return;
       }
 
-      // Generate preview
       const reader = new FileReader();
       reader.onloadend = () => {
         setThumbnailPreview(reader.result as string);
+        setHasNewThumbnail(true);
       };
       reader.readAsDataURL(file);
     }
   };
 
   const handleRemoveThumbnail = () => {
-    setValue("thumbnail", {} as FileList);
-    setThumbnailPreview("");
+    setValue("thumbnail", undefined);
+    setThumbnailPreview(editingNewsId ? originalThumbnailPreview : "");
+    setHasNewThumbnail(false);
   };
 
   const handleAddTag = (tag: string) => {
@@ -233,7 +341,6 @@ export default function NewsEditorPage() {
     }
   };
 
-  // Auto-generate slug from title
   const generateSlug = (text: string) => {
     return text
       .toLowerCase()
@@ -254,22 +361,49 @@ export default function NewsEditorPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">News Editor</h1>
-          <p className="text-muted-foreground">Create and edit news articles</p>
+          <p className="text-muted-foreground">
+            {isLoadingArticle
+              ? "Loading article..."
+              : editingNewsId
+                ? "Editing selected article"
+                : "Create a new news article"}
+          </p>
         </div>
         <div className="flex gap-2">
+          <Button
+            variant="outline"
+            onClick={() => router.push("/admin/news/management")}
+          >
+            Manage Articles
+          </Button>
+          {editingNewsId ? (
+            <Button
+              variant="outline"
+              onClick={() => {
+                resetFormForCreate();
+                router.push("/admin/news/editor");
+              }}
+            >
+              <Plus className="mr-2 h-4 w-4" />
+              New Article
+            </Button>
+          ) : null}
           <Button variant="outline" onClick={handlePreview}>
             <Eye className="mr-2 h-4 w-4" />
             Preview
           </Button>
-          <Button onClick={handleSubmit(onSubmit)}>
-            <Save className="mr-2 h-4 w-4" />
-            Save
+          <Button onClick={handleSubmit(onSubmit)} disabled={isSaving}>
+            {isSaving ? (
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            ) : (
+              <Save className="mr-2 h-4 w-4" />
+            )}
+            {editingNewsId ? "Update" : "Save"}
           </Button>
         </div>
       </div>
 
       <div className="grid gap-4 md:grid-cols-3">
-        {/* Main Content - 2 columns */}
         <div className="md:col-span-2 space-y-4">
           <Card>
             <CardHeader>
@@ -329,12 +463,15 @@ export default function NewsEditorPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <NewsEditor onContentChange={setEditorState} />
+              <NewsEditor
+                key={editorKey}
+                initialEditorState={editorState}
+                onContentChange={setEditorState}
+              />
             </CardContent>
           </Card>
         </div>
 
-        {/* Sidebar - 1 column */}
         <div className="space-y-4">
           <Card>
             <CardHeader>
@@ -357,6 +494,11 @@ export default function NewsEditorPage() {
                 <p className="text-xs text-muted-foreground">
                   Max file size: 5MB. Accepted formats: JPG, PNG, GIF, WebP
                 </p>
+                {editingNewsId ? (
+                  <p className="text-xs text-muted-foreground">
+                    Uploading a new file replaces the current image.
+                  </p>
+                ) : null}
               </div>
               {thumbnailPreview && (
                 <div className="space-y-2">
@@ -367,16 +509,18 @@ export default function NewsEditorPage() {
                       className="w-full h-full object-cover"
                     />
                   </div>
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="sm"
-                    onClick={handleRemoveThumbnail}
-                    className="w-full"
-                  >
-                    <X className="mr-2 h-4 w-4" />
-                    Remove Image
-                  </Button>
+                  {hasNewThumbnail ? (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={handleRemoveThumbnail}
+                      className="w-full"
+                    >
+                      <X className="mr-2 h-4 w-4" />
+                      Remove New Image
+                    </Button>
+                  ) : null}
                 </div>
               )}
               {!thumbnailPreview && (
@@ -579,7 +723,11 @@ export default function NewsEditorPage() {
               <div className="flex items-center gap-4 text-sm text-muted-foreground">
                 <div className="flex items-center gap-1">
                   <CalendarIcon className="h-4 w-4" />
-                  <span>{format(watchPublishedDate, "PPP")}</span>
+                  <span>
+                    {watchPublishedDate
+                      ? format(watchPublishedDate, "PPP")
+                      : "Unpublished"}
+                  </span>
                 </div>
                 {watch("authorName") && (
                   <div className="flex items-center gap-1">
