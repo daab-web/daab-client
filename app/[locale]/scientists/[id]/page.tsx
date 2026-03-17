@@ -1,17 +1,26 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
-import { Building2, Calendar, Globe, Linkedin, MapPin, Sparkles } from "lucide-react";
+import {
+  Building2,
+  Calendar,
+  Globe,
+  Linkedin,
+  MapPin,
+  Sparkles,
+} from "lucide-react";
 
 import { Link } from "@/i18n/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import NewsViewer from "@/components/news-viewer";
 import { Separator } from "@/components/ui/separator";
 import {
   fetchPublicationsByScientistId,
   fetchScientistById,
 } from "@/lib/api/scientists";
+import { parseScientistDescription } from "@/lib/scientist-description";
 
 type Props = {
   params: Promise<{ locale: string; id: string }>;
@@ -30,6 +39,7 @@ export default async function ScientistDetailPage({ params }: Props) {
   const hasLinks =
     scientist.linkedInUrl || scientist.orcid || scientist.website;
   const hasPublications = publications.length > 0;
+  const descriptionState = parseScientistDescription(scientist.description);
 
   return (
     <div className="relative mx-auto flex w-full max-w-7xl flex-col gap-10 overflow-hidden px-4 py-8 md:py-10">
@@ -65,7 +75,10 @@ export default async function ScientistDetailPage({ params }: Props) {
                     {t("detail.dateOfBirth")}
                   </span>
                   <p className="mt-2 text-sm font-medium">
-                    {new Date(scientist.dateOfBirth).toLocaleDateString(locale, { year: "numeric", month: "long", day: "numeric" })}
+                    {new Date(scientist.dateOfBirth).toLocaleDateString(
+                      locale,
+                      { year: "numeric", month: "long", day: "numeric" },
+                    )}
                   </p>
                 </div>
               )}
@@ -114,16 +127,16 @@ export default async function ScientistDetailPage({ params }: Props) {
               </div>
             )}
 
-            {scientist.description && (
+            {descriptionState && (
               <>
                 <Separator className="my-6" />
                 <div>
                   <h2 className="mb-3 text-lg font-semibold lg:text-xl">
                     {t("detail.profile")}
                   </h2>
-                  <p className="max-w-3xl leading-8 text-muted-foreground">
-                    {scientist.description}
-                  </p>
+                  <div className="max-w-3xl leading-8 text-muted-foreground">
+                    <NewsViewer editorState={descriptionState} />
+                  </div>
                 </div>
               </>
             )}

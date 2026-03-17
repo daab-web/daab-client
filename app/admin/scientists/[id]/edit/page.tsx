@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { SerializedEditorState } from "lexical";
 import {
   Card,
   CardContent,
@@ -20,11 +21,15 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { ArrowLeft, Plus, Trash2 } from "lucide-react";
+import NewsEditor from "@/components/news-editor";
+import {
+  parseScientistDescription,
+  serializeScientistDescription,
+} from "@/lib/scientist-description";
 import { Scientist } from "@/types/scientist";
 import { fetchScientistById, updateScientist } from "@/lib/api/scientists";
 import { ScientistFormData, scientistSchema } from "../../new/types";
@@ -39,6 +44,9 @@ export default function EditScientistPage() {
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [descriptionState, setDescriptionState] =
+    useState<SerializedEditorState | null>(null);
+  const [editorKey, setEditorKey] = useState(0);
 
   const form = useForm<ScientistFormData>({
     resolver: zodResolver(scientistSchema),
@@ -76,6 +84,10 @@ export default function EditScientistPage() {
 
     try {
       const data: Scientist = await fetchScientistById(scientistId as string);
+      const parsedDescription = parseScientistDescription(data.description);
+
+      setDescriptionState(parsedDescription);
+      setEditorKey((prev) => prev + 1);
 
       form.reset({
         firstName: data.firstName,
@@ -108,7 +120,10 @@ export default function EditScientistPage() {
     setIsSaving(true);
 
     try {
-      await updateScientist(scientistId as string, values);
+      await updateScientist(scientistId as string, {
+        ...values,
+        description: serializeScientistDescription(descriptionState),
+      });
       setSuccess("Scientist updated successfully!");
 
       setTimeout(() => {
@@ -297,15 +312,21 @@ export default function EditScientistPage() {
               <FormField
                 control={form.control}
                 name="description"
-                render={({ field }) => (
+                render={() => (
                   <FormItem>
                     <FormLabel>Description (optional)</FormLabel>
                     <FormControl>
-                      <Textarea
-                        placeholder="Brief description..."
-                        disabled={isSaving}
-                        rows={4}
-                        {...field}
+                      <NewsEditor
+                        key={editorKey}
+                        initialEditorState={descriptionState}
+                        onContentChange={(editorState) => {
+                          setDescriptionState(editorState);
+                          form.setValue(
+                            "description",
+                            serializeScientistDescription(editorState),
+                            { shouldDirty: true },
+                          );
+                        }}
                       />
                     </FormControl>
                     <FormMessage />
