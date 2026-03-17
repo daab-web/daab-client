@@ -15,5 +15,6 @@ export type Scientist = {
   website?: string;
   email?: string;
   phoneNumber?: string;
+  dateOfBirth?: string | null;
   publications?: Array<{ id?: string; title: string; url?: string }>;
 };

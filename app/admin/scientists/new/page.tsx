@@ -46,6 +46,7 @@ export default function AddScientistPage() {
       linkedInUrl: "",
       orcId: "",
       website: "",
+      dateOfBirth: "",
       photo: null,
       publications: [],
     },
@@ -334,6 +335,20 @@ export default function AddScientistPage() {
                   )}
                 />
               </div>
+
+              <FormField
+                control={form.control}
+                name="dateOfBirth"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Date of Birth (optional)</FormLabel>
+                    <FormControl>
+                      <Input type="date" disabled={isPending} {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
 
               <FormField
                 control={form.control}

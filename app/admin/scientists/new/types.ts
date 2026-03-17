@@ -21,6 +21,7 @@ export const scientistSchema = z.object({
   linkedInUrl: z.string().url().optional().or(z.literal("")),
   orcId: z.string().optional(),
   website: z.string().url().optional().or(z.literal("")),
+  dateOfBirth: z.string().optional(),
   photo: z.instanceof(File).optional().nullable(),
   publications: z.array(publicationSchema).optional(),
 });
