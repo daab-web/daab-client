@@ -1,25 +1,25 @@
-"use client"
+"use client";
 
-import { LexicalComposer } from "@lexical/react/LexicalComposer"
-import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin"
-import { ContentEditable } from "@lexical/react/LexicalContentEditable"
-import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin"
-import { LinkPlugin } from "@lexical/react/LexicalLinkPlugin"
-import { ListPlugin } from "@lexical/react/LexicalListPlugin"
-import { MarkdownShortcutPlugin } from "@lexical/react/LexicalMarkdownShortcutPlugin"
-import { TRANSFORMERS } from "@lexical/markdown"
-import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary"
-import { HeadingNode, QuoteNode } from "@lexical/rich-text"
-import { ListNode, ListItemNode } from "@lexical/list"
-import { CodeNode, CodeHighlightNode } from "@lexical/code"
-import { LinkNode, AutoLinkNode } from "@lexical/link"
-import { cn } from "@/lib/utils"
+import { LexicalComposer } from "@lexical/react/LexicalComposer";
+import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
+import { ContentEditable } from "@lexical/react/LexicalContentEditable";
+import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
+import { ListPlugin } from "@lexical/react/LexicalListPlugin";
+import { MarkdownShortcutPlugin } from "@lexical/react/LexicalMarkdownShortcutPlugin";
+import { TRANSFORMERS } from "@lexical/markdown";
+import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
+import { HeadingNode, QuoteNode } from "@lexical/rich-text";
+import { ListNode, ListItemNode } from "@lexical/list";
+import { CodeNode, CodeHighlightNode } from "@lexical/code";
+import { LinkNode, AutoLinkNode } from "@lexical/link";
+import { cn } from "@/lib/utils";
 
-import ToolbarPlugin from "./plugins/toolbar-plugin"
-import ImagesPlugin from "./plugins/image-plugin"
-import { ImageNode } from "./nodes/image-node"
-import { useEditorContent } from "./plugins/editor-content-plugin"
-import { SerializedEditorState } from "lexical"
+import ToolbarPlugin from "./plugins/toolbar-plugin";
+import ImagesPlugin from "./plugins/image-plugin";
+import LinkPlugin from "./plugins/link-plugin";
+import { ImageNode } from "./nodes/image-node";
+import { useEditorContent } from "./plugins/editor-content-plugin";
+import { SerializedEditorState } from "lexical";
 
 const theme = {
   paragraph: "mb-2 text-base",
@@ -49,23 +49,28 @@ const theme = {
   code: "bg-muted block p-2 rounded font-mono text-sm my-2",
   quote: "border-l-4 border-muted-foreground pl-4 italic my-4",
   image: "inline-block",
-}
+};
 
 function onError(error: Error) {
-  console.error(error)
+  console.error(error);
 }
 
 interface NewsEditorProps {
-  onContentChange?: (editorState: SerializedEditorState) => void
-  initialEditorState?: SerializedEditorState | null
+  onContentChange?: (editorState: SerializedEditorState) => void;
+  initialEditorState?: SerializedEditorState | null;
 }
 
-export default function NewsEditor({ onContentChange, initialEditorState }: NewsEditorProps = {}) {
+export default function NewsEditor({
+  onContentChange,
+  initialEditorState,
+}: NewsEditorProps = {}) {
   const initialConfig = {
     namespace: "NewsEditor",
     theme,
     onError,
-    editorState: initialEditorState ? JSON.stringify(initialEditorState) : undefined,
+    editorState: initialEditorState
+      ? JSON.stringify(initialEditorState)
+      : undefined,
     nodes: [
       HeadingNode,
       ListNode,
@@ -77,7 +82,7 @@ export default function NewsEditor({ onContentChange, initialEditorState }: News
       AutoLinkNode,
       ImageNode,
     ],
-  }
+  };
 
   return (
     <LexicalComposer initialConfig={initialConfig}>
@@ -90,7 +95,7 @@ export default function NewsEditor({ onContentChange, initialEditorState }: News
               <ContentEditable
                 className={cn(
                   "min-h-112.5 resize-none overflow-auto px-4 py-3 text-base",
-                  "outline-none focus-visible:outline-none"
+                  "outline-none focus-visible:outline-none",
                 )}
               />
             }
@@ -102,17 +107,21 @@ export default function NewsEditor({ onContentChange, initialEditorState }: News
             ErrorBoundary={LexicalErrorBoundary}
           />
           <HistoryPlugin />
-          <LinkPlugin />
+          <LinkPlugin hasLinkAttributes />
           <ListPlugin />
           <ImagesPlugin />
           <MarkdownShortcutPlugin transformers={TRANSFORMERS} />
         </div>
       </div>
     </LexicalComposer>
-  )
+  );
 }
 
-function EditorContentPlugin({ onChange }: { onChange: (editorState: SerializedEditorState) => void }) {
-  useEditorContent(onChange)
-  return null
+function EditorContentPlugin({
+  onChange,
+}: {
+  onChange: (editorState: SerializedEditorState) => void;
+}) {
+  useEditorContent(onChange);
+  return null;
 }
