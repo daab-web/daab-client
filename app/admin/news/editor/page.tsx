@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm, Controller } from "react-hook-form";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -47,12 +47,43 @@ import {
   User,
   X,
   Image as ImageIcon,
+  Paperclip,
+  Upload,
+  FileText,
+  FileImage,
+  FileVideo,
+  FileAudio,
+  File,
 } from "lucide-react";
 import { SerializedEditorState } from "lexical";
 import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+
+interface Attachment {
+  id: string;
+  file: File;
+  caption: string | null;
+}
+
+function getFileIcon(file: File) {
+  if (file.type.startsWith("image/"))
+    return <FileImage className="h-4 w-4 text-blue-500" />;
+  if (file.type.startsWith("video/"))
+    return <FileVideo className="h-4 w-4 text-purple-500" />;
+  if (file.type.startsWith("audio/"))
+    return <FileAudio className="h-4 w-4 text-green-500" />;
+  if (file.type === "application/pdf" || file.type.includes("text"))
+    return <FileText className="h-4 w-4 text-orange-500" />;
+  return <File className="h-4 w-4 text-muted-foreground" />;
+}
+
+function formatBytes(bytes: number): string {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
 
 const CATEGORIES = [
   "Events",
@@ -85,7 +116,6 @@ const COMMON_TAGS = [
 
 interface NewsFormData {
   title: string;
-  slug: string;
   excerpt: string;
   thumbnail?: FileList;
   category: string;
@@ -95,7 +125,6 @@ interface NewsFormData {
 
 const DEFAULT_FORM_VALUES: Omit<NewsFormData, "thumbnail"> = {
   title: "",
-  slug: "",
   excerpt: "",
   category: "",
   authorName: "",
@@ -131,6 +160,9 @@ export default function NewsEditorPage() {
   const [isLoadingArticle, setIsLoadingArticle] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [editingNewsId, setEditingNewsId] = useState<string | null>(null);
+  const [attachments, setAttachments] = useState<Attachment[]>([]);
+  const [isDragOver, setIsDragOver] = useState(false);
+  const attachmentInputRef = useRef<HTMLInputElement>(null);
 
   const watchTitle = watch("title");
   const watchPublishedDate = watch("publishedDate");
@@ -177,7 +209,6 @@ export default function NewsEditorPage() {
       const article = await getNewsByIdOrSlug(id);
       setEditingNewsId(article.id);
       setValue("title", article.title);
-      setValue("slug", article.slug ?? "");
       setValue("excerpt", article.excerpt ?? "");
       setValue("category", article.category ?? "");
       setValue("authorName", article.authorName ?? "");
@@ -227,9 +258,6 @@ export default function NewsEditorPage() {
 
     const formData = new FormData();
     formData.append("title", data.title);
-    if (data.slug) {
-      formData.append("slug", data.slug);
-    }
     if (data.excerpt) {
       formData.append("excerpt", data.excerpt);
     }
@@ -264,6 +292,38 @@ export default function NewsEditorPage() {
           description: errorMessage,
         });
         return;
+      }
+
+      const { id } = await response.json();
+
+      // Upload attachments if any
+      if (attachments.length > 0 && id) {
+        const failed: string[] = [];
+        await Promise.all(
+          attachments.map(async (attachment) => {
+            const attachmentData = new FormData();
+            attachmentData.append("file", attachment.file);
+            if (attachment.caption) {
+              attachmentData.append("caption", attachment.caption);
+            }
+            try {
+              const res = await fetch(
+                `${process.env.NEXT_PUBLIC_SERVER}/news/${id}/attachments`,
+                { method: "POST", body: attachmentData },
+              );
+              if (!res.ok) failed.push(attachment.file.name);
+            } catch {
+              failed.push(attachment.file.name);
+            }
+          }),
+        );
+
+        if (failed.length > 0) {
+          toast.warning("Article saved with issues", {
+            description: `Some attachments failed to upload: ${failed.join(", ")}`,
+          });
+          return;
+        }
       }
 
       toast.success(editingNewsId ? "Article updated" : "Article created", {
@@ -349,11 +409,51 @@ export default function NewsEditorPage() {
   };
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const newTitle = e.target.value;
-    setValue("title", newTitle);
-    if (!watch("slug")) {
-      setValue("slug", generateSlug(newTitle));
+    setValue("title", e.target.value);
+  };
+
+  const addAttachmentFiles = (files: FileList | File[]) => {
+    const fileArray = Array.from(files);
+    const newAttachments: Attachment[] = fileArray.map((file) => ({
+      id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
+      file,
+      caption: null,
+    }));
+    setAttachments((prev) => [...prev, ...newAttachments]);
+  };
+
+  const handleAttachmentInputChange = (
+    e: React.ChangeEvent<HTMLInputElement>,
+  ) => {
+    if (e.target.files && e.target.files.length > 0) {
+      addAttachmentFiles(e.target.files);
+      e.target.value = "";
     }
+  };
+
+  const handleAttachmentDrop = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragOver(false);
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      addAttachmentFiles(e.dataTransfer.files);
+    }
+  };
+
+  const handleAttachmentDragOver = (e: React.DragEvent<HTMLDivElement>) => {
+    e.preventDefault();
+    setIsDragOver(true);
+  };
+
+  const handleAttachmentDragLeave = () => setIsDragOver(false);
+
+  const handleRemoveAttachment = (id: string) => {
+    setAttachments((prev) => prev.filter((a) => a.id !== id));
+  };
+
+  const handleAttachmentCaptionChange = (id: string, caption: string) => {
+    setAttachments((prev) =>
+      prev.map((a) => (a.id === id ? { ...a, caption: caption || null } : a)),
+    );
   };
 
   return (
@@ -426,22 +526,6 @@ export default function NewsEditorPage() {
                     {errors.title.message}
                   </p>
                 )}
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="slug">Slug *</Label>
-                <Input
-                  id="slug"
-                  placeholder="article-url-slug"
-                  {...register("slug", { required: "Slug is required" })}
-                />
-                {errors.slug && (
-                  <p className="text-xs text-destructive">
-                    {errors.slug.message}
-                  </p>
-                )}
-                <p className="text-xs text-muted-foreground">
-                  Auto-generated from title, but you can edit it
-                </p>
               </div>
               <div className="space-y-2">
                 <Label htmlFor="excerpt">Excerpt</Label>
@@ -677,6 +761,104 @@ export default function NewsEditorPage() {
                     ))}
                 </div>
               </div>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center gap-2">
+                <Paperclip className="h-4 w-4" />
+                Attachments
+              </CardTitle>
+              <CardDescription>
+                Attach files to this article (uploaded after saving)
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              {/* Drop zone */}
+              <div
+                onDrop={handleAttachmentDrop}
+                onDragOver={handleAttachmentDragOver}
+                onDragLeave={handleAttachmentDragLeave}
+                onClick={() => attachmentInputRef.current?.click()}
+                className={cn(
+                  "flex flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed p-6 text-center cursor-pointer transition-colors",
+                  isDragOver
+                    ? "border-primary bg-primary/5"
+                    : "border-muted-foreground/25 hover:border-primary/50 hover:bg-muted/20",
+                )}
+              >
+                <div className="rounded-full bg-muted p-2">
+                  <Upload className="h-4 w-4 text-muted-foreground" />
+                </div>
+                <div>
+                  <p className="text-sm font-medium">
+                    {isDragOver ? "Drop files here" : "Click or drag files"}
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-0.5">
+                    Any file type supported
+                  </p>
+                </div>
+                <input
+                  ref={attachmentInputRef}
+                  type="file"
+                  multiple
+                  className="hidden"
+                  onChange={handleAttachmentInputChange}
+                />
+              </div>
+
+              {/* Attachment list */}
+              {attachments.length > 0 && (
+                <div className="space-y-2">
+                  {attachments.map((attachment) => (
+                    <div
+                      key={attachment.id}
+                      className="group rounded-lg border bg-muted/20 p-3 space-y-2 transition-colors hover:bg-muted/40"
+                    >
+                      <div className="flex items-center gap-2">
+                        <div className="shrink-0">
+                          {getFileIcon(attachment.file)}
+                        </div>
+                        <div className="min-w-0 flex-1">
+                          <p className="text-sm font-medium truncate">
+                            {attachment.file.name}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            {formatBytes(attachment.file.size)}
+                          </p>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveAttachment(attachment.id)}
+                          className="shrink-0 rounded p-0.5 text-muted-foreground opacity-0 group-hover:opacity-100 hover:text-destructive hover:bg-destructive/10 transition-all"
+                        >
+                          <X className="h-3.5 w-3.5" />
+                        </button>
+                      </div>
+                      <Input
+                        placeholder="Caption (optional)"
+                        value={attachment.caption ?? ""}
+                        onChange={(e) =>
+                          handleAttachmentCaptionChange(
+                            attachment.id,
+                            e.target.value,
+                          )
+                        }
+                        className="h-7 text-xs"
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {attachments.length > 0 && (
+                <p className="text-xs text-muted-foreground">
+                  {attachments.length} file
+                  {attachments.length !== 1 ? "s" : ""} queued — will be
+                  uploaded after saving
+                </p>
+              )}
             </CardContent>
           </Card>
         </div>

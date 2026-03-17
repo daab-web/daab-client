@@ -24,5 +24,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: "/((?!api|trpc|test|_next|_vercel|.*\\..*).*)",
+  matcher: "/((?!api|admin|trpc|test|_next|_vercel|.*\\..*).*)",
 };
