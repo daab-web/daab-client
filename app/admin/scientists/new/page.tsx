@@ -1,8 +1,10 @@
 "use client";
 
+import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useForm, useFieldArray } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { SerializedEditorState } from "lexical";
 import {
   Card,
   CardContent,
@@ -19,16 +21,19 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Textarea } from "@/components/ui/textarea";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
+import NewsEditor from "@/components/news-editor";
 import { ArrowLeft, Plus, Trash2 } from "lucide-react";
+import { serializeScientistDescription } from "@/lib/scientist-description";
 import TagInput from "./tag-input";
 import { ScientistFormData, scientistSchema } from "./types";
 import { useScientistMutation } from "./hooks";
 
 export default function AddScientistPage() {
   const router = useRouter();
+  const [descriptionState, setDescriptionState] =
+    useState<SerializedEditorState | null>(null);
 
   const form = useForm<ScientistFormData>({
     resolver: zodResolver(scientistSchema),
@@ -82,12 +87,19 @@ export default function AddScientistPage() {
           <Form {...form}>
             <form
               onSubmit={form.handleSubmit((data) =>
-                mutate(data, {
-                  onSuccess: () => {
-                    router.push("/admin/scientists");
-                    router.refresh();
+                mutate(
+                  {
+                    ...data,
+                    description:
+                      serializeScientistDescription(descriptionState),
                   },
-                }),
+                  {
+                    onSuccess: () => {
+                      router.push("/admin/scientists");
+                      router.refresh();
+                    },
+                  },
+                ),
               )}
               className="space-y-4"
             >
@@ -224,15 +236,19 @@ export default function AddScientistPage() {
               <FormField
                 control={form.control}
                 name="description"
-                render={({ field }) => (
+                render={() => (
                   <FormItem>
                     <FormLabel>Description (optional)</FormLabel>
                     <FormControl>
-                      <Textarea
-                        placeholder="Brief description..."
-                        disabled={isPending}
-                        rows={4}
-                        {...field}
+                      <NewsEditor
+                        onContentChange={(editorState) => {
+                          setDescriptionState(editorState);
+                          form.setValue(
+                            "description",
+                            serializeScientistDescription(editorState),
+                            { shouldDirty: true },
+                          );
+                        }}
                       />
                     </FormControl>
                     <FormMessage />

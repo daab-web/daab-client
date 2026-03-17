@@ -38,6 +38,7 @@ import {
 } from "lucide-react";
 import { Scientist } from "@/types/scientist";
 import { fetchScientists, deleteScientist } from "@/lib/api/scientists";
+import { getScientistDescriptionPreview } from "@/lib/scientist-description";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 export default function ScientistsPage() {
@@ -226,7 +227,9 @@ export default function ScientistsPage() {
                             Description
                           </p>
                           <p className="text-sm leading-relaxed text-foreground">
-                            {scientist.description}
+                            {getScientistDescriptionPreview(
+                              scientist.description,
+                            )}
                           </p>
                         </div>
                       )}
