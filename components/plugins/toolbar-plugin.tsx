@@ -60,15 +60,31 @@ import { validateUrl } from "./link-plugin";
 
 const LowPriority = 1;
 
+type ToolbarState = {
+  isBold: boolean;
+  isItalic: boolean;
+  isUnderline: boolean;
+  isStrikethrough: boolean;
+  isCode: boolean;
+  isLink: boolean;
+  blockType: string;
+};
+
+const INITIAL_TOOLBAR_STATE: ToolbarState = {
+  isBold: false,
+  isItalic: false,
+  isUnderline: false,
+  isStrikethrough: false,
+  isCode: false,
+  isLink: false,
+  blockType: "paragraph",
+};
+
 export default function ToolbarPlugin() {
   const [editor] = useLexicalComposerContext();
-  const [isBold, setIsBold] = useState(false);
-  const [isItalic, setIsItalic] = useState(false);
-  const [isUnderline, setIsUnderline] = useState(false);
-  const [isStrikethrough, setIsStrikethrough] = useState(false);
-  const [isCode, setIsCode] = useState(false);
-  const [isLink, setIsLink] = useState(false);
-  const [blockType, setBlockType] = useState("paragraph");
+  const [toolbarState, setToolbarState] = useState<ToolbarState>(
+    INITIAL_TOOLBAR_STATE,
+  );
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -96,41 +112,51 @@ export default function ToolbarPlugin() {
   const updateToolbar = useCallback(() => {
     const selection = $getSelection();
     if ($isRangeSelection(selection)) {
-      setIsBold(selection.hasFormat("bold"));
-      setIsItalic(selection.hasFormat("italic"));
-      setIsUnderline(selection.hasFormat("underline"));
-      setIsStrikethrough(selection.hasFormat("strikethrough"));
-      setIsCode(selection.hasFormat("code"));
       const anchorNode = selection.anchor.getNode();
       const focusNode = selection.focus.getNode();
       const anchorParent = anchorNode.getParent();
       const focusParent = focusNode.getParent();
-      setIsLink(
+      const isLink =
         $isLinkNode(anchorNode) ||
-          $isLinkNode(focusNode) ||
-          $isLinkNode(anchorParent) ||
-          $isLinkNode(focusParent),
-      );
+        $isLinkNode(focusNode) ||
+        $isLinkNode(anchorParent) ||
+        $isLinkNode(focusParent);
 
       const element =
         anchorNode.getKey() === "root"
           ? anchorNode
           : anchorNode.getTopLevelElementOrThrow();
-      const elementKey = element.getKey();
-      const elementDOM = editor.getElementByKey(elementKey);
 
-      if (elementDOM !== null) {
-        if ($isListNode(element)) {
-          const parentList = $getNearestNodeOfType(anchorNode, ListNode);
-          const type = parentList
-            ? parentList.getListType()
-            : element.getListType();
-          setBlockType(type);
-        } else {
-          const type = element.getType();
-          setBlockType(type);
+      const blockType = $isListNode(element)
+        ? ($getNearestNodeOfType(anchorNode, ListNode)?.getListType() ??
+          element.getListType())
+        : element.getType();
+
+      setToolbarState((prev) => {
+        const next: ToolbarState = {
+          isBold: selection.hasFormat("bold"),
+          isItalic: selection.hasFormat("italic"),
+          isUnderline: selection.hasFormat("underline"),
+          isStrikethrough: selection.hasFormat("strikethrough"),
+          isCode: selection.hasFormat("code"),
+          isLink,
+          blockType,
+        };
+
+        if (
+          prev.isBold === next.isBold &&
+          prev.isItalic === next.isItalic &&
+          prev.isUnderline === next.isUnderline &&
+          prev.isStrikethrough === next.isStrikethrough &&
+          prev.isCode === next.isCode &&
+          prev.isLink === next.isLink &&
+          prev.blockType === next.blockType
+        ) {
+          return prev;
         }
-      }
+
+        return next;
+      });
     }
   }, [editor]);
 
@@ -145,7 +171,7 @@ export default function ToolbarPlugin() {
   }, [editor, updateToolbar]);
 
   const formatHeading = (headingSize: HeadingTagType) => {
-    if (blockType !== headingSize) {
+    if (toolbarState.blockType !== headingSize) {
       editor.update(() => {
         const selection = $getSelection();
         if ($isRangeSelection(selection)) {
@@ -156,7 +182,7 @@ export default function ToolbarPlugin() {
   };
 
   const formatQuote = () => {
-    if (blockType !== "quote") {
+    if (toolbarState.blockType !== "quote") {
       editor.update(() => {
         const selection = $getSelection();
         if ($isRangeSelection(selection)) {
@@ -167,7 +193,7 @@ export default function ToolbarPlugin() {
   };
 
   const formatBulletList = () => {
-    if (blockType !== "bullet") {
+    if (toolbarState.blockType !== "bullet") {
       editor.dispatchCommand(INSERT_UNORDERED_LIST_COMMAND, undefined);
     } else {
       editor.dispatchCommand(REMOVE_LIST_COMMAND, undefined);
@@ -175,7 +201,7 @@ export default function ToolbarPlugin() {
   };
 
   const formatNumberedList = () => {
-    if (blockType !== "number") {
+    if (toolbarState.blockType !== "number") {
       editor.dispatchCommand(INSERT_ORDERED_LIST_COMMAND, undefined);
     } else {
       editor.dispatchCommand(REMOVE_LIST_COMMAND, undefined);
@@ -183,7 +209,7 @@ export default function ToolbarPlugin() {
   };
 
   const toggleLink = () => {
-    if (isLink) {
+    if (toolbarState.isLink) {
       editor.dispatchCommand(TOGGLE_LINK_COMMAND, null);
       return;
     }
@@ -228,7 +254,7 @@ export default function ToolbarPlugin() {
 
       {/* Block Type */}
       <Select
-        value={blockType}
+        value={toolbarState.blockType}
         onValueChange={(value) => {
           if (value === "h1") formatHeading("h1");
           else if (value === "h2") formatHeading("h2");
@@ -252,7 +278,7 @@ export default function ToolbarPlugin() {
 
       {/* Text Formatting */}
       <Button
-        variant={isBold ? "secondary" : "ghost"}
+        variant={toolbarState.isBold ? "secondary" : "ghost"}
         size="icon"
         onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, "bold")}
         className="h-8 w-8"
@@ -261,7 +287,7 @@ export default function ToolbarPlugin() {
         <Bold className="h-4 w-4" />
       </Button>
       <Button
-        variant={isItalic ? "secondary" : "ghost"}
+        variant={toolbarState.isItalic ? "secondary" : "ghost"}
         size="icon"
         onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, "italic")}
         className="h-8 w-8"
@@ -270,7 +296,7 @@ export default function ToolbarPlugin() {
         <Italic className="h-4 w-4" />
       </Button>
       <Button
-        variant={isUnderline ? "secondary" : "ghost"}
+        variant={toolbarState.isUnderline ? "secondary" : "ghost"}
         size="icon"
         onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, "underline")}
         className="h-8 w-8"
@@ -279,7 +305,7 @@ export default function ToolbarPlugin() {
         <Underline className="h-4 w-4" />
       </Button>
       <Button
-        variant={isStrikethrough ? "secondary" : "ghost"}
+        variant={toolbarState.isStrikethrough ? "secondary" : "ghost"}
         size="icon"
         onClick={() =>
           editor.dispatchCommand(FORMAT_TEXT_COMMAND, "strikethrough")
@@ -290,7 +316,7 @@ export default function ToolbarPlugin() {
         <Strikethrough className="h-4 w-4" />
       </Button>
       <Button
-        variant={isCode ? "secondary" : "ghost"}
+        variant={toolbarState.isCode ? "secondary" : "ghost"}
         size="icon"
         onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, "code")}
         className="h-8 w-8"
@@ -299,7 +325,7 @@ export default function ToolbarPlugin() {
         <Code className="h-4 w-4" />
       </Button>
       <Button
-        variant={isLink ? "secondary" : "ghost"}
+        variant={toolbarState.isLink ? "secondary" : "ghost"}
         size="icon"
         onClick={toggleLink}
         className="h-8 w-8"
@@ -312,7 +338,7 @@ export default function ToolbarPlugin() {
 
       {/* Lists */}
       <Button
-        variant={blockType === "bullet" ? "secondary" : "ghost"}
+        variant={toolbarState.blockType === "bullet" ? "secondary" : "ghost"}
         size="icon"
         onClick={formatBulletList}
         className="h-8 w-8"
@@ -321,7 +347,7 @@ export default function ToolbarPlugin() {
         <List className="h-4 w-4" />
       </Button>
       <Button
-        variant={blockType === "number" ? "secondary" : "ghost"}
+        variant={toolbarState.blockType === "number" ? "secondary" : "ghost"}
         size="icon"
         onClick={formatNumberedList}
         className="h-8 w-8"
