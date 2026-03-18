@@ -12,9 +12,9 @@ export async function proxy(request: NextRequest) {
     const sessionCookie = getSessionCookie(request);
 
     if (!sessionCookie) {
-      // const redirectUrl = new URL("/en/auth", request.url);
-      // redirectUrl.searchParams.set("redirect", pathname);
-      // return NextResponse.redirect(redirectUrl);
+      const redirectUrl = new URL("/en/auth", request.url);
+      redirectUrl.searchParams.set("redirect", pathname);
+      return NextResponse.redirect(redirectUrl);
     }
 
     return NextResponse.next();
@@ -24,5 +24,5 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: "/((?!api|admin|trpc|test|_next|_vercel|.*\\..*).*)",
+  matcher: "/((?!api|trpc|test|_next|_vercel|.*\\..*).*)",
 };
