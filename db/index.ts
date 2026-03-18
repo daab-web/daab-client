@@ -1,9 +1,8 @@
 import Nedb from "@seald-io/nedb"
-import path from "path"
 
 const dbPath = process.env.DB_PATH
-  ? path.resolve(process.env.DB_PATH)
-  : path.resolve("./local.db")
+
+if (!dbPath) { throw new Error("AUTH_DB_PATH not specified") }
 
 const db = new Nedb({ filename: dbPath, autoload: true })
 

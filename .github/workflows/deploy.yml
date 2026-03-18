@@ -68,6 +68,6 @@ jobs:
               --restart unless-stopped \
               -e BETTER_AUTH_SECRET=${{ secrets.BETTER_AUTH_SECRET }} \
               -e BETTER_AUTH_URL=${{ secrets.BETTER_AUTH_URL }} \
-              -v /home/${{ secrets.VPS_USERNAME }}/daab-data/client:/app/data \
+              -v ${{ secrets.VOLUME }} \
               ${{ steps.meta.outputs.tags }}
             docker logout

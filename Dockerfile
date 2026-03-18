@@ -15,25 +15,46 @@ FROM base AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
+
 ARG NEXT_PUBLIC_SERVER
+ARG AUTH_DB_PATH
+ARG DB_PATH
+
 ENV NEXT_PUBLIC_SERVER=$NEXT_PUBLIC_SERVER
+ENV AUTH_DB_PATH=$AUTH_DB_PATH
+ENV DB_PATH=$DB_PATH
 ENV NEXT_TELEMETRY_DISABLED=1
+
 RUN npm run build
 
 FROM base AS runner
 WORKDIR /app
+
+ARG AUTH_DB_PATH
+ARG DB_PATH
+
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
-ENV DB_PATH=/app/data/local.db
-ENV AUTH_DB_PATH=/app/data/sqlite.db
+ENV AUTH_DB_PATH=$AUTH_DB_PATH
+ENV DB_PATH=$DB_PATH
+
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs
+
 COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+COPY --from=builder /app/better-auth_migrations ./better-auth_migrations
+COPY --from=builder /app/docker-entrypoint.sh ./docker-entrypoint.sh
+
+RUN apk add --no-cache sqlite
 RUN mkdir -p /app/data && chown -R 1001:1001 /app/data
+RUN chmod +x ./docker-entrypoint.sh
+
 USER nextjs
+
 EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME="0.0.0.0"
-CMD ["node", "server.js"]
+
+ENTRYPOINT ["./docker-entrypoint.sh"]

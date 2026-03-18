@@ -1,11 +1,10 @@
 import { betterAuth } from "better-auth";
 import { genericOAuth } from "better-auth/plugins"
 import Database from "better-sqlite3";
-import path from "path";
 
 const dbPath = process.env.AUTH_DB_PATH
-  ? path.resolve(process.env.AUTH_DB_PATH)
-  : path.resolve("./sqlite.db")
+
+if (!dbPath) { throw new Error("AUTH_DB_PATH not specified") }
 
 const host = process.env.NEXT_PUBLIC_SERVER
 
