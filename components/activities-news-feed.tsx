@@ -94,7 +94,7 @@ export function ActivitiesNewsFeed({
           <Link
             key={article.id}
             href={`/${locale}/activities/${article.slug || article.id}`}
-            className={`reveal reveal-delay-${Math.min((index % 6) + 1, 6)}`}
+            className={`reveal `}
           >
             <Card className="overflow-hidden hover:shadow-lg transition-all duration-300 flex flex-col group h-full cursor-pointer">
               <div className="relative h-48 overflow-hidden bg-muted">
