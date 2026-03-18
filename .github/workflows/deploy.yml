@@ -47,6 +47,8 @@ jobs:
             NEXT_PUBLIC_MINIO_HOST=${{ secrets.NEXT_PUBLIC_MINIO_HOST }}
             AUTH_DB_PATH=${{ secrets.AUTH_DB_PATH }}
             DB_PATH=${{ secrets.DB_PATH }}
+            BETTER_AUTH_URL=${{ secrets.BETTER_AUTH_URL }}
+            BETTER_AUTH_SECRET=${{ secrets.BETTER_AUTH_SECRET }}
           
       - name: Generate artifact attestation
         uses: actions/attest-build-provenance@v3
