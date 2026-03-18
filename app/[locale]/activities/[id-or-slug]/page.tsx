@@ -10,6 +10,7 @@ import { getNewsByIdOrSlug } from "@/lib/api/news";
 import { News } from "@/types/news";
 import { formatDate } from "@/lib/date-utils";
 import { ScrollReveal } from "@/components/scroll-reveal";
+import { NewsAttachmentsCarousel } from "@/components/news-attachments-carousel";
 
 type Props = {
   params: Promise<{ locale: string; "id-or-slug": string }>;
@@ -107,6 +108,14 @@ export default async function ArticlePage({ params }: Props) {
         {/* Article Content */}
         <div className="prose prose-lg dark:prose-invert max-w-none reveal">
           <NewsViewer editorState={article.editorState} />
+        </div>
+
+        {/* Attachments Carousel */}
+        <div className="reveal">
+          <NewsAttachmentsCarousel
+            newsId={article.id}
+            title={t("attachments")}
+          />
         </div>
 
         <Separator className="reveal" />

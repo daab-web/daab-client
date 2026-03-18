@@ -14,3 +14,15 @@ export type News = {
   editorState: SerializedEditorState | null
 };
 
+export type NewsAttachment = {
+  id: string;
+  fileUrl: string;
+  caption: string | null;
+  fileType: string | null;
+};
+
+export type NewsAttachmentsResponse = {
+  newsId: string;
+  attachments: NewsAttachment[];
+};
+

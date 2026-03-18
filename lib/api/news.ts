@@ -1,4 +1,4 @@
-import { News } from "@/types/news"
+import { News, NewsAttachmentsResponse } from "@/types/news"
 import { PagedResponse } from "@/types/paged-response"
 import { fetchAPI } from ".";
 
@@ -41,4 +41,10 @@ export async function deleteNews(id: string) {
   return fetchAPI(`/news/${id}`, {
     method: "DELETE",
   });
+}
+
+export async function fetchNewsAttachments(newsId: string): Promise<NewsAttachmentsResponse> {
+  const response = await fetchAPI(`/news/${newsId}/attachments`);
+  const data: NewsAttachmentsResponse = await response.json();
+  return data;
 }
