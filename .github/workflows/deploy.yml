@@ -45,6 +45,8 @@ jobs:
           build-args: |
             NEXT_PUBLIC_SERVER=${{ secrets.NEXT_PUBLIC_SERVER }}
             NEXT_PUBLIC_MINIO_HOST=${{ secrets.NEXT_PUBLIC_MINIO_HOST }}
+            AUTH_DB_PATH=${{ secrets.AUTH_DB_PATH }}
+            DB_PATH=${{ secrets.DB_PATH }}
           
       - name: Generate artifact attestation
         uses: actions/attest-build-provenance@v3
