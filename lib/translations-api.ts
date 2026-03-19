@@ -36,7 +36,7 @@ export async function handlePost<T extends TranslationEntry>(
         DB.updateAsync(
           { locale },
           { $set: { [key]: name } },
-          {},
+          { upsert: true },
         ),
       ),
     );
