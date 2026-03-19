@@ -20,6 +20,7 @@ import Link from "next/link";
 import Autoplay from "embla-carousel-autoplay";
 import { News } from "@/types/news";
 import { formatDate } from "@/lib/date-utils";
+import { NewsThumbnailPlaceholder } from "@/components/news-thumbnail-placeholder";
 
 interface NewsCarouselProps {
   articles: News[];
@@ -58,7 +59,9 @@ export function NewsCarousel({ articles, locale }: NewsCarouselProps) {
                           className="h-full w-full object-contain hover:scale-105 transition-transform duration-300"
                           sizes="(min-width: 768px) 50vw, 100vw"
                         />
-                      ) : null}
+                      ) : (
+                        <NewsThumbnailPlaceholder />
+                      )}
                       {article.category && (
                         <div className="absolute top-4 left-4">
                           <Badge className="text-sm px-3 py-1 backdrop-blur-sm bg-background/80">

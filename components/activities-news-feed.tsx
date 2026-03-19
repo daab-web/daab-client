@@ -19,6 +19,7 @@ import { formatDate, getTimeAgo } from "@/lib/date-utils";
 import { fetchNews } from "@/lib/api/news";
 import { News } from "@/types/news";
 import { PagedResponse } from "@/types/paged-response";
+import { NewsThumbnailPlaceholder } from "@/components/news-thumbnail-placeholder";
 
 type Props = {
   locale: string;
@@ -105,7 +106,9 @@ export function ActivitiesNewsFeed({
                     fill
                     className="object-contain group-hover:scale-105 transition-transform duration-300"
                   />
-                ) : null}
+                ) : (
+                  <NewsThumbnailPlaceholder />
+                )}
                 {article.category && (
                   <div className="absolute top-3 left-3">
                     <Badge
