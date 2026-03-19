@@ -21,7 +21,34 @@ export const scientistSchema = z.object({
   linkedInUrl: z.string().url().optional().or(z.literal("")),
   orcId: z.string().optional(),
   website: z.string().url().optional().or(z.literal("")),
-  dateOfBirth: z.string().optional(),
+  dateOfBirth: z
+    .string()
+    .optional()
+    .refine((value) => {
+      if (!value) {
+        return true;
+      }
+
+      const [year, month, day] = value.split("-").map(Number);
+      const dateOfBirth = new Date(year, month - 1, day);
+
+      if (
+        Number.isNaN(dateOfBirth.getTime()) ||
+        dateOfBirth.getFullYear() !== year ||
+        dateOfBirth.getMonth() !== month - 1 ||
+        dateOfBirth.getDate() !== day
+      ) {
+        return false;
+      }
+
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      const oldestAllowedDate = new Date(today);
+      oldestAllowedDate.setFullYear(today.getFullYear() - 100);
+
+      return dateOfBirth >= oldestAllowedDate && dateOfBirth <= today;
+    }, "Date of birth must be within the last 100 years"),
   photo: z.instanceof(File).optional().nullable(),
   publications: z.array(publicationSchema).optional(),
 });

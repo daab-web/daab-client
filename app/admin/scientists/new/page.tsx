@@ -23,6 +23,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
+import { DatePicker } from "@/components/ui/date-picker";
 import NewsEditor from "@/components/news-editor";
 import { ArrowLeft, Plus, Trash2 } from "lucide-react";
 import { serializeScientistDescription } from "@/lib/scientist-description";
@@ -30,10 +31,22 @@ import TagInput from "./tag-input";
 import { ScientistFormData, scientistSchema } from "./types";
 import { useScientistMutation } from "./hooks";
 
+function formatDateForInput(date: Date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+
+  return `${year}-${month}-${day}`;
+}
+
 export default function AddScientistPage() {
   const router = useRouter();
   const [descriptionState, setDescriptionState] =
     useState<SerializedEditorState | null>(null);
+  const maxDateOfBirth = formatDateForInput(new Date());
+  const minDate = new Date();
+  minDate.setFullYear(minDate.getFullYear() - 100);
+  const minDateOfBirth = formatDateForInput(minDate);
 
   const form = useForm<ScientistFormData>({
     resolver: zodResolver(scientistSchema),
@@ -359,7 +372,14 @@ export default function AddScientistPage() {
                   <FormItem>
                     <FormLabel>Date of Birth (optional)</FormLabel>
                     <FormControl>
-                      <Input type="date" disabled={isPending} {...field} />
+                      <DatePicker
+                        value={field.value}
+                        onChange={field.onChange}
+                        placeholder="Pick a date"
+                        disabled={isPending}
+                        minDate={minDateOfBirth}
+                        maxDate={maxDateOfBirth}
+                      />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
