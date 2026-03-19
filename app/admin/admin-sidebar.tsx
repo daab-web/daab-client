@@ -7,17 +7,28 @@ import {
   SidebarGroup,
   SidebarGroupContent,
   SidebarGroupLabel,
-  SidebarHeader,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-  SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { ModeToggle } from "@/components/mode-toggle";
 import Link from "next/link";
-import { Home, FileText, Users, Settings, ClipboardList, Languages } from "lucide-react";
+import {
+  Home,
+  FileText,
+  Users,
+  Settings,
+  ClipboardList,
+  Languages,
+  LogOut,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 export default function AdminSidebar() {
+  const router = useRouter();
+
   return (
     <Sidebar>
       <SidebarContent>
@@ -106,6 +117,20 @@ export default function AdminSidebar() {
         <div className="flex items-center justify-between">
           <span className="text-sm text-muted-foreground">Theme</span>
           <ModeToggle />
+        </div>
+        <div className="flex items-center justify-between">
+          <span className="text-sm text-muted-foreground">Sign Out</span>
+          <Button
+            variant="outline"
+            size="icon"
+            onClick={() =>
+              authClient.signOut({
+                fetchOptions: { onSuccess: () => router.push("/") },
+              })
+            }
+          >
+            <LogOut />
+          </Button>
         </div>
       </SidebarFooter>
     </Sidebar>
