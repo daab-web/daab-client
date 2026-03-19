@@ -25,12 +25,17 @@ export async function handlePost<T extends TranslationEntry>(
   try {
     const body = schema.parse(await req.json());
     const key = makeKey(namespace, body.nameEn);
+    const translations = new Map<string, string>([["en", body.nameEn]]);
+
+    for (const translation of body.translations) {
+      translations.set(translation.locale, translation.name);
+    }
 
     await Promise.all(
-      body.translations.map((t) =>
+      Array.from(translations.entries()).map(([locale, name]) =>
         DB.updateAsync(
-          { locale: t.locale },
-          { $set: { [key]: t.name } },
+          { locale },
+          { $set: { [key]: name } },
           {},
         ),
       ),

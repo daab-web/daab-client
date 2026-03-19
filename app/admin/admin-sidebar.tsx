@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/sidebar";
 import { ModeToggle } from "@/components/mode-toggle";
 import Link from "next/link";
-import { Home, FileText, Users, Settings, ClipboardList } from "lucide-react";
+import { Home, FileText, Users, Settings, ClipboardList, Languages } from "lucide-react";
 
 export default function AdminSidebar() {
   return (
@@ -78,6 +78,14 @@ export default function AdminSidebar() {
                   <Link href="/admin/scientists">
                     <Users className="mr-2 h-4 w-4" />
                     Scientists
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <Link href="/admin/translations">
+                    <Languages className="mr-2 h-4 w-4" />
+                    Translations
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
