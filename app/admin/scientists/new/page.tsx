@@ -33,7 +33,7 @@ import { useScientistMutation } from "./hooks";
 export default function AddScientistPage() {
   const router = useRouter();
   const [descriptionState, setDescriptionState] =
-    useState<SerializedEditorState | null>(null);
+    useState<SerializedEditorState | undefined>(undefined);
 
   const form = useForm<ScientistFormData>({
     resolver: zodResolver(scientistSchema),

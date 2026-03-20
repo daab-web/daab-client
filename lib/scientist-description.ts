@@ -54,9 +54,9 @@ export function toEditorStateFromPlainText(
 
 export function parseScientistDescription(
   description?: string | null,
-): SerializedEditorState | null {
+): SerializedEditorState | undefined {
   if (!description?.trim()) {
-    return null;
+    return undefined;
   }
 
   try {
@@ -72,7 +72,7 @@ export function parseScientistDescription(
 }
 
 export function serializeScientistDescription(
-  editorState: SerializedEditorState | null,
+  editorState: SerializedEditorState | undefined,
 ): string {
   if (!editorState) {
     return "";
