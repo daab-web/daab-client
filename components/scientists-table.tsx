@@ -186,9 +186,10 @@ export function ScientistsTable() {
                       </TableCell>
                       <TableCell className="px-6">
                         <div className="flex flex-wrap gap-2">
-                          {s.institutions.map((inst) => {
+                          {s.institutions.map((inst, index) => {
                             return (
                               <Badge
+                                key={`$inst-${index}`}
                                 variant="secondary"
                                 className="wrap-break-word"
                               >
@@ -200,15 +201,19 @@ export function ScientistsTable() {
                       </TableCell>
                       <TableCell className="px-6">
                         <div className="flex flex-wrap gap-2">
-                          {s.countries.map((country) => (
-                            <Badge variant="secondary">{c(country)}</Badge>
+                          {s.countries.map((country, index) => (
+                            <Badge key={`country-${index}`} variant="secondary">
+                              {c(country)}
+                            </Badge>
                           ))}
                         </div>
                       </TableCell>
                       <TableCell className="px-6">
                         <div className="flex flex-wrap gap-2">
-                          {s.areas.map((area) => (
-                            <Badge variant="secondary">{a(area)}</Badge>
+                          {s.areas.map((area, index) => (
+                            <Badge key={`area-${index}`} variant="secondary">
+                              {a(area)}
+                            </Badge>
                           ))}
                         </div>
                       </TableCell>

@@ -49,6 +49,12 @@ export async function fetchScientistById(idOrSlug: string) {
   const response = await fetchAPI(`/scientists/${idOrSlug}`);
   const scientist: Scientist = await response.json();
 
+  if (typeof scientist.description === "string") {
+    scientist.description = JSON.parse(scientist.description);
+  }
+
+  console.log(scientist);
+
   return scientist;
 }
 
@@ -123,6 +129,8 @@ export async function updateScientist(id: string, data: any) {
       formData.append(key, JSON.stringify(value));
     } else if (Array.isArray(value)) {
       value.forEach((item) => formData.append(key, item));
+    } else if (key === "description") {
+      formData.append(key, JSON.stringify(value));
     } else {
       formData.append(key, value as string);
     }

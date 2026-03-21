@@ -1,3 +1,5 @@
+import { SerializedEditorState } from "lexical";
+
 export type Scientist = {
   id: string;
   userId: string;
@@ -5,7 +7,7 @@ export type Scientist = {
   firstName: string;
   lastName: string;
   academicTitle: string;
-  description?: string;
+  description?: SerializedEditorState;
   institutions: string[];
   countries: string[];
   areas: string[];

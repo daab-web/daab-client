@@ -341,7 +341,7 @@ function TranslationFormCard({
 
   return (
     <>
-      <div className="grid gap-4 xl:grid-cols-[minmax(0,1.05fr)_minmax(320px,0.95fr)]">
+      <div className="grid items-start gap-4 xl:grid-cols-[minmax(0,1.05fr)_minmax(320px,0.95fr)]">
         <Card>
           <CardHeader>
             <div className="flex flex-wrap items-start justify-between gap-3">

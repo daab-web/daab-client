@@ -20,7 +20,6 @@ import {
   fetchPublicationsByScientistId,
   fetchScientistById,
 } from "@/lib/api/scientists";
-import { parseScientistDescription } from "@/lib/scientist-description";
 
 type Props = {
   params: Promise<{ locale: string; id: string }>;
@@ -39,7 +38,7 @@ export default async function ScientistDetailPage({ params }: Props) {
   const hasLinks =
     scientist.linkedInUrl || scientist.orcid || scientist.website;
   const hasPublications = publications.length > 0;
-  const descriptionState = parseScientistDescription(scientist.description);
+  const descriptionState = scientist.description;
 
   return (
     <div className="relative mx-auto flex w-full max-w-7xl flex-col gap-10 overflow-hidden px-4 py-8 md:py-10">
