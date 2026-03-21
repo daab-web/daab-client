@@ -31,7 +31,7 @@ export default async function LocaleLayout(props: Props) {
       <QueryProvider>
         <NavbarScrollEffect />
         <div lang={locale} className="min-h-screen flex flex-col">
-          <header className="sticky top-0 py-4 flex gap-2 justify-center transition-all duration-300">
+          <header className="sticky top-0 z-50 py-4 flex gap-2 justify-center transition-all duration-300">
             <Navbar />
           </header>
           <main className="flex-1 flex flex-col w-full">{props.children}</main>

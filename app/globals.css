@@ -90,15 +90,9 @@ html {
   scrollbar-gutter: stable;
 }
 
-/* Prevent Radix UI react-remove-scroll from causing scroll jumps
-   while maintaining sticky positioning */
-html body[data-scroll-locked] {
-  margin-right: 0 !important;
-  --removed-body-scroll-bar-size: 0 !important;
-}
-
 html,
 body {
+  height: 100%;
   margin: 0;
   padding: 0;
   background-image: var(--background-image);
@@ -106,6 +100,10 @@ body {
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
+}
+
+body {
+  min-height: 100vh;
 }
 
 .dark {
@@ -168,6 +166,7 @@ body {
 }
 
 header {
+  background-color: transparent;
   animation: slideDown 0.4s ease-out;
   transition:
     background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
