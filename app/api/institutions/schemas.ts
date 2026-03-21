@@ -10,4 +10,9 @@ export const AddInstitutionSchema = z.object({
   translations: z.array(TranslationEntrySchema),
 });
 
+export const UpdateInstitutionSchema = AddInstitutionSchema.extend({
+  previousNameEn: z.string().nonempty().optional(),
+});
+
 export type AddInstitutionReq = z.infer<typeof AddInstitutionSchema>;
+export type UpdateInstitutionReq = z.infer<typeof UpdateInstitutionSchema>;
