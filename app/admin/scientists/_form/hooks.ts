@@ -23,7 +23,9 @@ export function useScientistUpdateMutation(id: string) {
   const client = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: ScientistFormData) => updateScientist(id, data),
+    mutationFn: (data: ScientistFormData) => { 
+      return updateScientist(id, data)
+    },
     onSuccess: () => {
       client.invalidateQueries({ queryKey: ["scientists"] });
       toast.success("Scientist updated successfully");
@@ -51,3 +53,4 @@ export const useScientistForm = (s?: Scientist) =>
       dateOfBirth: s?.dateOfBirth || "",
     },
   });
+

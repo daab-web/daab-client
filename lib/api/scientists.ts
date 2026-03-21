@@ -53,8 +53,6 @@ export async function fetchScientistById(idOrSlug: string) {
     scientist.description = JSON.parse(scientist.description);
   }
 
-  console.log(scientist);
-
   return scientist;
 }
 
@@ -119,34 +117,13 @@ export async function createScientist(data: any) {
 }
 
 export async function updateScientist(id: string, data: any) {
-  const formData = new FormData();
-  const { photo, orcId, ...rest } = data;
-
-  Object.entries(rest).forEach(([key, value]) => {
-    if (!value || value === "") return;
-
-    if (key === "publications" && Array.isArray(value) && value.length > 0) {
-      formData.append(key, JSON.stringify(value));
-    } else if (Array.isArray(value)) {
-      value.forEach((item) => formData.append(key, item));
-    } else if (key === "description") {
-      formData.append(key, JSON.stringify(value));
-    } else {
-      formData.append(key, value as string);
-    }
-  });
-
-  if (orcId) {
-    formData.append("orcid", orcId);
-  }
-
-  if (photo instanceof File) {
-    formData.append("photo", photo);
-  }
-
+  data.description = JSON.stringify(data.description);
   return fetchAPI(`/scientists/${id}`, {
     method: "PUT",
-    body: formData,
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data),
   });
 }
 
