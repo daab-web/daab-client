@@ -1,17 +1,17 @@
-"use client";
+"use client"
 
-import { LexicalComposer } from "@lexical/react/LexicalComposer";
-import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
-import { ContentEditable } from "@lexical/react/LexicalContentEditable";
-import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary";
-import { HeadingNode, QuoteNode } from "@lexical/rich-text";
-import { ListNode, ListItemNode } from "@lexical/list";
-import { CodeNode, CodeHighlightNode } from "@lexical/code";
-import { LinkNode, AutoLinkNode } from "@lexical/link";
-import { ImageNode } from "./nodes/image-node";
-import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext";
-import { useEffect } from "react";
-import { SerializedEditorState } from "lexical";
+import { LexicalComposer } from "@lexical/react/LexicalComposer"
+import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin"
+import { ContentEditable } from "@lexical/react/LexicalContentEditable"
+import { LexicalErrorBoundary } from "@lexical/react/LexicalErrorBoundary"
+import { HeadingNode, QuoteNode } from "@lexical/rich-text"
+import { ListNode, ListItemNode } from "@lexical/list"
+import { CodeNode, CodeHighlightNode } from "@lexical/code"
+import { LinkNode, AutoLinkNode } from "@lexical/link"
+import { ImageNode } from "./nodes/image-node"
+import { useLexicalComposerContext } from "@lexical/react/LexicalComposerContext"
+import { useEffect } from "react"
+import { SerializedEditorState } from "lexical"
 
 const theme = {
   paragraph: "mb-2 text-base",
@@ -41,33 +41,29 @@ const theme = {
   code: "bg-muted block p-2 rounded font-mono text-sm my-2",
   quote: "border-l-4 border-muted-foreground pl-4 italic my-4",
   image: "inline-block",
-};
+}
 
 function onError(error: Error) {
-  console.error(error);
+  console.error(error)
 }
 
 interface NewsViewerProps {
-  editorState: SerializedEditorState | undefined;
+  editorState: SerializedEditorState | null
 }
 
-function ViewerContent({
-  editorState,
-}: {
-  editorState: SerializedEditorState | undefined;
-}) {
-  const [editor] = useLexicalComposerContext();
+function ViewerContent({ editorState }: { editorState: SerializedEditorState | null }) {
+  const [editor] = useLexicalComposerContext()
 
   useEffect(() => {
     if (editorState) {
       queueMicrotask(() => {
-        const parsedState = editor.parseEditorState(editorState);
-        editor.setEditorState(parsedState);
-      });
+        const parsedState = editor.parseEditorState(editorState)
+        editor.setEditorState(parsedState)
+      })
     }
-  }, [editor, editorState]);
+  }, [editor, editorState])
 
-  return null;
+  return null
 }
 
 export default function NewsViewer({ editorState }: NewsViewerProps) {
@@ -87,7 +83,7 @@ export default function NewsViewer({ editorState }: NewsViewerProps) {
       AutoLinkNode,
       ImageNode,
     ],
-  };
+  }
 
   return (
     <LexicalComposer initialConfig={initialConfig}>
@@ -104,5 +100,5 @@ export default function NewsViewer({ editorState }: NewsViewerProps) {
         ErrorBoundary={LexicalErrorBoundary}
       />
     </LexicalComposer>
-  );
+  )
 }

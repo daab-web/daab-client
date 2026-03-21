@@ -60,7 +60,6 @@ import { format } from "date-fns";
 import { cn } from "@/lib/utils";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
-import { Editor } from "@/components/blocks/editor-x/editor";
 
 interface Attachment {
   id: string;
@@ -153,8 +152,8 @@ export default function NewsEditorPage() {
   const [hasNewThumbnail, setHasNewThumbnail] = useState(false);
   const [tags, setTags] = useState<string[]>([]);
   const [tagInput, setTagInput] = useState("");
-  const [editorState, setEditorState] = useState<SerializedEditorState | undefined>(
-    undefined
+  const [editorState, setEditorState] = useState<SerializedEditorState | null>(
+    null,
   );
   const [editorKey, setEditorKey] = useState(0);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
@@ -196,7 +195,7 @@ export default function NewsEditorPage() {
     reset(DEFAULT_FORM_VALUES);
     setTags([]);
     setTagInput("");
-    setEditorState(undefined);
+    setEditorState(null);
     setThumbnailPreview("");
     setOriginalThumbnailPreview("");
     setHasNewThumbnail(false);
@@ -218,7 +217,7 @@ export default function NewsEditorPage() {
         article.publishedDate ? new Date(article.publishedDate) : new Date(),
       );
       setTags(Array.isArray(article.tags) ? article.tags : []);
-      setEditorState(article.editorState ?? undefined);
+      setEditorState(article.editorState ?? null);
       const existingThumbnail = article.thumbnail ?? "";
       setThumbnailPreview(existingThumbnail);
       setOriginalThumbnailPreview(existingThumbnail);
@@ -402,6 +401,13 @@ export default function NewsEditorPage() {
     }
   };
 
+  const generateSlug = (text: string) => {
+    return text
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, "");
+  };
+
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue("title", e.target.value);
   };
@@ -541,10 +547,10 @@ export default function NewsEditorPage() {
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Editor
+              <NewsEditor
                 key={editorKey}
-                editorSerializedState={editorState}
-                onSerializedChange={setEditorState}
+                initialEditorState={editorState}
+                onContentChange={setEditorState}
               />
             </CardContent>
           </Card>

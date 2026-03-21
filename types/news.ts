@@ -11,7 +11,7 @@ export type News = {
   authorName?: string;
   category?: string;
   tags: string[];
-  editorState: SerializedEditorState | undefined
+  editorState: SerializedEditorState | null
 };
 
 export type NewsAttachment = {

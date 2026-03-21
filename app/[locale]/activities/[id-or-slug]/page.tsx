@@ -16,13 +16,13 @@ type Props = {
   params: Promise<{ locale: string; "id-or-slug": string }>;
 };
 
-async function getArticleWithContent(idOrSlug: string): Promise<News | undefined> {
+async function getArticleWithContent(idOrSlug: string): Promise<News | null> {
   try {
     const article: News = await getNewsByIdOrSlug(idOrSlug);
     return article;
   } catch (error) {
     console.error("Error fetching article:", error);
-    return undefined;
+    return null;
   }
 }
 

@@ -34,7 +34,6 @@ import { Scientist } from "@/types/scientist";
 import { fetchScientistById, updateScientist } from "@/lib/api/scientists";
 import { ScientistFormData, scientistSchema } from "../../new/types";
 import TagInput from "../../new/tag-input";
-import { Editor } from "@/components/blocks/editor-x/editor";
 
 export default function EditScientistPage() {
   const router = useRouter();
@@ -46,7 +45,7 @@ export default function EditScientistPage() {
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
   const [descriptionState, setDescriptionState] =
-    useState<SerializedEditorState | undefined>(undefined);
+    useState<SerializedEditorState | null>(null);
   const [editorKey, setEditorKey] = useState(0);
 
   const form = useForm<ScientistFormData>({
@@ -317,10 +316,10 @@ export default function EditScientistPage() {
                   <FormItem>
                     <FormLabel>Description (optional)</FormLabel>
                     <FormControl>
-                      <Editor
+                      <NewsEditor
                         key={editorKey}
-                        editorSerializedState={descriptionState}
-                        onSerializedChange={(editorState) => {
+                        initialEditorState={descriptionState}
+                        onContentChange={(editorState) => {
                           setDescriptionState(editorState);
                           form.setValue(
                             "description",
