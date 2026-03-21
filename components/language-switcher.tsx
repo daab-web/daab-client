@@ -1,44 +1,39 @@
-"use client"
+"use client";
 
-import * as React from "react"
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select"
 import { useRouter, usePathname } from "@/i18n/navigation";
-import { useLocale } from "next-intl"
-import { Skeleton } from "@/components/ui/skeleton"
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { useLocale } from "next-intl";
+import { Button } from "@/components/ui/button";
 
 export function LanguageSwitcher() {
   const locale = useLocale();
   const router = useRouter();
   const pathname = usePathname();
-  const [mounted, setMounted] = React.useState(false)
-
-  React.useEffect(() => {
-    setMounted(true)
-  }, [])
 
   const handleLanguageChange = (newLocale: string) => {
     router.replace(pathname, { locale: newLocale });
   };
 
-  if (!mounted) {
-    return <Skeleton className="h-9 w-20" />
-  }
-
   return (
-    <Select value={locale} onValueChange={handleLanguageChange}>
-      <SelectTrigger className="w-20">
-        <SelectValue placeholder={locale.toUpperCase()} />
-      </SelectTrigger>
-      <SelectContent>
-        <SelectItem value="az">AZ</SelectItem>
-        <SelectItem value="en">EN</SelectItem>
-      </SelectContent>
-    </Select>
-  )
+    <DropdownMenu modal={false}>
+      <DropdownMenuTrigger asChild>
+        <Button variant="outline" size="icon">
+          {locale}
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem onClick={() => handleLanguageChange("az")}>
+          AZ
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => handleLanguageChange("en")}>
+          EN
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
 }
