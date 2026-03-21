@@ -232,7 +232,7 @@ function TranslationFormCard({
 
 export default function TranslationManagement() {
   return (
-    <div className="grid gap-4 xl:grid-cols-3">
+    <div className="grid items-start gap-4 xl:grid-cols-3">
       <TranslationFormCard
         title="Areas"
         description="Create localized research area names for the public site and admin tools."
