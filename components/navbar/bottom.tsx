@@ -1,6 +1,5 @@
 "use client";
 
-import * as React from "react";
 import Link from "next/link";
 
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -13,6 +12,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import { useTranslations } from "next-intl";
 import { NAV_ITEMS } from "@/lib/navigation";
+import { Button } from "../ui/button";
 
 export function BottomNavigationMenu() {
   const isMobile = useIsMobile();
@@ -27,9 +27,9 @@ export function BottomNavigationMenu() {
               asChild
               className={navigationMenuTriggerStyle()}
             >
-              <Link href={item.href} className="text-sm px-3">
-                {t(item.key)}
-              </Link>
+              <Button asChild variant="outline">
+                <Link href={item.href}>{t(item.key)}</Link>
+              </Button>
             </NavigationMenuLink>
           </NavigationMenuItem>
         ))}

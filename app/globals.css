@@ -91,7 +91,6 @@ html {
 
 html,
 body {
-  height: 100%;
   margin: 0;
   padding: 0;
   background-image: var(--background-image);
@@ -99,10 +98,6 @@ body {
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
-}
-
-body {
-  min-height: 100vh;
 }
 
 .dark {
@@ -164,32 +159,32 @@ body {
   }
 }
 
-header {
-  background-color: transparent;
-  animation: slideDown 0.4s ease-out;
-  transition:
-    background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-    box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
-    backdrop-filter 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-header.scrolled {
-  background-color: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(12px) saturate(180%);
-  box-shadow:
-    0 1px 3px rgba(0, 0, 0, 0.1),
-    0 4px 8px rgba(0, 0, 0, 0.05);
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
-}
-
-.dark header.scrolled {
-  background-color: rgba(13, 13, 13, 0.8);
-  backdrop-filter: blur(12px) saturate(180%);
-  box-shadow:
-    0 1px 3px rgba(255, 255, 255, 0.05),
-    0 4px 8px rgba(255, 255, 255, 0.02);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-}
+/* header { */
+/*   background-color: transparent; */
+/*   animation: slideDown 0.4s ease-out; */
+/*   transition: */
+/*     background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1), */
+/*     box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1), */
+/*     backdrop-filter 0.3s cubic-bezier(0.4, 0, 0.2, 1); */
+/* } */
+/**/
+/* header.scrolled { */
+/*   background-color: rgba(255, 255, 255, 0.7); */
+/*   backdrop-filter: blur(12px) saturate(180%); */
+/*   box-shadow: */
+/*     0 1px 3px rgba(0, 0, 0, 0.1), */
+/*     0 4px 8px rgba(0, 0, 0, 0.05); */
+/*   border-bottom: 1px solid rgba(0, 0, 0, 0.08); */
+/* } */
+/**/
+/* .dark header.scrolled { */
+/*   background-color: rgba(13, 13, 13, 0.8); */
+/*   backdrop-filter: blur(12px) saturate(180%); */
+/*   box-shadow: */
+/*     0 1px 3px rgba(255, 255, 255, 0.05), */
+/*     0 4px 8px rgba(255, 255, 255, 0.02); */
+/*   border-bottom: 1px solid rgba(255, 255, 255, 0.08); */
+/* } */
 
 @media (prefers-reduced-motion: reduce) {
   header {

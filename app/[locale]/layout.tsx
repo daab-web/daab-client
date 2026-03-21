@@ -6,7 +6,6 @@ import { NextIntlClientProvider } from "next-intl";
 import * as React from "react";
 import Navbar from "@/components/navbar";
 import { QueryProvider } from "@/components/providers/query-provider";
-import { NavbarScrollEffect } from "@/components/navbar-scroll-effect";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -29,12 +28,14 @@ export default async function LocaleLayout(props: Props) {
   return (
     <NextIntlClientProvider locale={locale}>
       <QueryProvider>
-        <NavbarScrollEffect />
         <div lang={locale} className="min-h-screen flex flex-col">
-          <header className="sticky top-0 z-50 py-4 flex gap-2 justify-center transition-all duration-300">
+          <header className="fixed w-full top-0 z-50 py-4 flex gap-2 
+          justify-center transition-all duration-300 backdrop-blur-xl border-b">
             <Navbar />
           </header>
-          <main className="flex-1 flex flex-col w-full">{props.children}</main>
+          <main className="flex-1 flex flex-col w-full mt-30">
+            {props.children}
+          </main>
         </div>
       </QueryProvider>
     </NextIntlClientProvider>
