@@ -10,4 +10,9 @@ export const AddAreaSchema = z.object({
   translations: z.array(TranslationEntrySchema),
 });
 
+export const UpdateAreaSchema = AddAreaSchema.extend({
+  previousNameEn: z.string().nonempty().optional(),
+});
+
 export type AddAreaReq = z.infer<typeof AddAreaSchema>;
+export type UpdateAreaReq = z.infer<typeof UpdateAreaSchema>;

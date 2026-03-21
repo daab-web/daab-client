@@ -9,4 +9,3 @@ const db = new Nedb({ filename: dbPath, autoload: true })
 await db.ensureIndexAsync({ fieldName: "locale" })
 
 export default db;
-
