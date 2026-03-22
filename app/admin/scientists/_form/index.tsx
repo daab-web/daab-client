@@ -22,6 +22,9 @@ import { Button } from "@/components/ui/button";
 import TagInput from "./tag-input";
 import { useState } from "react";
 import { SerializedEditorState } from "lexical";
+import { useAreas, useCoutnries, useInstitutions } from "@/hooks/use-scientists";
+import { ComboboxMultiple } from "@/components/combobox-multiple";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export interface ScientistsEditorProps {
   scientist?: Scientist;
@@ -42,6 +45,10 @@ export default function ScientistsEditor({
   >();
   const buttonText = action === "POST" ? "Create" : "Update";
   const processingText = action === "POST" ? "Creating..." : "Updating...";
+
+  const { data: areas, isLoading: areAreasLoading } = useAreas();
+  const { data: countries, isLoading: areCountriesLoading } = useCoutnries();
+  const { data: institutions, isLoading: areInstitutionsLoading } = useInstitutions();
 
   return (
     <Form {...form}>
@@ -116,12 +123,15 @@ export default function ScientistsEditor({
             <FormItem>
               <FormLabel>Institutions</FormLabel>
               <FormControl>
-                <TagInput
-                  value={field.value}
-                  onChange={field.onChange}
-                  placeholder="Type and press Enter"
-                  disabled={isPending}
-                />
+                {areInstitutionsLoading ? (
+                  <Skeleton className="h-8" />
+                ) : (
+                  <ComboboxMultiple
+                    items={institutions!}
+                    onChange={field.onChange}
+                    value={field.value}
+                  />
+                )}
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -135,12 +145,15 @@ export default function ScientistsEditor({
             <FormItem>
               <FormLabel>Countries</FormLabel>
               <FormControl>
-                <TagInput
-                  value={field.value}
-                  onChange={field.onChange}
-                  placeholder="Type and press Enter"
-                  disabled={isPending}
-                />
+                {areCountriesLoading ? (
+                  <Skeleton className="h-8" />
+                ) : (
+                  <ComboboxMultiple
+                    items={countries!}
+                    onChange={field.onChange}
+                    value={field.value}
+                  />
+                )}
               </FormControl>
               <FormMessage />
             </FormItem>
@@ -154,12 +167,15 @@ export default function ScientistsEditor({
             <FormItem>
               <FormLabel>Research Areas</FormLabel>
               <FormControl>
-                <TagInput
-                  value={field.value}
-                  onChange={field.onChange}
-                  placeholder="Type and press Enter"
-                  disabled={isPending}
-                />
+                {areAreasLoading ? (
+                  <Skeleton className="h-8" />
+                ) : (
+                  <ComboboxMultiple
+                    items={areas!}
+                    onChange={field.onChange}
+                    value={field.value}
+                  />
+                )}
               </FormControl>
               <FormMessage />
             </FormItem>
