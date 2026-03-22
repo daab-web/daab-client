@@ -108,7 +108,10 @@ export function ScientistsTable() {
                   placeholder={t("filter.allCountries") || "All Countries"}
                 />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent
+                className="max-h-100 overflow-y-auto"
+                position="popper"
+              >
                 <SelectItem value="all">
                   {t("filter.allCountries") || "All Countries"}
                 </SelectItem>
@@ -131,7 +134,10 @@ export function ScientistsTable() {
                   placeholder={t("filter.allAreas") || "All Areas"}
                 />
               </SelectTrigger>
-              <SelectContent>
+              <SelectContent
+                className="max-h-100 overflow-y-auto"
+                position="popper"
+              >
                 <SelectItem value="all">
                   {t("filter.allAreas") || "All Areas"}
                 </SelectItem>
