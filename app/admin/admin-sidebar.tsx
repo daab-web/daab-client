@@ -21,6 +21,7 @@ import {
   ClipboardList,
   Languages,
   LogOut,
+  Briefcase,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth-client";
@@ -89,6 +90,14 @@ export default function AdminSidebar() {
                   <Link href="/admin/scientists">
                     <Users className="mr-2 h-4 w-4" />
                     Scientists
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
+                  <Link href="/admin/directors">
+                    <Briefcase className="mr-2 h-4 w-4" />
+                    Directors
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
