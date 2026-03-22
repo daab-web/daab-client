@@ -10,6 +10,7 @@ import { ArrowLeft } from "lucide-react";
 import { fetchScientistById } from "@/lib/api/scientists";
 import Link from "next/link";
 import ScientistsEditor from "../../_form";
+import ScientistProfilePicture from "../../_profile-pic";
 
 export default async function EditScientistPage({
   params,
@@ -36,15 +37,18 @@ export default async function EditScientistPage({
         <h1 className="text-3xl font-bold tracking-tight">Edit Scientist</h1>
       </div>
 
-      <Card className="max-w-3xl mx-auto">
-        <CardHeader>
-          <CardTitle>Scientist Data</CardTitle>
-          <CardDescription>Update scientist information</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ScientistsEditor scientist={scientist} action="PUT" />
-        </CardContent>
-      </Card>
+      <div className="flex items-start justify-self-center gap-4">
+        <Card className="max-w-3xl mx-auto">
+          <CardHeader>
+            <CardTitle>Scientist Data</CardTitle>
+            <CardDescription>Update scientist information</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <ScientistsEditor scientist={scientist} action="PUT" />
+          </CardContent>
+        </Card>
+        <ScientistProfilePicture scientist={scientist} />
+      </div>
     </div>
   );
 }

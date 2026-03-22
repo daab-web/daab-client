@@ -47,3 +47,11 @@ export async function fetchAreas(): Promise<string[]> {
 
   return data.areas;
 }
+
+export async function fetchInstitutions(): Promise<string[]> {
+  const res = await fetchAPI("/institutions");
+
+  const data: { institutions: string[] } = await res.json();
+
+  return data.institutions;
+}
