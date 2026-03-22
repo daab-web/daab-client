@@ -351,7 +351,7 @@ export default function DirectorsPage() {
                   showClear
                   disabled={scientistsLoading || createMutation.isPending}
                 />
-                <ComboboxContent>
+                <ComboboxContent portalled={false}>
                   <ComboboxEmpty>No available scientists</ComboboxEmpty>
                   <ComboboxList>
                     {(scientist) => (
