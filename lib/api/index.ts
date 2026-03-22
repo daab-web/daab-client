@@ -31,27 +31,3 @@ async function refreshToken(): Promise<boolean> {
 
   return res.ok;
 }
-
-export async function fetchCountries(): Promise<string[]> {
-  const res = await fetchAPI("/countries");
-
-  const data: { countries: string[] } = await res.json();
-
-  return data.countries;
-}
-
-export async function fetchAreas(): Promise<string[]> {
-  const res = await fetchAPI("/areas");
-
-  const data: { areas: string[] } = await res.json();
-
-  return data.areas;
-}
-
-export async function fetchInstitutions(): Promise<string[]> {
-  const res = await fetchAPI("/institutions");
-
-  const data: { institutions: string[] } = await res.json();
-
-  return data.institutions;
-}

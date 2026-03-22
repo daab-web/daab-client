@@ -19,12 +19,12 @@ import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import router from "next/router";
 import { Button } from "@/components/ui/button";
-import TagInput from "./tag-input";
 import { useState } from "react";
 import { SerializedEditorState } from "lexical";
-import { useAreas, useCoutnries, useInstitutions } from "@/hooks/use-scientists";
 import { ComboboxMultiple } from "@/components/combobox-multiple";
 import { Skeleton } from "@/components/ui/skeleton";
+import { useTRPC } from "@/trpc/client";
+import { useQuery } from "@tanstack/react-query";
 
 export interface ScientistsEditorProps {
   scientist?: Scientist;
@@ -35,6 +35,7 @@ export default function ScientistsEditor({
   scientist,
   action,
 }: ScientistsEditorProps) {
+  const trpc = useTRPC();
   const form = useScientistForm(scientist);
   const { mutate, isPending } =
     action === "POST"
@@ -46,9 +47,15 @@ export default function ScientistsEditor({
   const buttonText = action === "POST" ? "Create" : "Update";
   const processingText = action === "POST" ? "Creating..." : "Updating...";
 
-  const { data: areas, isLoading: areAreasLoading } = useAreas();
-  const { data: countries, isLoading: areCountriesLoading } = useCoutnries();
-  const { data: institutions, isLoading: areInstitutionsLoading } = useInstitutions();
+  const { data: areas, isLoading: areAreasLoading } = useQuery(
+    trpc.areas.queryOptions({}),
+  );
+  const { data: countries, isLoading: areCountriesLoading } = useQuery(
+    trpc.countries.queryOptions({}),
+  );
+  const { data: institutions, isLoading: areInstitutionsLoading } = useQuery(
+    trpc.institutions.queryOptions({ locale: "en" }),
+  );
 
   return (
     <Form {...form}>
