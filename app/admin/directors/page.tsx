@@ -34,12 +34,13 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+  Combobox,
+  ComboboxContent,
+  ComboboxEmpty,
+  ComboboxInput,
+  ComboboxItem,
+  ComboboxList,
+} from "@/components/ui/combobox";
 import {
   createDirector,
   deleteDirector,
@@ -53,7 +54,6 @@ export default function DirectorsPage() {
   const [createOpen, setCreateOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<Director | null>(null);
   const [selectedScientistId, setSelectedScientistId] = useState("");
-  const [scientistSearch, setScientistSearch] = useState("");
   const [role, setRole] = useState("");
 
   const {
@@ -88,25 +88,11 @@ export default function DirectorsPage() {
 
   const availableScientists = useMemo(() => {
     const scientists = scientistsResponse?.items ?? [];
-    const search = scientistSearch.trim().toLowerCase();
 
-    return scientists
-      .filter((scientist) => !assignedScientistIds.has(scientist.id))
-      .filter((scientist) => {
-        if (!search) return true;
-
-        const label = [
-          scientist.firstName,
-          scientist.lastName,
-          scientist.academicTitle,
-        ]
-          .filter(Boolean)
-          .join(" ")
-          .toLowerCase();
-
-        return label.includes(search);
-      });
-  }, [assignedScientistIds, scientistSearch, scientistsResponse?.items]);
+    return scientists.filter(
+      (scientist) => !assignedScientistIds.has(scientist.id),
+    );
+  }, [assignedScientistIds, scientistsResponse?.items]);
 
   const createMutation = useMutation({
     mutationFn: createDirector,
@@ -114,7 +100,6 @@ export default function DirectorsPage() {
       toast.success("Director assigned successfully");
       setCreateOpen(false);
       setSelectedScientistId("");
-      setScientistSearch("");
       setRole("");
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: ["directors"] }),
@@ -162,7 +147,6 @@ export default function DirectorsPage() {
 
     if (!open && !createMutation.isPending) {
       setSelectedScientistId("");
-      setScientistSearch("");
       setRole("");
     }
   };
@@ -170,6 +154,17 @@ export default function DirectorsPage() {
   const selectedScientist = availableScientists.find(
     (scientist) => scientist.id === selectedScientistId,
   );
+
+  const getScientistLabel = (scientist: {
+    id: string;
+    academicTitle?: string | null;
+    firstName: string;
+    lastName: string;
+  }) => {
+    return [scientist.academicTitle, scientist.firstName, scientist.lastName]
+      .filter(Boolean)
+      .join(" ");
+  };
 
   return (
     <div className="flex-1 space-y-4">
@@ -318,60 +313,44 @@ export default function DirectorsPage() {
 
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="director-scientist-search">
-                Search scientist
-              </Label>
-              <Input
-                id="director-scientist-search"
-                placeholder="Type a name or academic title"
-                value={scientistSearch}
-                onChange={(event) => setScientistSearch(event.target.value)}
-                disabled={scientistsLoading || createMutation.isPending}
-              />
-            </div>
-
-            <div className="space-y-2">
               <Label htmlFor="director-scientist">Scientist</Label>
-              <Select
-                value={selectedScientistId}
-                onValueChange={setSelectedScientistId}
+              <Combobox
+                items={availableScientists}
+                value={selectedScientist ?? null}
+                itemToStringLabel={getScientistLabel}
+                itemToStringValue={(scientist) => scientist.id}
+                onValueChange={(scientist) =>
+                  setSelectedScientistId(scientist?.id ?? "")
+                }
                 disabled={scientistsLoading || createMutation.isPending}
               >
-                <SelectTrigger id="director-scientist" className="w-full">
-                  <SelectValue
-                    placeholder={
-                      scientistsLoading
-                        ? "Loading scientists..."
-                        : availableScientists.length === 0
-                          ? "No available scientists"
-                          : "Choose a scientist"
-                    }
-                  />
-                </SelectTrigger>
-                <SelectContent>
-                  {availableScientists.map((scientist) => (
-                    <SelectItem key={scientist.id} value={scientist.id}>
-                      {[
-                        scientist.academicTitle,
-                        scientist.firstName,
-                        scientist.lastName,
-                      ]
-                        .filter(Boolean)
-                        .join(" ")}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
+                <ComboboxInput
+                  id="director-scientist"
+                  className="w-full"
+                  placeholder={
+                    scientistsLoading
+                      ? "Loading scientists..."
+                      : availableScientists.length === 0
+                        ? "No available scientists"
+                        : "Type a name or academic title"
+                  }
+                  showClear
+                  disabled={scientistsLoading || createMutation.isPending}
+                />
+                <ComboboxContent>
+                  <ComboboxEmpty>No available scientists</ComboboxEmpty>
+                  <ComboboxList>
+                    {(scientist) => (
+                      <ComboboxItem key={scientist.id} value={scientist}>
+                        {getScientistLabel(scientist)}
+                      </ComboboxItem>
+                    )}
+                  </ComboboxList>
+                </ComboboxContent>
+              </Combobox>
               {selectedScientist && (
                 <p className="text-xs text-muted-foreground">
-                  Selected:{" "}
-                  {[
-                    selectedScientist.academicTitle,
-                    selectedScientist.firstName,
-                    selectedScientist.lastName,
-                  ]
-                    .filter(Boolean)
-                    .join(" ")}
+                  Selected: {getScientistLabel(selectedScientist)}
                 </p>
               )}
             </div>
