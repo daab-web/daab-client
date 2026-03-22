@@ -54,6 +54,7 @@ export default function DirectorsPage() {
   const [createOpen, setCreateOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<Director | null>(null);
   const [selectedScientistId, setSelectedScientistId] = useState("");
+  const [scientistInputValue, setScientistInputValue] = useState("");
   const [role, setRole] = useState("");
 
   const {
@@ -100,6 +101,7 @@ export default function DirectorsPage() {
       toast.success("Director assigned successfully");
       setCreateOpen(false);
       setSelectedScientistId("");
+      setScientistInputValue("");
       setRole("");
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: ["directors"] }),
@@ -147,6 +149,7 @@ export default function DirectorsPage() {
 
     if (!open && !createMutation.isPending) {
       setSelectedScientistId("");
+      setScientistInputValue("");
       setRole("");
     }
   };
@@ -317,11 +320,22 @@ export default function DirectorsPage() {
               <Combobox
                 items={availableScientists}
                 value={selectedScientist ?? null}
+                inputValue={scientistInputValue}
                 itemToStringLabel={getScientistLabel}
                 itemToStringValue={(scientist) => scientist.id}
-                onValueChange={(scientist) =>
-                  setSelectedScientistId(scientist?.id ?? "")
-                }
+                onValueChange={(scientist) => {
+                  setSelectedScientistId(scientist?.id ?? "");
+                  setScientistInputValue(
+                    scientist ? getScientistLabel(scientist) : "",
+                  );
+                }}
+                onInputValueChange={(value, eventDetails) => {
+                  setScientistInputValue(value);
+
+                  if (eventDetails.reason === "input-clear") {
+                    setSelectedScientistId("");
+                  }
+                }}
                 disabled={scientistsLoading || createMutation.isPending}
               >
                 <ComboboxInput
