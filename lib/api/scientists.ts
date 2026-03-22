@@ -15,6 +15,28 @@ async function readErrorMessage(response: Response, fallback: string) {
   return fallback;
 }
 
+function parseScientistDescription(
+  description: unknown,
+): SerializedEditorState | null {
+  if (!description) {
+    return null;
+  }
+
+  if (typeof description === "object") {
+    return description as SerializedEditorState;
+  }
+
+  if (typeof description !== "string") {
+    return null;
+  }
+
+  try {
+    return JSON.parse(description) as SerializedEditorState;
+  } catch {
+    return null;
+  }
+}
+
 export async function fetchScientists(
   page: number = 1,
   pageSize: number = 20,
@@ -57,7 +79,7 @@ export async function fetchScientistById(idOrSlug: string): Promise<Scientist> {
 
   return {
     ...data,
-    description: data.description ? (JSON.parse(data.description) as SerializedEditorState) : null,
+    description: parseScientistDescription(data.description),
   };
 }
 

@@ -4,17 +4,16 @@ import {
   CardDescription,
   CardTitle,
 } from "@/components/ui/card";
-import Image from "next/image";
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { Separator } from "./ui/separator";
-import { MapPin } from "lucide-react";
+import { MapPin, UserRound } from "lucide-react";
 
 export type DirectorCardProps = {
   name: string;
   role: string;
   subtitle?: string;
   country: string;
-  imageSrc: string;
+  imageSrc?: string;
   profileUrl?: string;
 };
 
@@ -26,35 +25,27 @@ export function DirectorCard({
   imageSrc,
   profileUrl,
 }: DirectorCardProps) {
-  return (
-    <Card className="group flex h-full flex-col items-center text-center bg-card/80 backdrop-blur-sm overflow-hidden border border-border/40 shadow-md hover:shadow-2xl hover:border-[#3B5998]/60 transition-all duration-500 ease-out hover:-translate-y-2 hover:scale-[1.02]">
+  const content = (
+    <Card className="group flex h-full flex-col items-center overflow-hidden border border-border/40 bg-card/80 text-center shadow-md backdrop-blur-sm transition-all duration-500 ease-out hover:-translate-y-2 hover:scale-[1.02] hover:border-[#3B5998]/60 hover:shadow-2xl">
       <div className="relative w-full aspect-square bg-muted overflow-hidden">
         <div className="absolute inset-0 bg-linear-to-t from-background/90 via-background/20 to-transparent z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
-        <Image
-          src={imageSrc}
-          alt={name}
-          fill
-          sizes="(max-width: 640px) 100vw, 25vw"
-          className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
-          priority={false}
-        />
+        {imageSrc ? (
+          <img
+            src={imageSrc}
+            alt={name}
+            className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+          />
+        ) : (
+          <div className="flex h-full w-full items-center justify-center bg-muted text-muted-foreground">
+            <UserRound className="h-16 w-16" />
+          </div>
+        )}
       </div>
       <CardContent className="flex flex-1 justify-between flex-col items-center gap-3 pt-5 pb-4 px-4 w-full">
         <div className="space-y-2 w-full">
-          <CardTitle className="text-lg font-bold text-foreground leading-tight group-hover:text-[#3B5998] transition-colors duration-300">
-            {profileUrl ? (
-              <Link
-                href={profileUrl}
-                className="hover:underline decoration-2 underline-offset-2"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                {name}
-              </Link>
-            ) : (
-              name
-            )}
+          <CardTitle className="text-lg font-bold text-foreground leading-tight transition-colors duration-300 group-hover:text-[#3B5998]">
+            {name}
           </CardTitle>
 
           <div className="inline-block px-3 py-1 rounded-full bg-[#3B5998]/10 border border-[#3B5998]/30 group-hover:bg-[#3B5998]/20 transition-colors duration-300">
@@ -83,4 +74,14 @@ export function DirectorCard({
       </CardContent>
     </Card>
   );
+
+  if (profileUrl) {
+    return (
+      <Link href={profileUrl} className="block h-full">
+        {content}
+      </Link>
+    );
+  }
+
+  return content;
 }
