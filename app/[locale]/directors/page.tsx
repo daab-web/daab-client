@@ -1,52 +1,23 @@
 import { DirectorCard } from "@/components/director-card";
+import { fetchDirectors } from "@/lib/api/directors";
 import { getTranslations } from "next-intl/server";
-
-const directorKeys = [
-  "masud",
-  "baxtiyar",
-  "seymur",
-  "emil",
-  "nigar",
-  "sevinc",
-  "saadat",
-  "teymur",
-  "togrulIsmayil",
-  "togrulKerimov",
-  "yulduz",
-] as const;
-
-const directorImages: Record<(typeof directorKeys)[number], string> = {
-  masud: "/directors/masud.jpg",
-  baxtiyar: "/directors/baxtiyar.jpg",
-  seymur: "/directors/seymur.jpg",
-  emil: "/directors/emil.jpg",
-  nigar: "/directors/nigar.jpg",
-  sevinc: "/directors/sevinc.jpg",
-  saadat: "/directors/saadat.jpg",
-  teymur: "/directors/teymur.jpg",
-  togrulIsmayil: "/directors/togrulIsmayil.jpg",
-  togrulKerimov: "/directors/togrulKerimov.png",
-  yulduz: "/directors/yulduz.jpg",
-};
 
 export default async function DirectorsPage() {
   const navigation = await getTranslations("Navigation");
   const directorsT = await getTranslations("Directors");
+  const directors = await fetchDirectors();
 
-  const directors = directorKeys.map((key) => {
-    const profileUrl = directorsT(`members.${key}.profileUrl`);
-    const subtitle = directorsT(`members.${key}.subtitle`);
-
-    return {
-      key,
-      name: directorsT(`members.${key}.name`),
-      role: directorsT(`members.${key}.role`),
-      subtitle: subtitle.trim() === "" ? undefined : subtitle,
-      country: directorsT(`members.${key}.country`),
-      imageSrc: directorImages[key],
-      profileUrl: profileUrl === "#" ? undefined : profileUrl,
-    };
-  });
+  const directorCards = directors.map((director) => ({
+    key: director.id,
+    name: `${director.firstName} ${director.lastName}`.trim(),
+    role: director.role,
+    subtitle: director.academicTitle || undefined,
+    country: director.countries.join(", ") || "-",
+    imageSrc: director.profilePictureUrl || undefined,
+    profileUrl: director.scientistId
+      ? `/scientists/${director.scientistId}`
+      : undefined,
+  }));
 
   return (
     <section className="mx-auto pt-12 flex w-full max-w-6xl flex-col items-center gap-8 text-center px-4">
@@ -59,7 +30,7 @@ export default async function DirectorsPage() {
         </p>
       </div>
       <div className="grid w-full gap-6 sm:grid-cols-2 xl:grid-cols-4">
-        {directors.map((director, index) => (
+        {directorCards.map((director, index) => (
           <div
             key={director.key}
             className="animate-in fade-in slide-in-from-bottom-8 duration-700"
