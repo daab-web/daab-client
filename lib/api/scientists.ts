@@ -2,6 +2,7 @@ import { PagedResponse } from "@/types/paged-response";
 import { Scientist } from "@/types/scientist";
 import { fetchAPI } from ".";
 import { Publication } from "@/types/publication";
+import { SerializedEditorState } from "lexical";
 
 async function readErrorMessage(response: Response, fallback: string) {
   try {
@@ -45,15 +46,19 @@ export async function fetchScientists(
   return data;
 }
 
-export async function fetchScientistById(idOrSlug: string) {
+export async function fetchScientistById(idOrSlug: string): Promise<Scientist> {
   const response = await fetchAPI(`/scientists/${idOrSlug}`);
-  const scientist: Scientist = await response.json();
 
-  if (typeof scientist.description === "string") {
-    scientist.description = JSON.parse(scientist.description);
+  if (!response.ok) {
+    throw new Error(`Failed to fetch scientist: ${response.status}`);
   }
 
-  return scientist;
+  const data = await response.json();
+
+  return {
+    ...data,
+    description: data.description ? (JSON.parse(data.description) as SerializedEditorState) : null,
+  };
 }
 
 export async function fetchPublicationsByScientistId(
@@ -121,7 +126,7 @@ export async function updateScientist(id: string, data: any) {
   return fetchAPI(`/scientists/${id}`, {
     method: "PUT",
     headers: {
-      "Content-Type": "application/json"
+      "Content-Type": "application/json",
     },
     body: JSON.stringify(data),
   });
