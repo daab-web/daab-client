@@ -102,6 +102,9 @@ function ComboboxContent({
   > & {
     portalled?: boolean;
   }) {
+  const [inlineContainer, setInlineContainer] =
+    React.useState<HTMLDivElement | null>(null);
+
   const content = (
     <ComboboxPrimitive.Positioner
       side={side}
@@ -124,7 +127,16 @@ function ComboboxContent({
   );
 
   if (!portalled) {
-    return content;
+    return (
+      <>
+        <div ref={setInlineContainer} />
+        {inlineContainer ? (
+          <ComboboxPrimitive.Portal container={inlineContainer}>
+            {content}
+          </ComboboxPrimitive.Portal>
+        ) : null}
+      </>
+    );
   }
 
   return <ComboboxPrimitive.Portal>{content}</ComboboxPrimitive.Portal>;
