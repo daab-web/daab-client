@@ -33,3 +33,9 @@ export async function approveApplication(applicationId: string) {
     method: "PUT",
   });
 }
+
+export async function rejectApplication(applicationId: string) {
+  return fetchAPI(`/applications/${applicationId}/reject`, {
+    method: "DELETE",
+  });
+}
