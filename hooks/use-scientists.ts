@@ -2,7 +2,6 @@ import { useQuery } from "@tanstack/react-query";
 import { PagedResponse } from "@/types/paged-response";
 import { Scientist } from "@/types/scientist";
 import { fetchScientists } from "@/lib/api/scientists";
-import { fetchAreas, fetchCountries, fetchInstitutions } from "@/lib/api/index";
 
 export function useScientists(
   page: number,
@@ -20,26 +19,5 @@ export function useScientists(
         country || undefined,
         area || undefined,
       ),
-  });
-}
-
-export function useAreas() {
-  return useQuery<string[]>({
-    queryKey: ["areas"],
-    queryFn: fetchAreas,
-  });
-}
-
-export function useCoutnries() {
-  return useQuery<string[]>({
-    queryKey: ["countries"],
-    queryFn: fetchCountries,
-  });
-}
-
-export function useInstitutions() {
-  return useQuery<string[]>({
-    queryKey: ["institutions"],
-    queryFn: fetchInstitutions,
   });
 }
