@@ -38,7 +38,11 @@ import {
   XCircle,
 } from "lucide-react";
 import { Application } from "@/types/application";
-import { fetchApplications, approveApplication } from "@/lib/api/applications";
+import {
+  fetchApplications,
+  approveApplication,
+  rejectApplication,
+} from "@/lib/api/applications";
 import { PagedResponse } from "@/types/paged-response";
 
 export default function ApplicationsPage() {
@@ -101,6 +105,7 @@ export default function ApplicationsPage() {
         await approveApplication(application.id);
         setApplications((prev) => prev.filter((a) => a.id !== application.id));
       } else {
+        await rejectApplication(application.id);
         setApplications((prev) => prev.filter((a) => a.id !== application.id));
       }
     } catch (err) {
