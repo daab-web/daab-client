@@ -25,15 +25,14 @@ export function AboutSectionWrapper({ sectionId, title, children }: Props) {
   return (
     <div className="flex flex-col gap-6 py-2 animate-in fade-in slide-in-from-bottom-3 duration-500">
       {/* Header */}
-      <div className="flex items-start gap-4 animate-in fade-in slide-in-from-left-4 duration-500">
+      <div className="flex items-center gap-4 animate-in fade-in slide-in-from-left-4 duration-500">
         <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-[#1e3a6e] animate-in zoom-in duration-500 delay-100">
           <Icon className="h-8 w-8 text-white" />
         </div>
-        <div className="space-y-0.5 animate-in fade-in slide-in-from-right-4 duration-500 delay-150">
-          <p className="text-xs font-semibold uppercase tracking-widest text-muted-foreground">
-            Section
-          </p>
-          <h1 className="text-2xl font-bold md:text-3xl">{title}</h1>
+        <div className="flex h-14 items-center animate-in fade-in slide-in-from-right-4 duration-500 delay-150">
+          <h1 className="text-2xl font-bold leading-none md:text-3xl">
+            {title}
+          </h1>
         </div>
       </div>
       <Separator className="animate-in fade-in duration-500 delay-200" />
