@@ -61,7 +61,10 @@ export function NewsCarousel({ articles, locale }: NewsCarouselProps) {
                       ) : null}
                       {article.category && (
                         <div className="absolute top-4 left-4">
-                          <Badge className="text-sm px-3 py-1 backdrop-blur-sm bg-background/80">
+                          <Badge
+                            variant="outline"
+                            className="text-sm px-3 py-1 backdrop-blur-sm bg-background/80 text-foreground border-border shadow-sm"
+                          >
                             {article.category}
                           </Badge>
                         </div>

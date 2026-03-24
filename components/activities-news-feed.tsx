@@ -109,8 +109,8 @@ export function ActivitiesNewsFeed({
                 {article.category && (
                   <div className="absolute top-3 left-3">
                     <Badge
-                      variant="secondary"
-                      className="backdrop-blur-sm bg-background/80"
+                      variant="outline"
+                      className="backdrop-blur-sm bg-background/80 text-foreground border-border shadow-sm"
                     >
                       {article.category}
                     </Badge>
