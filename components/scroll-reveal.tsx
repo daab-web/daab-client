@@ -22,14 +22,21 @@ export function ScrollReveal() {
       },
       {
         threshold: 0.1,
-        rootMargin: "0px 0px -50px 0px",
+        rootMargin: "50px 0px 0px 0px",
       },
     );
 
     const elements = document.querySelectorAll(
       ".reveal, .reveal-from-left, .reveal-from-right",
     );
-    elements.forEach((el) => observer.observe(el));
+
+    elements.forEach((el) => {
+      const rect = el.getBoundingClientRect();
+      if (rect.top < window.innerHeight && rect.bottom > 0) {
+        el.classList.add("reveal-visible");
+      }
+      observer.observe(el);
+    });
 
     return () => observer.disconnect();
   }, []);
