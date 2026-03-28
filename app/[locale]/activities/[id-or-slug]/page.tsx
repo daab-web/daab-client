@@ -16,9 +16,9 @@ type Props = {
   params: Promise<{ locale: string; "id-or-slug": string }>;
 };
 
-async function getArticleWithContent(idOrSlug: string): Promise<News | null> {
+async function getArticleWithContent(idOrSlug: string, locale: string): Promise<News | null> {
   try {
-    const article: News = await getNewsByIdOrSlug(idOrSlug);
+    const article: News = await getNewsByIdOrSlug(idOrSlug, locale);
     return article;
   } catch (error) {
     console.error("Error fetching article:", error);
@@ -30,7 +30,7 @@ export default async function ArticlePage({ params }: Props) {
   const { locale, "id-or-slug": idOrSlug } = await params;
   const t = await getTranslations({ locale, namespace: "ArticlePage" });
 
-  const article = await getArticleWithContent(idOrSlug);
+  const article = await getArticleWithContent(idOrSlug, locale);
 
   if (!article) {
     notFound();

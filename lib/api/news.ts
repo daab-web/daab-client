@@ -5,10 +5,12 @@ import { fetchAPI } from ".";
 export async function fetchNews(
   page: number = 1,
   pageSize: number = 20,
+  locale: string
 ): Promise<PagedResponse<News>> {
   const params = new URLSearchParams({
     page: page.toString(),
     pageSize: pageSize.toString(),
+    locale
   });
   const response = await fetchAPI(`/news?${params.toString()}`);
   const data: PagedResponse<News> = await response.json();
@@ -16,8 +18,8 @@ export async function fetchNews(
   return data;
 }
 
-export async function getNewsByIdOrSlug(idOrSlug: string) {
-  const response = await fetchAPI(`/news/${idOrSlug}`);
+export async function getNewsByIdOrSlug(idOrSlug: string, locale: string) {
+  const response = await fetchAPI(`/news/${idOrSlug}?locale=${locale}`);
   const news: News = await response.json();
 
   return news;

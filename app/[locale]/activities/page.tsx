@@ -20,6 +20,7 @@ export default async function Activities({ params }: Props) {
   const newsResponse = (await fetchNews(
     1,
     initialPageSize,
+    locale
   )) as FetchNewsResponse;
   const news = newsResponse.items;
 
