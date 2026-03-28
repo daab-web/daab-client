@@ -206,7 +206,7 @@ export default function NewsEditorPage() {
   const loadNewsForEdit = async (id: string) => {
     setIsLoadingArticle(true);
     try {
-      const article = await getNewsByIdOrSlug(id);
+      const article = await getNewsByIdOrSlug(id, "en");
       setEditingNewsId(article.id);
       setValue("title", article.title);
       setValue("excerpt", article.excerpt ?? "");

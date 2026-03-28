@@ -41,7 +41,7 @@ export default async function Home({ params }: Props) {
 
   let news: News[] = [];
   try {
-    const newsResponse = (await fetchNews(1, 9)) as FetchNewsResponse;
+    const newsResponse = (await fetchNews(1, 9, locale)) as FetchNewsResponse;
     news = newsResponse.items;
   } catch {
     news = [];

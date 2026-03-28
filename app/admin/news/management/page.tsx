@@ -49,7 +49,7 @@ export default function NewsManagementPage() {
   const loadNews = async () => {
     setIsListLoading(true);
     try {
-      const response = await fetchNews(1, 50);
+      const response = await fetchNews(1, 50, "en");
       setNewsItems(response.items);
     } catch {
       toast.error("Could not load news", {

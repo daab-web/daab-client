@@ -44,7 +44,8 @@ export function ActivitiesNewsFeed({
       number
     >({
       queryKey: ["activities-news", locale, pageSize],
-      queryFn: async ({ pageParam }) => await fetchNews(pageParam, pageSize),
+      queryFn: async ({ pageParam }) =>
+        await fetchNews(pageParam, pageSize, locale),
       initialPageParam: 1,
       getNextPageParam: (lastPage) =>
         lastPage.metadata.hasNextPage
