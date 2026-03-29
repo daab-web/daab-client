@@ -339,7 +339,7 @@ export default function NewsEditorPage() {
             <Eye className="mr-2 h-4 w-4" />
             Preview
           </Button>
-          <Button onClick={handleSubmit(onSubmit)} disabled={isPending}>
+          <Button onClick={handleSubmit((d) => console.log(d))} disabled={isPending}>
             {isPending ? (
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
             ) : (
