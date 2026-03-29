@@ -1,4 +1,4 @@
-import { News, NewsAttachmentsResponse } from "@/types/news"
+import { CreateNewsRequest, News, NewsAttachmentsResponse } from "@/types/news"
 import { PagedResponse } from "@/types/paged-response"
 import { fetchAPI } from ".";
 
@@ -25,11 +25,23 @@ export async function getNewsByIdOrSlug(idOrSlug: string, locale: string) {
   return news;
 }
 
-export async function createNews(formData: FormData) {
+export async function createNews(data: CreateNewsRequest) {
   return fetchAPI("/news", {
     method: "POST",
-    body: formData,
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data),
   });
+}
+
+export async function setThumbnail(newsId: string, image: File) {
+  const formData = new FormData()
+  formData.append("image", image)
+  return fetchAPI(`/news/${newsId}/thumbnail`, {
+    method: "POST",
+    body: formData
+  })
 }
 
 export async function updateNews(id: string, formData: FormData) {

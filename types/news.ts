@@ -7,11 +7,10 @@ export type News = {
   thumbnail: string;
   excerpt?: string;
   publishedDate: string;
-  authorId?: string;
   authorName?: string;
   category?: string;
   tags: string[];
-  editorState: SerializedEditorState | null
+  editorState: SerializedEditorState | null;
 };
 
 export type NewsAttachment = {
@@ -24,5 +23,20 @@ export type NewsAttachment = {
 export type NewsAttachmentsResponse = {
   newsId: string;
   attachments: NewsAttachment[];
+};
+
+export type CreateNewsRequest = {
+  title: string;
+  editorState: string;
+  excerpt?: string;
+  author?: string;
+  authorId?: string;
+  category?: string;
+  tags: string[]
+  publishedDate: Date;
+};
+
+export type CreateNewsResponse = {
+  id: string;
 };
 
