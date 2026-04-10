@@ -350,5 +350,14 @@
       "contributionsRequired": "DAAB-a töhfələr tələb olunur",
       "fieldsRequired": "Ən azı bir sahə seçin"
     }
+  },
+
+  "footer": {
+    "sitemap": "Sayt xəritəsi",
+    "contact": "Əlaqə",
+    "chairmanName": "Məsud Əfəndiyev, DAAB İdarə Heyətinin Sədri",
+    "chairmanTitle": "James D. Murray adına Fəxri Professor, Almaniya",
+    "address": "DAAB-nin Türkiyədə qeydiyyatdan keçdiyi ünvan: Feneryolu Mahallesi, Gazi Muhtar Paşa Sokak No: 44, Kadıköy, İstanbul, Türkiyə",
+    "copyright": "DAAB / Dünya Azərbaycanlı Alimlər Birliyi. Bütün hüquqlar qorunur."
   }
 }

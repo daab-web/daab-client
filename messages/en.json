@@ -350,5 +350,14 @@
       "contributionsRequired": "Contributions to DAAB is required",
       "fieldsRequired": "Select at least one field"
     }
+  },
+
+  "footer": {
+    "sitemap": "Sitemap",
+    "contact": "Contact",
+    "chairmanName": "Messoud Efendiyev, WAAS Board Chairman",
+    "chairmanTitle": "James D. Murray Distinguished Professor, Germany",
+    "address": "Registered Address of WAAS in Turkey: Feneryolu Mahallesi, Gazi Muhtar Paşa Sokak No: 44, Kadıköy, Istanbul, Turkey",
+    "copyright": "DAAB / World Association of Azerbaijani Scientists (WAAS). All rights reserved."
   }
 }

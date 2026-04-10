@@ -5,6 +5,7 @@ import { NextIntlClientProvider } from "next-intl";
 
 import * as React from "react";
 import Navbar from "@/components/navbar";
+import { Footer } from "@/components/footer";
 
 type Props = {
   params: Promise<{ locale: string }>;
@@ -36,6 +37,9 @@ export default async function LocaleLayout(props: Props) {
         <main className="flex-1 flex flex-col w-full mt-30">
           {props.children}
         </main>
+        <footer className="f-full border-t border-border backdrop-blur-xl">
+          <Footer />
+        </footer>
       </div>
     </NextIntlClientProvider>
   );
