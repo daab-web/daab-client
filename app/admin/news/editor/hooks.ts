@@ -13,7 +13,7 @@ export type createNewsOpts = {
 
 export type updateNewsProps = {
   data: CreateNewsRequest;
-  thumbnail: File;
+  thumbnail?: File;
   attachments?: Attachment[];
   locale: "en" | "az"
 }

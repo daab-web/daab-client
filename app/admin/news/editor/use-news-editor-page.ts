@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { SerializedEditorState } from "lexical";
 import { toast } from "sonner";
 import { getNewsAttachments, getNewsByIdOrSlug } from "@/lib/api/news";
@@ -10,10 +10,7 @@ import { NewsFormData, DEFAULT_FORM_VALUES } from "./types";
 import { Attachment } from "@/types/attachment";
 import { useCreateNewsMutation, useUpdateNewsMutation } from "./hooks";
 
-export function useNewsEditorPage() {
-  const params = useSearchParams();
-  const editId = params.get("editId")
-
+export function useNewsEditorPage(editId?: string) {
   const router = useRouter();
 
   const form = useForm<NewsFormData>({ defaultValues: DEFAULT_FORM_VALUES });
