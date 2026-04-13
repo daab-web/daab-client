@@ -21,8 +21,15 @@ import { PreviewDialog } from "./preview-dialog";
 import { useNewsEditorPage } from "./use-news-editor-page";
 import { ButtonGroup } from "@/components/ui/button-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { use } from "react";
 
-export default function NewsEditorPage() {
+export default function NewsEditorPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ editId?: string }>;
+}) {
+  const { editId } = use(searchParams);
+
   const {
     register,
     control,
@@ -51,7 +58,7 @@ export default function NewsEditorPage() {
     router,
     locale,
     setLocale
-  } = useNewsEditorPage();
+  } = useNewsEditorPage(editId);
 
   return (
     <div className="flex-1 space-y-4 p-8">
