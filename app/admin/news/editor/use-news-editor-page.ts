@@ -2,15 +2,18 @@
 
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { SerializedEditorState } from "lexical";
 import { toast } from "sonner";
-import { getNewsByIdOrSlug } from "@/lib/api/news";
+import { getNewsAttachments, getNewsByIdOrSlug } from "@/lib/api/news";
 import { NewsFormData, DEFAULT_FORM_VALUES } from "./types";
 import { Attachment } from "@/types/attachment";
-import { useCreateNewsMutation } from "./hooks";
+import { useCreateNewsMutation, useUpdateNewsMutation } from "./hooks";
 
 export function useNewsEditorPage() {
+  const params = useSearchParams();
+  const editId = params.get("editId")
+
   const router = useRouter();
 
   const form = useForm<NewsFormData>({ defaultValues: DEFAULT_FORM_VALUES });
@@ -26,6 +29,7 @@ export function useNewsEditorPage() {
 
   const [editingNewsId, setEditingNewsId] = useState<string | null>(null);
   const [isLoadingArticle, setIsLoadingArticle] = useState(false);
+  const [locale, setLocale] = useState<"en" | "az">("en");
   const [editorState, setEditorState] = useState<SerializedEditorState | null>(
     null,
   );
@@ -37,7 +41,9 @@ export function useNewsEditorPage() {
   const [attachments, setAttachments] = useState<Attachment[]>([]);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
-  const { mutate, isPending } = useCreateNewsMutation();
+  const { mutate, isPending } = editId 
+    ? useUpdateNewsMutation(editId)
+    : useCreateNewsMutation();
 
   const resetFormForCreate = () => {
     reset(DEFAULT_FORM_VALUES);
@@ -53,8 +59,10 @@ export function useNewsEditorPage() {
   const loadNewsForEdit = async (id: string) => {
     setIsLoadingArticle(true);
     try {
-      const article = await getNewsByIdOrSlug(id, "en");
+      const article = await getNewsByIdOrSlug(id, locale);
+      const att = await getNewsAttachments(id)
       setEditingNewsId(article.id);
+      setAttachments(att)
       setValue("title", article.title);
       setValue("excerpt", article.excerpt ?? "");
       setValue("category", article.category ?? "");
@@ -84,13 +92,6 @@ export function useNewsEditorPage() {
 
   const onSubmit = handleSubmit((formData: NewsFormData) => {
     const thumbnail = formData.thumbnail?.[0];
-    if (!thumbnail) {
-      toast.error("Thumbnail required", {
-        description: "Please upload a thumbnail image.",
-      });
-      return;
-    }
-
     mutate({
       data: {
         title: formData.title,
@@ -104,14 +105,13 @@ export function useNewsEditorPage() {
       },
       thumbnail,
       attachments,
+      locale
     });
   });
 
   useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const editId = params.get("editId");
     if (editId) void loadNewsForEdit(editId);
-  }, []);
+  }, [locale]);
 
   return {
     // form
@@ -146,5 +146,8 @@ export function useNewsEditorPage() {
     isLoadingArticle,
     resetFormForCreate,
     router,
+    //locale
+    locale,
+    setLocale
   };
 }
