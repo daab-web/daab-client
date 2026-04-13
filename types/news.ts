@@ -25,6 +25,13 @@ export type NewsAttachmentsResponse = {
   attachments: NewsAttachment[];
 };
 
+export type CreateNewsTranslationRequest = {
+  locale: string;
+  title: string;
+  excerpt?: string;
+  editorState?: string;
+}
+
 export type CreateNewsRequest = {
   title: string;
   editorState: string;

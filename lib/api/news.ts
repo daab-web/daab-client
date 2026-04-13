@@ -1,6 +1,7 @@
-import { CreateNewsRequest, News, NewsAttachmentsResponse } from "@/types/news"
+import { CreateNewsRequest, CreateNewsTranslationRequest, News, NewsAttachmentsResponse } from "@/types/news"
 import { PagedResponse } from "@/types/paged-response"
 import { fetchAPI } from ".";
+import { Attachment } from "@/types/attachment";
 
 export async function fetchNews(
   page: number = 1,
@@ -25,6 +26,13 @@ export async function getNewsByIdOrSlug(idOrSlug: string, locale: string) {
   return news;
 }
 
+export async function getNewsAttachments(id: string) {
+  const response = await fetchAPI(`/news/${id}/attachments`);
+  const attachments: Attachment[] = await response.json()
+
+  return attachments
+}
+
 export async function createNews(data: CreateNewsRequest) {
   return fetchAPI("/news", {
     method: "POST",
@@ -33,6 +41,26 @@ export async function createNews(data: CreateNewsRequest) {
     },
     body: JSON.stringify(data),
   });
+}
+
+export async function createTranslation(newsId: string, data: CreateNewsTranslationRequest) {
+  return fetchAPI(`/news/${newsId}/translations`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data),
+  })
+}
+
+export async function updateTranslation(newsId: string, data: CreateNewsTranslationRequest) {
+  return fetchAPI(`/news/${newsId}/translations`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data),
+  })
 }
 
 export async function setThumbnail(newsId: string, image: File) {

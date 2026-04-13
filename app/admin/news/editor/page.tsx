@@ -19,6 +19,8 @@ import { TagsCard } from "./tags-card";
 import { AttachmentsCard } from "./attachments-card";
 import { PreviewDialog } from "./preview-dialog";
 import { useNewsEditorPage } from "./use-news-editor-page";
+import { ButtonGroup } from "@/components/ui/button-group";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function NewsEditorPage() {
   const {
@@ -47,6 +49,8 @@ export default function NewsEditorPage() {
     isLoadingArticle,
     resetFormForCreate,
     router,
+    locale,
+    setLocale
   } = useNewsEditorPage();
 
   return (
@@ -86,14 +90,25 @@ export default function NewsEditorPage() {
             <Eye className="mr-2 h-4 w-4" />
             Preview
           </Button>
-          <Button onClick={onSubmit} disabled={isPending}>
-            {isPending ? (
-              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-            ) : (
-              <Save className="mr-2 h-4 w-4" />
-            )}
-            {editingNewsId ? "Update" : "Save"}
-          </Button>
+          <ButtonGroup>
+            <Select defaultValue={locale} onValueChange={v => setLocale(v as "en" | "az")}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select locale" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="en">EN</SelectItem>
+                <SelectItem value="az">AZ</SelectItem>
+              </SelectContent>
+            </Select>
+            <Button onClick={onSubmit} disabled={isPending}>
+              {isPending ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <Save className="mr-2 h-4 w-4" />
+              )}
+              {editingNewsId ? "Update" : "Save"}
+            </Button>
+          </ButtonGroup>
         </div>
       </div>
 
