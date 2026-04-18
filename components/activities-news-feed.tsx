@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useRef } from "react";
 import { InfiniteData, useInfiniteQuery } from "@tanstack/react-query";
-import { User, Clock } from "lucide-react";
+import { User, Clock, ImageIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -91,14 +91,14 @@ export function ActivitiesNewsFeed({
   return (
     <>
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-        {articles.map((article, index) => (
+        {articles.map((article) => (
           <Link
             key={article.id}
             href={`/${locale}/activities/${article.slug || article.id}`}
             className={`reveal `}
           >
             <Card className="overflow-hidden hover:shadow-lg transition-all duration-300 flex flex-col group h-full cursor-pointer">
-              <div className="relative h-48 overflow-hidden bg-muted">
+              <div className="relative h-48 overflow-hidden bg-muted flex items-center justify-center">
                 {article.thumbnail ? (
                   <Image
                     src={article.thumbnail}
@@ -106,7 +106,7 @@ export function ActivitiesNewsFeed({
                     fill
                     className="object-contain group-hover:scale-105 transition-transform duration-300"
                   />
-                ) : null}
+                ) : <ImageIcon />}
                 {article.category && (
                   <div className="absolute top-3 left-3">
                     <Badge
