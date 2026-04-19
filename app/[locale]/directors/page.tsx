@@ -1,11 +1,12 @@
 import { DirectorCard } from "@/components/director-card";
 import { fetchDirectors } from "@/lib/api/directors";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 
 export default async function DirectorsPage() {
   const navigation = await getTranslations("Navigation");
   const directorsT = await getTranslations("Directors");
-  const directors = await fetchDirectors();
+  const locale = await getLocale();
+  const directors = await fetchDirectors(locale);
 
   const directorCards = directors.map((director) => ({
     key: director.id,

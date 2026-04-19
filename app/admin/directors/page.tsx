@@ -61,7 +61,7 @@ export default function DirectorsPage() {
     isRefetching: directorsRefetching,
   } = useQuery({
     queryKey: ["directors"],
-    queryFn: fetchDirectors,
+    queryFn: () => fetchDirectors("en"),
   });
 
   const {

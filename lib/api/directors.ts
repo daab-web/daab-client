@@ -12,8 +12,8 @@ async function readErrorMessage(response: Response, fallback: string) {
   return fallback;
 }
 
-export async function fetchDirectors(): Promise<Director[]> {
-  const response = await fetchAPI("/directors");
+export async function fetchDirectors(locale: string): Promise<Director[]> {
+  const response = await fetchAPI(`/directors?locale=${locale}`);
 
   if (!response.ok) {
     throw new Error(
