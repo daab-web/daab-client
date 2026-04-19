@@ -11,7 +11,7 @@ export function useScientistCreateMutation(locale: string) {
 
   return useMutation({
     mutationFn: async (data: ScientistFormData) => {
-      const { id } = await createScientist(data)
+      const { id } = await createScientist(data, locale)
       await updateScientistTranslation(id, locale, {
         firstName: data.firstName,
         lastName: data.lastName,

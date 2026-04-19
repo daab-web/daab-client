@@ -107,7 +107,7 @@ export async function fetchPublicationsByScientistId(
   return [];
 }
 
-export async function createScientist(data: any) {
+export async function createScientist(data: any, locale: string) {
   const formData = new FormData();
   const { photo, orcId, ...rest } = data;
 
@@ -131,7 +131,7 @@ export async function createScientist(data: any) {
     formData.append("photo", photo);
   }
 
-  const response = await fetchAPI("/scientists", {
+  const response = await fetchAPI(`/scientists?locale=${locale}`, {
     method: "POST",
     body: formData,
   });
