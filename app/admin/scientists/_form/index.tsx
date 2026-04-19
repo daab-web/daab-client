@@ -19,12 +19,15 @@ import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import router from "next/router";
 import { Button } from "@/components/ui/button";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { SerializedEditorState } from "lexical";
 import { ComboboxMultiple } from "@/components/combobox-multiple";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useTRPC } from "@/trpc/client";
 import { useQuery } from "@tanstack/react-query";
+import { ButtonGroup } from "@/components/ui/button-group";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { fetchScientistById } from "@/lib/api/scientists";
 
 export interface ScientistsEditorProps {
   scientist?: Scientist;
@@ -37,15 +40,17 @@ export default function ScientistsEditor({
 }: ScientistsEditorProps) {
   const trpc = useTRPC();
   const form = useScientistForm(scientist);
-  const { mutate, isPending } =
-    action === "POST"
-      ? useScientistCreateMutation()
-      : useScientistUpdateMutation(scientist!.id);
   const [editorState, setEditorState] = useState<
     SerializedEditorState | undefined
-  >();
+  >(scientist?.description);
   const buttonText = action === "POST" ? "Create" : "Update";
   const processingText = action === "POST" ? "Creating..." : "Updating...";
+  const [locale, setLocale] = useState<"en" | "az">("en");
+  const [editorKey, setEditorKey] = useState(locale)
+  const { mutate, isPending } =
+    action === "POST"
+      ? useScientistCreateMutation(locale)
+      : useScientistUpdateMutation(scientist!.id, locale);
 
   const { data: areas, isLoading: areAreasLoading } = useQuery(
     trpc.areas.queryOptions({}),
@@ -56,6 +61,20 @@ export default function ScientistsEditor({
   const { data: institutions, isLoading: areInstitutionsLoading } = useQuery(
     trpc.institutions.queryOptions({ locale: "en" }),
   );
+
+  useEffect(() => {
+    if (action !== "PUT" || !scientist) return;
+
+    const loadLocaleData = async () => {
+      const data = await fetchScientistById(scientist.id, locale);
+      setEditorState(data.description);
+      form.setValue("firstName", data.firstName)
+      form.setValue("lastName", data.lastName)
+      setEditorKey(locale)
+    };
+
+    loadLocaleData();
+  }, [locale]);
 
   return (
     <Form {...form}>
@@ -197,7 +216,8 @@ export default function ScientistsEditor({
               <FormLabel>Description (optional)</FormLabel>
               <FormControl>
                 <NewsEditor
-                  initialEditorState={scientist?.description}
+                  key={editorKey}
+                  initialEditorState={editorState}
                   onContentChange={(state) => setEditorState(state)}
                 />
               </FormControl>
@@ -317,16 +337,27 @@ export default function ScientistsEditor({
         />
 
         <div className="flex gap-2 pt-4">
-          <Button type="submit" disabled={isPending}>
-            {isPending ? (
-              <>
-                <Spinner data-icon="inline-start" />
-                {processingText}
-              </>
-            ) : (
-              buttonText
-            )}
-          </Button>
+          <ButtonGroup>
+            <Select defaultValue={locale} onValueChange={v => setLocale(v as "en" | "az")}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select locale" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="en">EN</SelectItem>
+                <SelectItem value="az">AZ</SelectItem>
+              </SelectContent>
+            </Select>
+            <Button type="submit" disabled={isPending}>
+              {isPending ? (
+                <>
+                  <Spinner data-icon="inline-start" />
+                  {processingText}
+                </>
+              ) : (
+                buttonText
+              )}
+            </Button>
+          </ButtonGroup>
           <Button
             type="button"
             variant="outline"

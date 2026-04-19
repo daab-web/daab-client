@@ -20,3 +20,21 @@ export type Scientist = {
   dateOfBirth?: string | null;
   publications?: Array<{ id?: string; title: string; url?: string }>;
 };
+
+export interface UpdateScientistRequest {
+  email?: string;
+  phoneNumber?: string;
+  academicTitle: string;
+  linkedInUrl?: string;
+  orcid?: string;
+  website?: string;
+  institutions: string[]
+  countries: string[]
+  areas: string[]
+}
+
+export interface UpdateScientistTranslationRequest {
+  firstName: string;
+  lastName: string;
+  description?: string;
+}

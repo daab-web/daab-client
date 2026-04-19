@@ -29,7 +29,7 @@ export default async function ScientistDetailPage({ params }: Props) {
   const { locale, id } = await params;
   const t = await getTranslations({ locale, namespace: "Scientists" });
 
-  const scientist = await fetchScientistById(id);
+  const scientist = await fetchScientistById(id, locale);
   if (!scientist) {
     notFound();
   }

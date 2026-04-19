@@ -17,13 +17,8 @@ export default async function EditScientistPage({
 }: {
   params: Promise<{ id: string }>;
 }) {
-  // const { fields, append, remove } = useFieldArray({
-  //   control: form.control,
-  //   name: "publications",
-  // });
-
   const { id } = await params;
-  const scientist = await fetchScientistById(id);
+  const scientist = await fetchScientistById(id, "en");
 
   return (
     <div className="flex-1 space-y-4">

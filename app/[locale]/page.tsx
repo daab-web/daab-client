@@ -119,22 +119,6 @@ export default async function Home({ params }: Props) {
                   className={`reveal reveal-delay-${index + 1}`}
                 >
                   <NewsCard article={article} />
-                  {/*
-                  <Card className="group h-full border transition-colors hover:border-primary/40">
-                    <CardHeader className="space-y-2">
-                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
-                        <Calendar className="h-3.5 w-3.5" />
-                        <span>{formatDate(article.publishedDate, locale)}</span>
-                      </div>
-                      <CardTitle className="line-clamp-2 text-xl leading-snug transition-colors group-hover:text-primary">
-                        {article.title}
-                      </CardTitle>
-                      <CardDescription className="line-clamp-2 text-sm">
-                        {article.excerpt}
-                      </CardDescription>
-                    </CardHeader>
-                  </Card>
-                  */}
                 </Link>
               ))
             ) : (

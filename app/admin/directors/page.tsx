@@ -5,11 +5,7 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { AlertCircle, Plus, RefreshCw, Trash2, UserRound } from "lucide-react";
 import {
-  Card,
   CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -74,7 +70,7 @@ export default function DirectorsPage() {
     error: scientistsError,
   } = useQuery({
     queryKey: ["scientists", "director-assignment"],
-    queryFn: async () => fetchScientists(1, 1000),
+    queryFn: async () => fetchScientists("en", 1, 1000),
   });
 
   const assignedScientistIds = useMemo(

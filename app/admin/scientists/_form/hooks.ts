@@ -1,16 +1,23 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createScientist, updateScientist } from "@/lib/api/scientists";
+import { createScientist, updateScientist, updateScientistTranslation } from "@/lib/api/scientists";
 import { toast } from "sonner";
 import { ScientistFormData, scientistSchema } from "./types";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Scientist } from "@/types/scientist";
 
-export function useScientistCreateMutation() {
+export function useScientistCreateMutation(locale: string) {
   const client = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: ScientistFormData) => createScientist(data),
+    mutationFn: async (data: ScientistFormData) => {
+      const { id } = await createScientist(data)
+      await updateScientistTranslation(id, locale, {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        description: JSON.stringify(data.description)
+      })
+    },
     onSuccess: () => {
       client.invalidateQueries({ queryKey: ["scientists"] });
       toast.success("Scientist created successfully");
@@ -19,12 +26,17 @@ export function useScientistCreateMutation() {
   });
 }
 
-export function useScientistUpdateMutation(id: string) {
+export function useScientistUpdateMutation(id: string, locale: string) {
   const client = useQueryClient();
 
   return useMutation({
-    mutationFn: (data: ScientistFormData) => { 
-      return updateScientist(id, data)
+    mutationFn: async (data: ScientistFormData) => {
+      await updateScientistTranslation(id, locale, {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        description: JSON.stringify(data.description)
+      })
+      await updateScientist(id, data)
     },
     onSuccess: () => {
       client.invalidateQueries({ queryKey: ["scientists"] });

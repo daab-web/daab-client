@@ -1,5 +1,5 @@
 import { PagedResponse } from "@/types/paged-response";
-import { Scientist } from "@/types/scientist";
+import { Scientist, UpdateScientistRequest, UpdateScientistTranslationRequest } from "@/types/scientist";
 import { fetchAPI } from ".";
 import { Publication } from "@/types/publication";
 import { SerializedEditorState } from "lexical";
@@ -38,6 +38,7 @@ function parseScientistDescription(
 }
 
 export async function fetchScientists(
+  locale: string,
   page: number = 1,
   pageSize: number = 20,
   search?: string,
@@ -45,6 +46,7 @@ export async function fetchScientists(
   area?: string,
 ): Promise<PagedResponse<Scientist>> {
   const params = new URLSearchParams({
+    locale: locale,
     page: page.toString(),
     pageSize: pageSize.toString(),
   });
@@ -68,8 +70,8 @@ export async function fetchScientists(
   return data;
 }
 
-export async function fetchScientistById(idOrSlug: string): Promise<Scientist> {
-  const response = await fetchAPI(`/scientists/${idOrSlug}`);
+export async function fetchScientistById(idOrSlug: string, locale: string): Promise<Scientist> {
+  const response = await fetchAPI(`/scientists/${idOrSlug}?locale=${locale}`);
 
   if (!response.ok) {
     throw new Error(`Failed to fetch scientist: ${response.status}`);
@@ -143,10 +145,19 @@ export async function createScientist(data: any) {
   return (await response.json()) as Scientist;
 }
 
-export async function updateScientist(id: string, data: any) {
-  data.description = JSON.stringify(data.description);
+export async function updateScientist(id: string, data: UpdateScientistRequest) {
   return fetchAPI(`/scientists/${id}`, {
     method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  });
+}
+
+export async function updateScientistTranslation(id: string, locale: string, data: UpdateScientistTranslationRequest) {
+  return fetchAPI(`/scientists/${id}/translations?locale=${locale}`, {
+    method: "POST",
     headers: {
       "Content-Type": "application/json",
     },

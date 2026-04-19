@@ -51,7 +51,7 @@ export default function ScientistsPage() {
 
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ["scientists"],
-    queryFn: async () => await fetchScientists(1, 100),
+    queryFn: async () => await fetchScientists("en", 1, 100),
     staleTime: 0,
     refetchOnMount: "always",
   });

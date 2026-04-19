@@ -1,6 +1,6 @@
 "use client";
 
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 import {
   Table,
@@ -39,6 +39,7 @@ function ScientistsTableSkeleton() {
 }
 
 export function ScientistsTable() {
+  const locale = useLocale();
   const t = useTranslations("Scientists");
   const c = useTranslations("countries");
   const a = useTranslations("areas");
@@ -64,6 +65,7 @@ export function ScientistsTable() {
   const { data: countries } = useQuery(trpc.countries.queryOptions({}));
   const { data: areas } = useQuery(trpc.areas.queryOptions({}));
   const { data: scientists, isLoading } = useScientists(
+    locale,
     page,
     debouncedSearch,
     selectedCountry,
