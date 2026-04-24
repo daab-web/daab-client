@@ -16,6 +16,7 @@ import { useState, useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
 import { Scientist } from "@/types/scientist";
+import Image from "next/image"
 
 export default function ScientistProfilePicture({
   scientist,
@@ -97,13 +98,16 @@ export default function ScientistProfilePicture({
         <div className="space-y-2">
           {preview ? (
             <>
-              <div className="relative aspect-video rounded-lg overflow-hidden border bg-muted">
-                <img
-                  src={preview}
-                  alt="Thumbnail preview"
-                  className="absolute inset-0 w-full h-full object-cover"
-                />
-              </div>{" "}
+            <div className="relative mx-auto h-72 w-full max-w-64 overflow-hidden rounded-2xl border border-border/70 bg-background/30 shadow-sm backdrop-blur-sm">
+              <Image
+                src={preview}
+                alt={`${scientist.firstName} ${scientist.lastName}`}
+                fill
+                sizes="(min-width: 1280px) 248px, 320px"
+                className="object-cover transition duration-500 hover:scale-105"
+              />
+              </div>
+              {" "}
               <Button
                 type="button"
                 variant="outline"
@@ -116,7 +120,7 @@ export default function ScientistProfilePicture({
               </Button>
             </>
           ) : (
-            <div className="aspect-video rounded-lg border-2 border-dashed flex items-center justify-center bg-muted/10">
+            <div className="flex items-center justify-center relative mx-auto h-72 w-full max-w-64 overflow-hidden rounded-2xl border border-border/70 bg-background/30 shadow-sm backdrop-blur-sm">
               <div className="text-center">
                 <ImageIcon className="mx-auto h-12 w-12 text-muted-foreground/50" />
                 <p className="mt-2 text-sm text-muted-foreground">
