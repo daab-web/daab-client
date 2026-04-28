@@ -3,7 +3,7 @@ import { Card, CardHeader, CardTitle, CardAction, CardDescription, CardFooter } 
 import { Badge } from "@/components/ui/badge"
 import Image from "next/image";
 import { getLocale } from "next-intl/server";
-import { User } from "lucide-react";
+import { ImageIcon, User } from "lucide-react";
 import { formatDate } from "@/lib/date-utils";
 
 export interface NewsCardProps {
@@ -15,13 +15,14 @@ export default async function NewsCard({ article }: NewsCardProps) {
 
   return (
     <Card className="mx-auto w-full h-full max-w-sm pt-0 overflow-hidden hover:border-primary/40">
-      <div className="relative aspect-video w-full">
-        <Image
-          src={article.thumbnail}
-          alt={article.title}
-          className="object-cover"
-          fill
-        />
+      <div className="relative flex items-center justify-center aspect-video w-full">
+        {article.thumbnail ? (
+          <Image
+            src={article.thumbnail}
+            alt={article.title}
+            className="object-cover"
+            fill
+          />) : <ImageIcon />}
       </div>
       <CardHeader>
         {article.category &&

@@ -1,5 +1,5 @@
 import { getTranslations } from "next-intl/server";
-import { Calendar, ChevronRight } from "lucide-react";
+import { Calendar, ChevronRight, ImageIcon } from "lucide-react";
 
 import Image from "next/image"
 import { Link } from "@/i18n/navigation";
@@ -65,14 +65,14 @@ export default async function Home({ params }: Props) {
           </p>
         </section>
 
-        <section className="mb-12 grid gap-5 lg:grid-cols-12">
+        <section className="mb-12 grid items-start gap-5 lg:grid-cols-12">
           {featured ? (
             <Link
               href={`/activities/${featured.slug || featured.id}`}
-              className="lg:col-span-8 reveal"
+              className="lg:col-span-8 reveal h-full"
             >
               <Card className="group h-full overflow-hidden border transition-colors hover:border-primary/40">
-                <div className="relative aspect-video overflow-hidden bg-muted">
+                <div className="relative flex items-center justify-center aspect-video overflow-hidden bg-muted">
                   {featured.thumbnail ? (
                     <Image
                       src={featured.thumbnail}
@@ -81,7 +81,7 @@ export default async function Home({ params }: Props) {
                       className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
                       sizes="(min-width: 1024px) 66vw, 100vw"
                     />
-                  ) : null}
+                  ) : <ImageIcon />}
                   {featured.category && (
                     <Badge className="absolute left-4 top-4 text-foreground bg-background/85 backdrop-blur-sm">
                       {featured.category}
@@ -110,13 +110,13 @@ export default async function Home({ params }: Props) {
             </Card>
           )}
 
-          <div className="grid gap-5 lg:col-span-4">
+          <div className="flex flex-col gap-5 lg:col-span-4">
             {secondary.length > 0 ? (
               secondary.map((article, index) => (
                 <Link
                   key={article.id}
                   href={`/activities/${article.slug || article.id}`}
-                  className={`reveal reveal-delay-${index + 1}`}
+                  className={`reveal reveal-delay-${index + 1} flex flex-1`}
                 >
                   <NewsCard article={article} />
                 </Link>

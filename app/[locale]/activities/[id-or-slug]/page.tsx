@@ -37,7 +37,7 @@ export default async function ArticlePage({ params }: Props) {
   }
 
   return (
-    <div className="container mx-auto px-4 py-12 max-w-5xl bg-muted/30 rounded-2xl border">
+    <div className="container backdrop-blur-xl mx-auto px-4 py-12 max-w-5xl bg-muted/30 rounded-2xl border">
       <ScrollReveal />
 
       {/* Back Button */}
