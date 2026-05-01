@@ -27,7 +27,7 @@ type Props = {
 
 export default async function ScientistDetailPage({ params }: Props) {
   const { locale, id } = await params;
-  const t = await getTranslations({ locale, namespace: "Scientists" });
+  const t = await getTranslations();
 
   const scientist = await fetchScientistById(id, locale);
   if (!scientist) {
@@ -44,7 +44,7 @@ export default async function ScientistDetailPage({ params }: Props) {
     <div className="relative mx-auto flex w-full max-w-7xl flex-col gap-10 overflow-hidden px-4 py-8 md:py-10">
       <div className="animate-in fade-in slide-in-from-top-4 duration-500">
         <Button variant="outline" asChild>
-          <Link href="/scientists">{t("detail.back")}</Link>
+          <Link href="/scientists">{t("Scientists.detail.back")}</Link>
         </Button>
       </div>
 
@@ -54,7 +54,7 @@ export default async function ScientistDetailPage({ params }: Props) {
             <div>
               <p className="mb-3 inline-flex items-center gap-2 rounded-full border border-border/70 bg-background/30 px-3 py-1 text-[11px] font-medium uppercase tracking-[0.14em] text-muted-foreground">
                 <Sparkles className="h-3.5 w-3.5" />
-                {t("detail.profile")}
+                {t("Scientists.detail.profile")}
               </p>
               <h1 className="text-4xl font-bold tracking-tight lg:text-6xl lg:leading-[1.05]">
                 {`${scientist.firstName} ${scientist.lastName}`}
@@ -85,12 +85,12 @@ export default async function ScientistDetailPage({ params }: Props) {
                 <div className="rounded-2xl border border-border/70 bg-background/35 p-4 backdrop-blur-sm">
                   <span className="inline-flex items-center gap-1.5 text-xs font-medium uppercase tracking-wide text-muted-foreground">
                     <Building2 className="h-3.5 w-3.5" />
-                    {t("detail.institution")}
+                    {t("Scientists.detail.institution")}
                   </span>
                   <div className="mt-2 flex flex-wrap gap-1.5">
                     {scientist.institutions.map((inst) => (
                       <Badge key={inst} variant="secondary">
-                        {inst}
+                        {t(`institutions.${inst}`)}
                       </Badge>
                     ))}
                   </div>
@@ -100,12 +100,12 @@ export default async function ScientistDetailPage({ params }: Props) {
                 <div className="rounded-2xl border border-border/70 bg-background/30 p-4 backdrop-blur-sm">
                   <span className="inline-flex items-center gap-1.5 text-xs font-medium uppercase tracking-wide text-muted-foreground">
                     <MapPin className="h-3.5 w-3.5" />
-                    {t("detail.country")}
+                    {t("Scientists.detail.country")}
                   </span>
                   <div className="mt-2 flex flex-wrap gap-1.5">
                     {scientist.countries.map((c) => (
                       <Badge key={c} variant="outline">
-                        {c}
+                        {t(`countries.${c}`)}
                       </Badge>
                     ))}
                   </div>
@@ -116,11 +116,11 @@ export default async function ScientistDetailPage({ params }: Props) {
             {scientist.areas.length > 0 && (
               <div className="mt-5 rounded-2xl border border-border/70 bg-background/30 p-4 backdrop-blur-sm">
                 <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                  {t("detail.areas")}
+                  {t("Scientists.detail.areas")}
                 </span>
                 <div className="mt-2 flex flex-wrap gap-1.5">
                   {scientist.areas.map((area) => (
-                    <Badge key={area}>{area}</Badge>
+                    <Badge key={area}>{t(`areas.${area}`)}</Badge>
                   ))}
                 </div>
               </div>
@@ -131,7 +131,7 @@ export default async function ScientistDetailPage({ params }: Props) {
                 <Separator className="my-6" />
                 <div>
                   <h2 className="mb-3 text-lg font-semibold lg:text-xl">
-                    {t("detail.profile")}
+                    {t("Scientists.detail.profile")}
                   </h2>
                   <div className="max-w-3xl leading-8 text-muted-foreground">
                     <NewsViewer editorState={descriptionState} />
@@ -155,7 +155,7 @@ export default async function ScientistDetailPage({ params }: Props) {
                 />
               ) : (
                 <div className="flex h-full w-full items-center justify-center px-4 text-center text-sm text-muted-foreground">
-                  {t("detail.noPhoto")}
+                  {t("Scientists.detail.noPhoto")}
                 </div>
               )}
             </div>
@@ -163,7 +163,7 @@ export default async function ScientistDetailPage({ params }: Props) {
             {hasLinks && (
               <div className="mt-4 border-t border-border/70 pt-4">
                 <p className="mb-3 text-center text-[11px] font-medium uppercase tracking-[0.16em] text-muted-foreground">
-                  {t("detail.links")}
+                  {t("Scientists.detail.links")}
                 </p>
                 <div className="flex items-center justify-center gap-2.5">
                   {scientist.linkedInUrl && (
@@ -171,8 +171,8 @@ export default async function ScientistDetailPage({ params }: Props) {
                       href={scientist.linkedInUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      aria-label={t("detail.linkedIn")}
-                      title={t("detail.linkedIn")}
+                      aria-label={t("Scientists.detail.linkedIn")}
+                      title={t("Scientists.detail.linkedIn")}
                       className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border/70 bg-background/80 text-primary transition hover:-translate-y-0.5 hover:border-primary/40 hover:bg-background"
                     >
                       <Linkedin className="h-4 w-4" />
@@ -183,8 +183,8 @@ export default async function ScientistDetailPage({ params }: Props) {
                       href={`https://orcid.org/${scientist.orcid}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      aria-label={t("detail.orcid")}
-                      title={t("detail.orcid")}
+                      aria-label={t("Scientists.detail.orcid")}
+                      title={t("Scientists.detail.orcid")}
                       className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border/70 bg-background/80 text-primary transition hover:-translate-y-0.5 hover:border-primary/40 hover:bg-background"
                     >
                       <span className="flex h-4 w-4 items-center justify-center rounded-full border border-current text-[9px] font-bold leading-none">
@@ -197,8 +197,8 @@ export default async function ScientistDetailPage({ params }: Props) {
                       href={scientist.website}
                       target="_blank"
                       rel="noopener noreferrer"
-                      aria-label={t("detail.website")}
-                      title={t("detail.website")}
+                      aria-label={t("Scientists.detail.website")}
+                      title={t("Scientists.detail.website")}
                       className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border/70 bg-background/80 text-primary transition hover:-translate-y-0.5 hover:border-primary/40 hover:bg-background"
                     >
                       <Globe className="h-4 w-4" />
