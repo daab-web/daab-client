@@ -71,7 +71,7 @@ export default async function Home({ params }: Props) {
               href={`/activities/${featured.slug || featured.id}`}
               className="lg:col-span-8 reveal h-full"
             >
-              <Card className="group h-full overflow-hidden border transition-colors hover:border-primary/40">
+              <Card className="group pt-0 h-full overflow-hidden border transition-colors hover:border-primary/40">
                 <div className="relative flex items-center justify-center aspect-video overflow-hidden bg-muted">
                   {featured.thumbnail ? (
                     <Image
