@@ -16,7 +16,7 @@ export default async function Activities({ params }: Props) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "ActivitiesPage" });
 
-  const initialPageSize = 12;
+  const initialPageSize = 18;
   const newsResponse = (await fetchNews(
     1,
     initialPageSize,
@@ -40,15 +40,15 @@ export default async function Activities({ params }: Props) {
 
       {carouselArticles.length > 0 && (
         <div className="reveal reveal-delay-1">
-          <NewsCarousel articles={carouselArticles} locale={locale} />
+          <NewsCarousel articles={carouselArticles} />
         </div>
       )}
 
       <ActivitiesNewsFeed
-        locale={locale}
         initialNewsResponse={newsResponse}
         noNewsText={t("noNews")}
         pageSize={initialPageSize}
+        locale={locale}
       />
     </div>
   );

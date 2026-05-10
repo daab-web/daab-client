@@ -5,7 +5,6 @@ import Image from "next/image"
 import { Link } from "@/i18n/navigation";
 import { fetchNews } from "@/lib/api/news";
 import { ScrollReveal } from "@/components/scroll-reveal";
-import { formatDate } from "@/lib/date-utils";
 import { PagedResponse } from "@/types/paged-response";
 import { News } from "@/types/news";
 import { Badge } from "@/components/ui/badge";
@@ -91,7 +90,7 @@ export default async function Home({ params }: Props) {
                 <CardHeader className="space-y-3">
                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
                     <Calendar className="h-3.5 w-3.5" />
-                    <span>{formatDate(featured.publishedDate, locale)}</span>
+                    <span>{featured.publishedDate}</span>
                   </div>
                   <CardTitle className="text-2xl leading-tight transition-colors group-hover:text-primary md:text-3xl">
                     {featured.title}
@@ -187,7 +186,7 @@ export default async function Home({ params }: Props) {
                     <CardHeader className="space-y-2">
                       <div className="flex items-center gap-2 text-xs text-muted-foreground">
                         <Calendar className="h-3.5 w-3.5" />
-                        <span>{formatDate(article.publishedDate, locale)}</span>
+                        <span>{article.publishedDate}</span>
                       </div>
                       <CardTitle className="line-clamp-2 text-lg transition-colors group-hover:text-primary">
                         {article.title}

@@ -2,17 +2,13 @@ import { News } from "@/types/news"
 import { Card, CardHeader, CardTitle, CardAction, CardDescription, CardFooter } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import Image from "next/image";
-import { getLocale } from "next-intl/server";
 import { ImageIcon, User } from "lucide-react";
-import { formatDate } from "@/lib/date-utils";
 
 export interface NewsCardProps {
   article: News;
 }
 
-export default async function NewsCard({ article }: NewsCardProps) {
-  const locale = await getLocale();
-
+export default function NewsCard({ article }: NewsCardProps) {
   return (
     <Card className="mx-auto w-full h-full max-w-sm pt-0 overflow-hidden hover:border-primary/40">
       <div className="relative flex items-center justify-center aspect-video w-full">
@@ -48,9 +44,7 @@ export default async function NewsCard({ article }: NewsCardProps) {
           <span className="truncate">
             {article.authorName || "DAAB"}
           </span>
-          <span className="ml-auto text-xs">
-            {formatDate(article.publishedDate, locale)}
-          </span>
+          <span className="ml-auto text-xs">{article.publishedDate}</span>
         </div>
       </CardFooter>
     </Card>

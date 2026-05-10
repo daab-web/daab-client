@@ -8,7 +8,6 @@ import { Calendar, User, Tag, ArrowLeft, Share2 } from "lucide-react";
 import Link from "next/link";
 import { getNewsByIdOrSlug } from "@/lib/api/news";
 import { News } from "@/types/news";
-import { formatDate } from "@/lib/date-utils";
 import { ScrollReveal } from "@/components/scroll-reveal";
 import { NewsAttachmentsCarousel } from "@/components/news-attachments-carousel";
 
@@ -83,7 +82,7 @@ export default async function ArticlePage({ params }: Props) {
           )}
           <div className="flex items-center gap-2">
             <Calendar className="h-4 w-4" />
-            <span>{formatDate(article.publishedDate, locale)}</span>
+            <span>{article.publishedDate}</span>
           </div>
         </div>
 

@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { getTranslations } from "next-intl/server";
+import { getMessages, getTranslations } from "next-intl/server";
 import "../globals.css";
 import { NextIntlClientProvider } from "next-intl";
 
@@ -24,9 +24,10 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function LocaleLayout(props: Props) {
   const { locale } = await props.params;
+  const messages = await getMessages();
 
   return (
-    <NextIntlClientProvider locale={locale}>
+    <NextIntlClientProvider locale={locale} messages={messages}>
       <div lang={locale} className="min-h-screen flex flex-col gap-12">
         <header
           className="fixed w-full top-0 z-50 py-4 flex gap-2 
