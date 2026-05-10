@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
-import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -171,9 +170,7 @@ export default function NewsManagementPage() {
                     </TableCell>
                     <TableCell>{article.category || "-"}</TableCell>
                     <TableCell>
-                      {article.publishedDate
-                        ? format(new Date(article.publishedDate), "PPP")
-                        : "-"}
+                      {article.publishedDate}
                     </TableCell>
                     <TableCell className="text-right space-x-2">
                       <Button
