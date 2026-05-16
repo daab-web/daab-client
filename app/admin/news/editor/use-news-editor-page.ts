@@ -38,9 +38,10 @@ export function useNewsEditorPage(editId?: string) {
   const [attachments, setAttachments] = useState<Attachment[]>([]);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
-  const { mutate, isPending } = editId 
+  const mutation = editId
     ? useUpdateNewsMutation(editId)
     : useCreateNewsMutation();
+  const { mutateAsync, isPending } = mutation;
 
   const resetFormForCreate = () => {
     reset(DEFAULT_FORM_VALUES);
@@ -57,9 +58,10 @@ export function useNewsEditorPage(editId?: string) {
     setIsLoadingArticle(true);
     try {
       const article = await getNewsByIdOrSlug(id, locale);
-      const att = await getNewsAttachments(id)
+      const att = await getNewsAttachments(id);
+      // console.log(article, att);
       setEditingNewsId(article.id);
-      setAttachments(att)
+      setAttachments(att);
       setValue("title", article.title);
       setValue("excerpt", article.excerpt ?? "");
       setValue("category", article.category ?? "");
@@ -87,23 +89,49 @@ export function useNewsEditorPage(editId?: string) {
     }
   };
 
-  const onSubmit = handleSubmit((formData: NewsFormData) => {
+  const onSubmit = handleSubmit(async (formData: NewsFormData) => {
     const thumbnail = formData.thumbnail?.[0];
-    mutate({
-      data: {
-        title: formData.title,
-        excerpt: formData.excerpt,
-        category: formData.category,
-        author: formData.authorName,
-        authorId: "",
-        editorState: JSON.stringify(editorState),
-        tags: tags,
-        publishedDate: formData.publishedDate,
-      },
-      thumbnail,
-      attachments,
-      locale
-    });
+    try {
+      if (editId) {
+        await mutateAsync({
+          data: {
+            title: formData.title,
+            excerpt: formData.excerpt,
+            category: formData.category,
+            author: formData.authorName,
+            authorId: "",
+            editorState: JSON.stringify(editorState),
+            tags: tags,
+            publishedDate: formData.publishedDate,
+          },
+          thumbnail,
+          attachments,
+          locale,
+        });
+      } else {
+        const result = await mutateAsync({
+          data: {
+            title: formData.title,
+            excerpt: formData.excerpt,
+            category: formData.category,
+            author: formData.authorName,
+            authorId: "",
+            editorState: JSON.stringify(editorState),
+            tags: tags,
+            publishedDate: formData.publishedDate,
+          },
+          thumbnail,
+          attachments,
+          locale,
+        });
+
+        const createdId = result?.id;
+        if (createdId) {
+          setEditingNewsId(createdId);
+          router.replace(`/admin/news/editor?editId=${createdId}`);
+        }
+      }
+    } catch (err) {}
   });
 
   useEffect(() => {
@@ -145,6 +173,6 @@ export function useNewsEditorPage(editId?: string) {
     router,
     //locale
     locale,
-    setLocale
+    setLocale,
   };
 }
