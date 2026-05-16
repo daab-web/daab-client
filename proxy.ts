@@ -9,6 +9,10 @@ export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (pathname.startsWith("/admin")) {
+    // if (process.env.ADMIN_DOMOY === "true") {
+    //   return NextResponse.next();
+    // }
+
     const sessionCookie = getSessionCookie(request);
 
     if (!sessionCookie) {

@@ -28,8 +28,6 @@ export function DirectorCard({
   const content = (
     <Card className="group flex h-full flex-col items-center overflow-hidden border border-border/40 bg-card/80 text-center shadow-md backdrop-blur-sm transition-all duration-500 ease-out hover:-translate-y-2 hover:scale-[1.02] hover:border-[#3B5998]/60 hover:shadow-2xl">
       <div className="relative w-full aspect-square bg-muted overflow-hidden">
-        <div className="absolute inset-0 bg-linear-to-t from-background/90 via-background/20 to-transparent z-10 opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-
         {imageSrc ? (
           <img
             src={imageSrc}

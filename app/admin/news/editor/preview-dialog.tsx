@@ -1,7 +1,7 @@
 "use client";
 
 import { SerializedEditorState } from "lexical";
-import { format } from "date-fns";
+import { format, isValid } from "date-fns";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import {
@@ -78,7 +78,9 @@ export function PreviewDialog({
               <div className="flex items-center gap-1">
                 <CalendarIcon className="h-4 w-4" />
                 <span>
-                  {publishedDate ? format(publishedDate, "PPP") : "Unpublished"}
+                  {publishedDate && isValid(new Date(publishedDate))
+                    ? format(new Date(publishedDate), "PPP")
+                    : "Unpublished"}
                 </span>
               </div>
               {authorName && (
