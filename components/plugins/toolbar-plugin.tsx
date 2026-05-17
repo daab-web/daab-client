@@ -236,6 +236,8 @@ export default function ToolbarPlugin() {
         size="icon"
         onClick={() => editor.dispatchCommand(UNDO_COMMAND, undefined)}
         className="h-8 w-8"
+        title="Undo"
+        aria-label="Undo"
         type="button"
       >
         <Undo className="h-4 w-4" />
@@ -245,6 +247,8 @@ export default function ToolbarPlugin() {
         size="icon"
         onClick={() => editor.dispatchCommand(REDO_COMMAND, undefined)}
         className="h-8 w-8"
+        title="Redo"
+        aria-label="Redo"
         type="button"
       >
         <Redo className="h-4 w-4" />
@@ -262,7 +266,11 @@ export default function ToolbarPlugin() {
           else if (value === "quote") formatQuote();
         }}
       >
-        <SelectTrigger className="h-8 w-32.5">
+        <SelectTrigger
+          className="h-8 w-32.5"
+          title="Block type"
+          aria-label="Block type"
+        >
           <SelectValue placeholder="Normal" />
         </SelectTrigger>
         <SelectContent>
@@ -283,6 +291,8 @@ export default function ToolbarPlugin() {
         onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, "bold")}
         className="h-8 w-8"
         type="button"
+        title="Bold"
+        aria-label="Bold"
       >
         <Bold className="h-4 w-4" />
       </Button>
@@ -292,6 +302,8 @@ export default function ToolbarPlugin() {
         onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, "italic")}
         className="h-8 w-8"
         type="button"
+        title="Italic"
+        aria-label="Italic"
       >
         <Italic className="h-4 w-4" />
       </Button>
@@ -301,6 +313,8 @@ export default function ToolbarPlugin() {
         onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, "underline")}
         className="h-8 w-8"
         type="button"
+        title="Underline"
+        aria-label="Underline"
       >
         <Underline className="h-4 w-4" />
       </Button>
@@ -312,6 +326,8 @@ export default function ToolbarPlugin() {
         }
         className="h-8 w-8"
         type="button"
+        title="Strikethrough"
+        aria-label="Strikethrough"
       >
         <Strikethrough className="h-4 w-4" />
       </Button>
@@ -321,6 +337,8 @@ export default function ToolbarPlugin() {
         onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, "code")}
         className="h-8 w-8"
         type="button"
+        title="Code"
+        aria-label="Code"
       >
         <Code className="h-4 w-4" />
       </Button>
@@ -330,6 +348,8 @@ export default function ToolbarPlugin() {
         onClick={toggleLink}
         className="h-8 w-8"
         type="button"
+        title="Insert link"
+        aria-label="Insert link"
       >
         <LinkIcon className="h-4 w-4" />
       </Button>
@@ -343,6 +363,8 @@ export default function ToolbarPlugin() {
         onClick={formatBulletList}
         className="h-8 w-8"
         type="button"
+        title="Bulleted list"
+        aria-label="Bulleted list"
       >
         <List className="h-4 w-4" />
       </Button>
@@ -352,6 +374,8 @@ export default function ToolbarPlugin() {
         onClick={formatNumberedList}
         className="h-8 w-8"
         type="button"
+        title="Numbered list"
+        aria-label="Numbered list"
       >
         <ListOrdered className="h-4 w-4" />
       </Button>
@@ -372,6 +396,8 @@ export default function ToolbarPlugin() {
         onClick={() => fileInputRef.current?.click()}
         className="h-8 w-8"
         type="button"
+        title="Insert image"
+        aria-label="Insert image"
       >
         <ImageIcon className="h-4 w-4" />
       </Button>
@@ -385,6 +411,8 @@ export default function ToolbarPlugin() {
         onClick={() => editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "left")}
         className="h-8 w-8"
         type="button"
+        title="Align left"
+        aria-label="Align left"
       >
         <AlignLeft className="h-4 w-4" />
       </Button>
@@ -394,6 +422,8 @@ export default function ToolbarPlugin() {
         onClick={() => editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "center")}
         className="h-8 w-8"
         type="button"
+        title="Align center"
+        aria-label="Align center"
       >
         <AlignCenter className="h-4 w-4" />
       </Button>
@@ -403,6 +433,8 @@ export default function ToolbarPlugin() {
         onClick={() => editor.dispatchCommand(FORMAT_ELEMENT_COMMAND, "right")}
         className="h-8 w-8"
         type="button"
+        title="Align right"
+        aria-label="Align right"
       >
         <AlignRight className="h-4 w-4" />
       </Button>
@@ -414,6 +446,8 @@ export default function ToolbarPlugin() {
         }
         className="h-8 w-8"
         type="button"
+        title="Justify"
+        aria-label="Justify"
       >
         <AlignJustify className="h-4 w-4" />
       </Button>
