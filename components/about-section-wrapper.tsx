@@ -1,4 +1,5 @@
 import { type ReactNode } from "react";
+import { useTranslations } from "next-intl";
 import { CheckCircle2, Target, Eye, Heart, FileText } from "lucide-react";
 import { type AboutSectionId, ABOUT_SECTIONS } from "@/lib/navigation";
 import { Separator } from "./ui/separator";
@@ -18,6 +19,7 @@ type Props = {
 };
 
 export function AboutSectionWrapper({ sectionId, title, children }: Props) {
+  const t = useTranslations("AboutPage");
   const Icon = sectionIcons[sectionId];
   const currentIndex = ABOUT_SECTIONS.findIndex((s) => s.id === sectionId);
   const total = ABOUT_SECTIONS.length;
@@ -45,7 +47,7 @@ export function AboutSectionWrapper({ sectionId, title, children }: Props) {
       {/* Pagination footer */}
       <div className="flex items-center justify-between border-t border-border/60 pt-4 mt-2 animate-in fade-in duration-500 delay-500">
         <span className="text-sm text-muted-foreground">
-          Section {currentIndex + 1} of {total}
+          {t("sectionCounter", { current: currentIndex + 1, total })}
         </span>
         <div className="flex items-center gap-1.5">
           {ABOUT_SECTIONS.map((_, i) => (

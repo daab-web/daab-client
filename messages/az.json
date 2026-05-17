@@ -5,7 +5,8 @@
   },
   "AboutPage": {
     "title": "DAAB haqqında",
-    "intro": "Təşkilatımız haqqında daha ətraflı məlumat almaq üçün yan menyudan bölmə seçin."
+    "intro": "Təşkilatımız haqqında daha ətraflı məlumat almaq üçün yan menyudan bölmə seçin.",
+    "sectionCounter": "Bölmə {current} / {total}"
   },
   "ActivitiesPage": {
     "title": "Xəbərlər və Fəaliyyətlər",
