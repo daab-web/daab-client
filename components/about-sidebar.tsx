@@ -23,13 +23,16 @@ const sectionIcons = {
 
 export function AboutSidebar() {
   const t = useTranslations("Navigation.about");
+  const tNav = useTranslations("Navigation");
   const pathname = usePathname();
 
   return (
     <aside className="hidden w-full shrink-0 lg:block lg:w-64">
       <div className="sticky top-36 rounded-xl border border-border/70 bg-card/90 backdrop-blur-sm overflow-hidden shadow-md transition-shadow duration-300 hover:shadow-lg">
         <div className="px-4 py-4 border-b border-border/70">
-          <span className="text-base font-semibold">About</span>
+          <span className="text-base font-semibold">
+            {tNav("aboutWaas")?.trim() || "About"}
+          </span>
         </div>
         <nav className="flex flex-col p-2 gap-0.5">
           {ABOUT_SECTIONS.map((section) => {

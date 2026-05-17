@@ -5,7 +5,8 @@
   },
   "AboutPage": {
     "title": "About WAAS",
-    "intro": "Select a section from the sidebar to learn more about our organization."
+    "intro": "Select a section from the sidebar to learn more about our organization.",
+    "sectionCounter": "Section {current} of {total}"
   },
   "ActivitiesPage": {
     "title": "News & Activities",
