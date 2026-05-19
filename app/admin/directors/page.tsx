@@ -3,14 +3,13 @@
 import { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { AlertCircle, Plus, RefreshCw, Trash2, UserRound } from "lucide-react";
+import { AlertCircle, Bolt, GlobeIcon, Plus, RefreshCw, Trash2, UserRound } from "lucide-react";
 import {
   CardContent,
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Spinner } from "@/components/ui/spinner";
-import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import {
@@ -41,17 +40,23 @@ import {
   createDirector,
   deleteDirector,
   fetchDirectors,
+  updateDirector,
 } from "@/lib/api/directors";
 import { fetchScientists } from "@/lib/api/scientists";
 import { Director } from "@/types/director";
+import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupInput } from "@/components/ui/input-group";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuGroup, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
 export default function DirectorsPage() {
   const queryClient = useQueryClient();
   const [createOpen, setCreateOpen] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<Director | null>(null);
   const [selectedScientistId, setSelectedScientistId] = useState("");
+  const [selectedDirector, setSelectedDirector] = useState<Director | undefined>();
   const [scientistInputValue, setScientistInputValue] = useState("");
   const [role, setRole] = useState("");
+  const [locale, setLocale] = useState<"az" | "en">("en");
 
   const {
     data: directors = [],
@@ -128,6 +133,22 @@ export default function DirectorsPage() {
     },
   });
 
+  const updateMutation = useMutation({
+    mutationFn: updateDirector,
+    onSuccess: async () => {
+      toast.success("Director updated");
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["directors"] }),
+        queryClient.invalidateQueries({
+          queryKey: ["scientists", "director-assignment"],
+        }),
+      ]);
+    },
+    onError: (error: Error) => {
+      toast.error(error.message || "Could not remove director");
+    },
+  });
+
   const handleCreate = async () => {
     if (!selectedScientistId || !role.trim()) {
       toast.error("Choose a scientist and enter a role");
@@ -136,7 +157,20 @@ export default function DirectorsPage() {
 
     await createMutation.mutateAsync({
       scientistId: selectedScientistId,
-      role: role.trim(),
+      translations: [{ locale, role }],
+    });
+  };
+
+  const handleUpdate = async () => {
+    if (!selectedDirector || !role.trim()) {
+      toast.error("Choose a director and enter a role");
+      return;
+    }
+
+    await updateMutation.mutateAsync({
+      directorId: selectedDirector.id,
+      locale: locale,
+      role: role,
     });
   };
 
@@ -146,6 +180,21 @@ export default function DirectorsPage() {
     if (!open && !createMutation.isPending) {
       setSelectedScientistId("");
       setScientistInputValue("");
+      setRole("");
+    }
+  };
+
+  const onEditOpen = (director: Director) => {
+    console.log("Director", director)
+    setSelectedDirector(director);
+    setEditOpen(true);
+  }
+
+  const resetEditDialog = (open: boolean) => {
+    setEditOpen(open);
+
+    if (!open) {
+      setSelectedScientistId("");
       setRole("");
     }
   };
@@ -270,7 +319,7 @@ export default function DirectorsPage() {
                           )}
                         </div>
                       </TableCell>
-                      <TableCell className="text-right">
+                      <TableCell className="text-right flex gap-2 justify-end-safe">
                         <Button
                           variant="outline"
                           size="sm"
@@ -290,6 +339,24 @@ export default function DirectorsPage() {
                             </>
                           )}
                         </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => onEditOpen(director)}
+                          disabled={updateMutation.isPending}
+                        >
+                          {updateMutation.isPending ? (
+                            <>
+                              <Spinner data-icon="inline-start" />
+                              Updating...
+                            </>
+                          ) : (
+                            <>
+                              <Bolt className="mr-2 h-4 w-4" />
+                              Edit
+                            </>
+                          )}
+                        </Button>
                       </TableCell>
                     </TableRow>
                   );
@@ -300,6 +367,7 @@ export default function DirectorsPage() {
         )}
       </CardContent>
 
+      {/* Assign Director */}
       <Dialog open={createOpen} onOpenChange={resetCreateDialog}>
         <DialogContent className="sm:max-w-xl">
           <DialogHeader>
@@ -367,13 +435,30 @@ export default function DirectorsPage() {
 
             <div className="space-y-2">
               <Label htmlFor="director-role">Role</Label>
-              <Input
-                id="director-role"
-                placeholder="Enter director role"
-                value={role}
-                onChange={(event) => setRole(event.target.value)}
-                disabled={createMutation.isPending}
-              />
+              <InputGroup>
+                <InputGroupInput
+                  id="director-role"
+                  placeholder="Enter director role"
+                  value={role}
+                  onChange={(event) => setRole(event.target.value)}
+                  disabled={createMutation.isPending}
+                />
+                <InputGroupAddon align="inline-end">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <InputGroupButton variant="ghost" className="pr-1.5! text-xs">
+                        {locale} <GlobeIcon className="size-3" />
+                      </InputGroupButton>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="[--radius:0.95rem]">
+                      <DropdownMenuGroup>
+                        <DropdownMenuItem onClick={() => setLocale("en")}>EN</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => setLocale("az")}>AZ</DropdownMenuItem>
+                      </DropdownMenuGroup>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </InputGroupAddon>
+              </InputGroup>
             </div>
           </div>
 
@@ -393,6 +478,70 @@ export default function DirectorsPage() {
                 </>
               ) : (
                 "Assign Director"
+              )}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Director */}
+      <Dialog open={editOpen} onOpenChange={resetEditDialog}>
+        <DialogContent className="sm:max-w-xl">
+          <DialogHeader>
+            <DialogTitle>
+              Editing Director: {`${selectedDirector?.firstName} ${selectedDirector?.lastName}`}
+            </DialogTitle>
+            <DialogDescription>
+              Update director's role for selected locale
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="space-y-4">
+            <div className="space-y-2">
+              <Label htmlFor="director-role">Role</Label>
+              <InputGroup>
+                <InputGroupInput
+                  id="director-role"
+                  placeholder="Enter director role"
+                  value={role}
+                  onChange={(event) => setRole(event.target.value)}
+                  disabled={updateMutation.isPending}
+                />
+                <InputGroupAddon align="inline-end">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <InputGroupButton variant="ghost" className="pr-1.5! text-xs">
+                        {locale} <GlobeIcon className="size-3" />
+                      </InputGroupButton>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end" className="[--radius:0.95rem]">
+                      <DropdownMenuGroup>
+                        <DropdownMenuItem onClick={() => setLocale("en")}>EN</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => setLocale("az")}>AZ</DropdownMenuItem>
+                      </DropdownMenuGroup>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </InputGroupAddon>
+              </InputGroup>
+            </div>
+          </div>
+
+          <DialogFooter>
+            <Button
+              variant="outline"
+              onClick={() => resetEditDialog(false)}
+              disabled={updateMutation.isPending}
+            >
+              Cancel
+            </Button>
+            <Button onClick={handleUpdate} disabled={updateMutation.isPending}>
+              {createMutation.isPending ? (
+                <>
+                  <Spinner data-icon="inline-start" />
+                  Updating...
+                </>
+              ) : (
+                "Update Director"
               )}
             </Button>
           </DialogFooter>

@@ -13,7 +13,11 @@ async function readErrorMessage(response: Response, fallback: string) {
 }
 
 export async function fetchDirectors(locale: string): Promise<Director[]> {
-  const response = await fetchAPI(`/directors?locale=${locale}`);
+  const response = await fetchAPI(`/directors`, {
+    headers: {
+      "Accept-Language": locale
+    }
+  });
 
   if (!response.ok) {
     throw new Error(
@@ -27,7 +31,7 @@ export async function fetchDirectors(locale: string): Promise<Director[]> {
 
 export async function createDirector(data: {
   scientistId: string;
-  role: string;
+  translations: { locale: string, role: string }[];
 }): Promise<{ id: string }> {
   const response = await fetchAPI("/directors", {
     method: "POST",
@@ -44,6 +48,22 @@ export async function createDirector(data: {
   }
 
   return (await response.json()) as { id: string };
+}
+
+export async function updateDirector(data: { locale: string, directorId: string, role: string }) {
+  const response = await fetchAPI(`/directors/${data.directorId}/${data.locale}`, {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ role: data.role }),
+  });
+
+  if (!response.ok) {
+    throw new Error(
+      await readErrorMessage(response, "Failed to update director"),
+    );
+  }
 }
 
 export async function deleteDirector(id: string) {
