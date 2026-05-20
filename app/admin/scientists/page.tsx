@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import {
   Accordion,
@@ -43,11 +43,16 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 export default function ScientistsPage() {
   const router = useRouter();
   const queryClient = useQueryClient();
+  const [mounted, setMounted] = useState(false);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [deleteDialogOpen, setDeleteDialogOpen] = useState(false);
   const [scientistToDelete, setScientistToDelete] = useState<Scientist | null>(
     null,
   );
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ["scientists"],
@@ -104,9 +109,13 @@ export default function ScientistsPage() {
           <Button
             onClick={() => refetch()}
             variant="outline"
-            disabled={isLoading}
+            disabled={mounted && isLoading}
           >
-            {isLoading ? <Spinner data-icon="inline-start" /> : "Refresh"}
+            {mounted && isLoading ? (
+              <Spinner data-icon="inline-start" />
+            ) : (
+              "Refresh"
+            )}
           </Button>
         </div>
       </div>

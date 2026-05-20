@@ -13,7 +13,11 @@ async function readErrorMessage(response: Response, fallback: string) {
 }
 
 export async function fetchDirectors(locale: string): Promise<Director[]> {
-  const response = await fetchAPI(`/directors?locale=${locale}`);
+  const response = await fetchAPI(`/directors?locale=${locale}`, {
+    headers: {
+      "Accept-Language": locale,
+    },
+  });
 
   if (!response.ok) {
     throw new Error(
@@ -27,14 +31,24 @@ export async function fetchDirectors(locale: string): Promise<Director[]> {
 
 export async function createDirector(data: {
   scientistId: string;
-  role: string;
+  enRole: string;
 }): Promise<{ id: string }> {
+  const payload = {
+    scientistId: data.scientistId,
+    translations: [
+      {
+        locale: "en",
+        role: data.enRole,
+      },
+    ],
+  };
+
   const response = await fetchAPI("/directors", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(data),
+    body: JSON.stringify(payload),
   });
 
   if (!response.ok) {

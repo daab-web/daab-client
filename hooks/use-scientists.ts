@@ -11,7 +11,7 @@ export function useScientists(
   area: string,
 ) {
   return useQuery<PagedResponse<Scientist>>({
-    queryKey: ["scientists", page, search, country, area],
+    queryKey: ["scientists", locale, page, search, country, area],
     queryFn: async () =>
       await fetchScientists(
         locale,

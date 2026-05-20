@@ -14,6 +14,11 @@ export async function fetchNews(
     locale
   });
   const response = await fetchAPI(`/news?${params.toString()}`);
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch news: ${response.status}`);
+  }
+
   const data: PagedResponse<News> = await response.json();
 
   return data;

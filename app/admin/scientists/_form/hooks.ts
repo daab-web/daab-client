@@ -1,5 +1,9 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createScientist, updateScientist, updateScientistTranslation } from "@/lib/api/scientists";
+import {
+  createScientist,
+  updateScientist,
+  updateScientistTranslation,
+} from "@/lib/api/scientists";
 import { toast } from "sonner";
 import { ScientistFormData, scientistSchema } from "./types";
 import { useForm } from "react-hook-form";
@@ -11,12 +15,12 @@ export function useScientistCreateMutation(locale: string) {
 
   return useMutation({
     mutationFn: async (data: ScientistFormData) => {
-      const { id } = await createScientist(data, locale)
+      const { id } = await createScientist(data, locale);
       await updateScientistTranslation(id, locale, {
         firstName: data.firstName,
         lastName: data.lastName,
-        description: JSON.stringify(data.description)
-      })
+        description: JSON.stringify(data.description),
+      });
     },
     onSuccess: () => {
       client.invalidateQueries({ queryKey: ["scientists"] });
@@ -34,9 +38,9 @@ export function useScientistUpdateMutation(id: string, locale: string) {
       await updateScientistTranslation(id, locale, {
         firstName: data.firstName,
         lastName: data.lastName,
-        description: JSON.stringify(data.description)
-      })
-      await updateScientist(id, data)
+        description: JSON.stringify(data.description),
+      });
+      await updateScientist(id, data);
     },
     onSuccess: () => {
       client.invalidateQueries({ queryKey: ["scientists"] });
@@ -65,4 +69,3 @@ export const useScientistForm = (s?: Scientist) =>
       dateOfBirth: s?.dateOfBirth || "",
     },
   });
-

@@ -4,9 +4,7 @@ import { useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 import { AlertCircle, Plus, RefreshCw, Trash2, UserRound } from "lucide-react";
-import {
-  CardContent,
-} from "@/components/ui/card";
+import { CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Spinner } from "@/components/ui/spinner";
@@ -51,7 +49,7 @@ export default function DirectorsPage() {
   const [deleteTarget, setDeleteTarget] = useState<Director | null>(null);
   const [selectedScientistId, setSelectedScientistId] = useState("");
   const [scientistInputValue, setScientistInputValue] = useState("");
-  const [role, setRole] = useState("");
+  const [enRole, setEnRole] = useState("");
 
   const {
     data: directors = [],
@@ -98,7 +96,7 @@ export default function DirectorsPage() {
       setCreateOpen(false);
       setSelectedScientistId("");
       setScientistInputValue("");
-      setRole("");
+      setEnRole("");
       await Promise.all([
         queryClient.invalidateQueries({ queryKey: ["directors"] }),
         queryClient.invalidateQueries({
@@ -129,14 +127,14 @@ export default function DirectorsPage() {
   });
 
   const handleCreate = async () => {
-    if (!selectedScientistId || !role.trim()) {
-      toast.error("Choose a scientist and enter a role");
+    if (!selectedScientistId || !enRole.trim()) {
+      toast.error("Choose a scientist and enter English role");
       return;
     }
 
     await createMutation.mutateAsync({
       scientistId: selectedScientistId,
-      role: role.trim(),
+      enRole: enRole.trim(),
     });
   };
 
@@ -146,7 +144,7 @@ export default function DirectorsPage() {
     if (!open && !createMutation.isPending) {
       setSelectedScientistId("");
       setScientistInputValue("");
-      setRole("");
+      setEnRole("");
     }
   };
 
@@ -366,13 +364,16 @@ export default function DirectorsPage() {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="director-role">Role</Label>
+              <Label htmlFor="director-en-role">
+                Role (English) <span className="text-red-500">*</span>
+              </Label>
               <Input
-                id="director-role"
-                placeholder="Enter director role"
-                value={role}
-                onChange={(event) => setRole(event.target.value)}
+                id="director-en-role"
+                placeholder="Enter director role in English"
+                value={enRole}
+                onChange={(event) => setEnRole(event.target.value)}
                 disabled={createMutation.isPending}
+                required
               />
             </div>
           </div>
