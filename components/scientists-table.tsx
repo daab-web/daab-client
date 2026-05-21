@@ -180,7 +180,7 @@ export function ScientistsTable() {
                 </TableRow>
               </TableHeader>
               <TableBody>
-                {scientists?.items.map((s) => {
+                {scientists?.items?.map((s) => {
                   return (
                     <TableRow key={s.id} className="divide-x divide-border">
                       <TableCell className="px-6">
