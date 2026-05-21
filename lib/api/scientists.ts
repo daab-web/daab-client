@@ -46,7 +46,6 @@ export async function fetchScientists(
   area?: string,
 ): Promise<PagedResponse<Scientist>> {
   const params = new URLSearchParams({
-    locale: locale,
     page: page.toString(),
     pageSize: pageSize.toString(),
   });
@@ -63,7 +62,11 @@ export async function fetchScientists(
     params.append("area", area);
   }
 
-  const res = await fetchAPI(`/scientists?${params.toString()}`);
+  const res = await fetchAPI(`/scientists?${params.toString()}`, {
+    headers: {
+      "Accept-Language": locale
+    }
+  });
 
   const data: PagedResponse<Scientist> = await res.json();
 
