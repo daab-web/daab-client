@@ -1,5 +1,5 @@
 import { PagedResponse } from "@/types/paged-response";
-import { Scientist, UpdateScientistRequest, UpdateScientistTranslationRequest } from "@/types/scientist";
+import { Scientist, UntranslatedScientistEntry, UpdateScientistRequest, UpdateScientistTranslationRequest } from "@/types/scientist";
 import { fetchAPI } from ".";
 import { Publication } from "@/types/publication";
 import { SerializedEditorState } from "lexical";
@@ -69,6 +69,18 @@ export async function fetchScientists(
   });
 
   const data: PagedResponse<Scientist> = await res.json();
+
+  return data;
+}
+
+export async function fetchUntranslatedScientists(): Promise<UntranslatedScientistEntry[]> {
+  const res = await fetchAPI('/scientists/untranslated')
+
+  if (!res.ok) {
+    throw new Error(`Failed to fetch: ${res.status}`);
+  }
+
+  const data: UntranslatedScientistEntry[] = await res.json()
 
   return data;
 }

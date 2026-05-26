@@ -1,4 +1,4 @@
-import { CreateNewsRequest, CreateNewsTranslationRequest, News, NewsAttachmentsResponse } from "@/types/news"
+import { CreateNewsRequest, CreateNewsTranslationRequest, News, NewsAttachmentsResponse, UntranslateNewsEntry } from "@/types/news"
 import { PagedResponse } from "@/types/paged-response"
 import { fetchAPI } from ".";
 import { Attachment } from "@/types/attachment";
@@ -15,6 +15,18 @@ export async function fetchNews(
   });
   const response = await fetchAPI(`/news?${params.toString()}`);
   const data: PagedResponse<News> = await response.json();
+
+  return data;
+}
+
+export async function fetchUntranslatedNews(): Promise<UntranslateNewsEntry[]> {
+  const res = await fetchAPI('/news/untranslated');
+
+  if (!res.ok) {
+    throw new Error(`Failed to fetch. Message: ${res.status}`)
+  }
+
+  const data: UntranslateNewsEntry = await res.json()
 
   return data;
 }

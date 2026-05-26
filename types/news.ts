@@ -47,3 +47,8 @@ export type CreateNewsResponse = {
   id: string;
 };
 
+export interface UntranslateNewsEntry {
+  newsId: string;
+  title?: string;
+  missingLocales: string[];
+}

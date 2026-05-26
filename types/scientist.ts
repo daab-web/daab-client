@@ -38,3 +38,10 @@ export interface UpdateScientistTranslationRequest {
   lastName: string;
   description?: string;
 }
+
+export interface UntranslatedScientistEntry {
+  scientistId: string;
+  firstName: string;
+  lastName: string;
+  missingLocales: string[];
+}
