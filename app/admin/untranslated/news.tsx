@@ -26,7 +26,7 @@ export default async function NewsTranslationsTable() {
             </TableCell>
             <TableCell>{r.missingLocales.join(', ')}</TableCell>
             <TableCell>{r.title}</TableCell>
-            <TableCell className="text-right">Untranslated</TableCell>
+            <TableCell className="text-right">{r.status}</TableCell>
           </TableRow>
         ))}
       </TableBody>
