@@ -26,7 +26,7 @@ export async function fetchUntranslatedNews(): Promise<UntranslateNewsEntry[]> {
     throw new Error(`Failed to fetch. Message: ${res.status}`)
   }
 
-  const data: UntranslateNewsEntry = await res.json()
+  const data: UntranslateNewsEntry[] = await res.json()
 
   return data;
 }
@@ -53,6 +53,17 @@ export async function createNews(data: CreateNewsRequest) {
     },
     body: JSON.stringify(data),
   });
+}
+
+export async function publishNews(data: { newsIds: string[] }) {
+  const res = await fetchAPI('/news', {
+    method: "PATCH",
+    body: JSON.stringify(data)
+  })
+
+  if (!res.ok) {
+    throw new Error(`Failed to publish news. Message: ${res.status}`)
+  }
 }
 
 export async function createTranslation(newsId: string, data: CreateNewsTranslationRequest) {
