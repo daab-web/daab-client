@@ -103,6 +103,14 @@ export default function AdminSidebar() {
               </SidebarMenuItem>
               <SidebarMenuItem>
                 <SidebarMenuButton asChild>
+                  <Link href="/admin/untranslated">
+                    <Languages className="mr-2 h-4 w-4" />
+                    Untranslated
+                  </Link>
+                </SidebarMenuButton>
+              </SidebarMenuItem>
+              <SidebarMenuItem>
+                <SidebarMenuButton asChild>
                   <Link href="/admin/translations">
                     <Languages className="mr-2 h-4 w-4" />
                     Translations
