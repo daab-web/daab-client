@@ -11,6 +11,7 @@ import {
   getPaginationRowModel,
   getSortedRowModel,
   useReactTable,
+  Table as TableType,
 } from "@tanstack/react-table";
 import * as React from "react";
 
@@ -37,12 +38,14 @@ interface DataTableProps<TData, TValue> {
   data: TData[];
   searchKey?: string;
   searchPlaceholder?: string;
+  toolbar?: (table: TableType<TData>) => React.ReactNode
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
   searchKey,
+  toolbar,
   searchPlaceholder = "Search...",
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = React.useState<SortingState>([]);
@@ -83,6 +86,7 @@ export function DataTable<TData, TValue>({
             className="max-w-sm"
           />
         )}
+        {toolbar?.(table)}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="outline" size="sm" className="ml-auto">

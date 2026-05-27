@@ -58,7 +58,10 @@ export async function createNews(data: CreateNewsRequest) {
 export async function publishNews(data: { newsIds: string[] }) {
   const res = await fetchAPI('/news', {
     method: "PATCH",
-    body: JSON.stringify(data)
+    body: JSON.stringify(data),
+    headers: {
+      "Content-Type": "application/json"
+    }
   })
 
   if (!res.ok) {

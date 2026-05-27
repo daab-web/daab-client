@@ -160,6 +160,20 @@ export async function createScientist(data: any, locale: string) {
   return (await response.json()) as Scientist;
 }
 
+export async function publishScientist(data: { scientistIds: string[] }) {
+  const res = await fetchAPI('/scientists', {
+    method: "PATCH",
+    body: JSON.stringify(data),
+    headers: {
+      "Content-Type": "application/json"
+    }
+  })
+
+  if (!res.ok) {
+    throw new Error(`Failed to publish scientists. Message: ${res.status}`)
+  }
+}
+
 export async function updateScientist(id: string, data: UpdateScientistRequest) {
   return fetchAPI(`/scientists/${id}`, {
     method: "PUT",
