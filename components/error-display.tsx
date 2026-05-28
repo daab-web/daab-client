@@ -93,7 +93,7 @@ export default function ErrorDisplay({
   const finalDescription = description || config.description;
 
   return (
-    <div className="flex min-h-screen items-center justify-center px-4 py-12">
+    <div className="flex items-center justify-center px-4 py-12">
       <Card className="w-full max-w-lg">
         <CardHeader className="text-center">
           <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-destructive/10">

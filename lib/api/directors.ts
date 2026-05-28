@@ -1,5 +1,5 @@
 import { fetchAPI } from ".";
-import { Director } from "@/types/director";
+import { Director, UntranslatedDirectorEntry } from "@/types/director";
 
 async function readErrorMessage(response: Response, fallback: string) {
   try {
@@ -29,6 +29,16 @@ export async function fetchDirectors(locale: string): Promise<Director[]> {
   return Array.isArray(data.directors) ? data.directors : [];
 }
 
+export async function fetchUntranslatedDirectors(): Promise<UntranslatedDirectorEntry[]> {
+  const res = await fetchAPI('/directors/untranslated');
+
+  if (!res.ok) {
+    throw new Error(`Failed to fetch directors. Message: ${res.status}`)
+  }
+
+  return res.json()
+}
+
 export async function createDirector(data: {
   scientistId: string;
   translations: { locale: string, role: string }[];
@@ -48,6 +58,20 @@ export async function createDirector(data: {
   }
 
   return (await response.json()) as { id: string };
+}
+
+export async function publishDirector(data: { directorIds: string[] }) {
+  const res = await fetchAPI('/directors', {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(data),
+  })
+
+  if (!res.ok) {
+    throw new Error(`Failed to publish directors. Message: ${res.status}`)
+  }
 }
 
 export async function updateDirector(data: { locale: string, directorId: string, role: string }) {
