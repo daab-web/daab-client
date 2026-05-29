@@ -1,6 +1,8 @@
 "use client";
 
-import { LexicalComposer } from "@lexical/react/LexicalComposer";
+import { LexicalExtensionComposer } from "@lexical/react/LexicalExtensionComposer"
+import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
+
 import { RichTextPlugin } from "@lexical/react/LexicalRichTextPlugin";
 import { ContentEditable } from "@lexical/react/LexicalContentEditable";
 import { HistoryPlugin } from "@lexical/react/LexicalHistoryPlugin";
@@ -18,8 +20,8 @@ import ToolbarPlugin from "./plugins/toolbar-plugin";
 import ImagesPlugin from "./plugins/image-plugin";
 import LinkPlugin from "./plugins/link-plugin";
 import { ImageNode } from "./nodes/image-node";
-import { useEditorContent } from "./plugins/editor-content-plugin";
-import { SerializedEditorState } from "lexical";
+import { defineExtension, SerializedEditorState } from "lexical";
+import { useMemo } from "react";
 
 const theme = {
   paragraph: "mb-2 text-base",
@@ -57,36 +59,41 @@ function onError(error: Error) {
 
 interface NewsEditorProps {
   onContentChange?: (editorState: SerializedEditorState) => void;
-  initialEditorState?: SerializedEditorState | null;
+  initialEditorState?: SerializedEditorState;
 }
 
 export default function NewsEditor({
   onContentChange,
   initialEditorState,
-}: NewsEditorProps = {}) {
-  const initialConfig = {
-    namespace: "NewsEditor",
-    theme,
-    onError,
-    editorState: initialEditorState
-      ? JSON.stringify(initialEditorState)
-      : undefined,
-    nodes: [
-      HeadingNode,
-      ListNode,
-      ListItemNode,
-      QuoteNode,
-      CodeNode,
-      CodeHighlightNode,
-      LinkNode,
-      AutoLinkNode,
-      ImageNode,
-    ],
-  };
+}: NewsEditorProps) {
+  const app = useMemo(() =>
+    defineExtension({
+      dependencies: [],
+      name: "Editor",
+      namespace: "DaabEditor",
+      theme: theme,
+      $initialEditorState(editor) {
+        if (initialEditorState) {
+          editor.parseEditorState(initialEditorState)
+        }
+      },
+      nodes: [
+        HeadingNode,
+        ListNode,
+        ListItemNode,
+        QuoteNode,
+        CodeNode,
+        CodeHighlightNode,
+        LinkNode,
+        AutoLinkNode,
+        ImageNode,
+      ]
+    }),
+    []
+  );
 
   return (
-    <LexicalComposer initialConfig={initialConfig}>
-      {onContentChange && <EditorContentPlugin onChange={onContentChange} />}
+    <LexicalExtensionComposer extension={app}>
       <div className="relative rounded-lg border bg-background">
         <ToolbarPlugin />
         <div className="relative">
@@ -113,15 +120,10 @@ export default function NewsEditor({
           <MarkdownShortcutPlugin transformers={TRANSFORMERS} />
         </div>
       </div>
-    </LexicalComposer>
+      <OnChangePlugin
+        ignoreSelectionChange
+        onChange={(editorState) => onContentChange?.(editorState.toJSON())}
+      />
+    </LexicalExtensionComposer>
   );
-}
-
-function EditorContentPlugin({
-  onChange,
-}: {
-  onChange: (editorState: SerializedEditorState) => void;
-}) {
-  useEditorContent(onChange);
-  return null;
 }

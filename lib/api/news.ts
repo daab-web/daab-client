@@ -32,7 +32,11 @@ export async function fetchUntranslatedNews(): Promise<UntranslateNewsEntry[]> {
 }
 
 export async function getNewsByIdOrSlug(idOrSlug: string, locale: string) {
-  const response = await fetchAPI(`/news/${idOrSlug}?locale=${locale}`);
+  const response = await fetchAPI(`/news/${idOrSlug}`, {
+    headers: {
+      "Accept-Language": locale,
+    }
+  });
   const news: News = await response.json();
 
   return news;
