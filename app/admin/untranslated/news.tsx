@@ -20,7 +20,7 @@ export default function NewsTranslationsTable() {
   const { mutate: publish, isPending } = useMutation({
     mutationFn: publishNews,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["untranslated-directors"] });
+      queryClient.invalidateQueries({ queryKey: ["untranslated-news"] });
       toast.success("Successfuly published")
     },
     onError: (error) => {
