@@ -20,7 +20,7 @@ export default function ScientistsTranslationsTable() {
   const { mutate: publish, isPending } = useMutation({
     mutationFn: publishScientist,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["untranslated-directors"] });
+      queryClient.invalidateQueries({ queryKey: ["untranslated-scientists"] });
       toast.success("Successfuly published")
     },
     onError: (error) => {
