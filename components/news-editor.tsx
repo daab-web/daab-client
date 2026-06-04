@@ -21,7 +21,7 @@ import ImagesPlugin from "./plugins/image-plugin";
 import LinkPlugin from "./plugins/link-plugin";
 import { ImageNode } from "./nodes/image-node";
 import { defineExtension, SerializedEditorState } from "lexical";
-import { useMemo } from "react";
+import { useMemo, useRef } from "react";
 
 const theme = {
   paragraph: "mb-2 text-base",
@@ -53,10 +53,6 @@ const theme = {
   image: "inline-block",
 };
 
-function onError(error: Error) {
-  console.error(error);
-}
-
 interface NewsEditorProps {
   onContentChange?: (editorState: SerializedEditorState) => void;
   initialEditorState?: SerializedEditorState;
@@ -66,6 +62,8 @@ export default function NewsEditor({
   onContentChange,
   initialEditorState,
 }: NewsEditorProps) {
+  const changeTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined);
+
   const app = useMemo(() =>
     defineExtension({
       dependencies: [],
@@ -89,7 +87,7 @@ export default function NewsEditor({
         ImageNode,
       ]
     }),
-    []
+    [initialEditorState]
   );
 
   return (
@@ -122,7 +120,12 @@ export default function NewsEditor({
       </div>
       <OnChangePlugin
         ignoreSelectionChange
-        onChange={(editorState) => onContentChange?.(editorState.toJSON())}
+        onChange={(editorState) => {
+          clearTimeout(changeTimerRef.current);
+          changeTimerRef.current = setTimeout(() => {
+            onContentChange?.(editorState.toJSON());
+          }, 300);
+        }}
       />
     </LexicalExtensionComposer>
   );

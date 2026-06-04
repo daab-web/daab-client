@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { SerializedEditorState } from "lexical";
@@ -27,9 +27,6 @@ export function useNewsEditorPage(editId?: string) {
   const [editingNewsId, setEditingNewsId] = useState<string | null>(null);
   const [isLoadingArticle, setIsLoadingArticle] = useState(false);
   const [locale, setLocale] = useState<"en" | "az">("en");
-  const [editorState, setEditorState] = useState<SerializedEditorState | null>(
-    null,
-  );
   const [editorKey, setEditorKey] = useState(0);
   const [thumbnailPreview, setThumbnailPreview] = useState("");
   const [originalThumbnailPreview, setOriginalThumbnailPreview] = useState("");
@@ -37,6 +34,8 @@ export function useNewsEditorPage(editId?: string) {
   const [tags, setTags] = useState<string[]>([]);
   const [attachments, setAttachments] = useState<Attachment[]>([]);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+
+  const editorStateRef = useRef<SerializedEditorState>(undefined);
 
   const mutation = editId
     ? useUpdateNewsMutation(editId)
@@ -46,7 +45,6 @@ export function useNewsEditorPage(editId?: string) {
   const resetFormForCreate = () => {
     reset(DEFAULT_FORM_VALUES);
     setTags([]);
-    setEditorState(null);
     setThumbnailPreview("");
     setOriginalThumbnailPreview("");
     setHasNewThumbnail(false);
@@ -71,7 +69,7 @@ export function useNewsEditorPage(editId?: string) {
         article.publishedDate ? new Date(article.publishedDate) : new Date(),
       );
       setTags(Array.isArray(article.tags) ? article.tags : []);
-      setEditorState(article.editorState ?? null);
+      editorStateRef.current = article.editorState;
       const thumb = article.thumbnail ?? "";
       setThumbnailPreview(thumb);
       setOriginalThumbnailPreview(thumb);
@@ -100,7 +98,7 @@ export function useNewsEditorPage(editId?: string) {
             category: formData.category,
             author: formData.authorName,
             authorId: "",
-            editorState: JSON.stringify(editorState),
+            editorState: JSON.stringify(editorStateRef.current),
             tags: tags,
             publishedDate: formData.publishedDate,
           },
@@ -116,7 +114,7 @@ export function useNewsEditorPage(editId?: string) {
             category: formData.category,
             author: formData.authorName,
             authorId: "",
-            editorState: JSON.stringify(editorState),
+            editorState: JSON.stringify(editorStateRef.current),
             tags: tags,
             publishedDate: formData.publishedDate,
           },
@@ -148,9 +146,7 @@ export function useNewsEditorPage(editId?: string) {
     onSubmit,
     isPending,
     // editor
-    editorState,
-    setEditorState,
-    editorKey,
+    editorStateRef,
     // thumbnail
     thumbnailPreview,
     setThumbnailPreview,

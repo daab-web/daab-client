@@ -1,4 +1,11 @@
-import { CreateNewsRequest, CreateNewsTranslationRequest, News, NewsAttachmentsResponse, UntranslateNewsEntry } from "@/types/news"
+import { 
+  CreateNewsRequest,
+  CreateNewsTranslationRequest,
+  News,
+  NewsAttachmentsResponse,
+  UntranslateNewsEntry,
+  NewsApiResponse,
+} from "@/types/news"
 import { PagedResponse } from "@/types/paged-response"
 import { fetchAPI } from ".";
 import { Attachment } from "@/types/attachment";
@@ -31,15 +38,18 @@ export async function fetchUntranslatedNews(): Promise<UntranslateNewsEntry[]> {
   return data;
 }
 
-export async function getNewsByIdOrSlug(idOrSlug: string, locale: string) {
+export async function getNewsByIdOrSlug(idOrSlug: string, locale: string): Promise<News> {
   const response = await fetchAPI(`/news/${idOrSlug}`, {
     headers: {
       "Accept-Language": locale,
     }
   });
-  const news: News = await response.json();
+  const raw: NewsApiResponse = await response.json();
 
-  return news;
+  return {
+    ...raw,
+    editorState: raw.editorState ? JSON.parse(raw.editorState) : undefined,
+  } satisfies News;
 }
 
 export async function getNewsAttachments(id: string) {

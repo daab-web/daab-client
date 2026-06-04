@@ -38,9 +38,7 @@ export default function NewsEditorPage({
     setValue,
     onSubmit,
     isPending,
-    editorState,
-    setEditorState,
-    editorKey,
+    editorStateRef,
     thumbnailPreview,
     setThumbnailPreview,
     originalThumbnailPreview,
@@ -164,9 +162,8 @@ export default function NewsEditorPage({
             </CardHeader>
             <CardContent>
               <NewsEditor
-                key={editorKey}
-                initialEditorState={editorState}
-                onContentChange={setEditorState}
+                initialEditorState={editorStateRef.current}
+                onContentChange={(e) => editorStateRef.current = e}
               />
             </CardContent>
           </Card>
@@ -197,18 +194,18 @@ export default function NewsEditorPage({
       </div>
 
       {/* Preview dialog */}
-      <PreviewDialog
-        open={isPreviewOpen}
-        onOpenChange={setIsPreviewOpen}
-        title={watch("title")}
-        excerpt={watch("excerpt")}
-        category={watch("category")}
-        authorName={watch("authorName")}
-        publishedDate={watch("publishedDate")}
-        thumbnailPreview={thumbnailPreview}
-        tags={tags}
-        editorState={editorState}
-      />
+      {/* <PreviewDialog */}
+      {/*   open={isPreviewOpen} */}
+      {/*   onOpenChange={setIsPreviewOpen} */}
+      {/*   title={watch("title")} */}
+      {/*   excerpt={watch("excerpt")} */}
+      {/*   category={watch("category")} */}
+      {/*   authorName={watch("authorName")} */}
+      {/*   publishedDate={watch("publishedDate")} */}
+      {/*   thumbnailPreview={thumbnailPreview} */}
+      {/*   tags={tags} */}
+      {/*   editorState={editorStateRef.current} */}
+      {/* /> */}
     </div>
   );
 }
