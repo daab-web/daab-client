@@ -12,7 +12,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Loader2, Plus, Save, Eye } from "lucide-react";
-import Editor from "@/components/editor";
+import dynamic from "next/dynamic";
+const Editor = dynamic(
+  () => import("@/components/editor").then((m) => ({ default: m.Editor })),
+  { ssr: false }
+);
 import { ThumbnailCard } from "./thumbnail-card";
 import { MetadataCard } from "./metadata-card";
 import { TagsCard } from "./tags-card";
