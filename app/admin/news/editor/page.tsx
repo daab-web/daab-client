@@ -12,7 +12,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Loader2, Plus, Save, Eye } from "lucide-react";
-import NewsEditor from "@/components/news-editor";
+import Editor from "@/components/editor";
 import { ThumbnailCard } from "./thumbnail-card";
 import { MetadataCard } from "./metadata-card";
 import { TagsCard } from "./tags-card";
@@ -161,10 +161,7 @@ export default function NewsEditorPage({
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <NewsEditor
-                initialEditorState={editorStateRef.current}
-                onContentChange={(e) => editorStateRef.current = e}
-              />
+              <Editor />
             </CardContent>
           </Card>
         </div>
