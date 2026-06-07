@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
-import { SerializedEditorState } from "lexical";
+import { EditorState, SerializedEditorState } from "lexical";
 import { toast } from "sonner";
 import { getNewsAttachments, getNewsByIdOrSlug } from "@/lib/api/news";
 import { NewsFormData, DEFAULT_FORM_VALUES } from "./types";
@@ -34,8 +34,11 @@ export function useNewsEditorPage(editId?: string) {
   const [tags, setTags] = useState<string[]>([]);
   const [attachments, setAttachments] = useState<Attachment[]>([]);
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
+  const [initialEditorState, setInitialEditorState] = useState<
+    SerializedEditorState | undefined
+  >(undefined);
 
-  const editorStateRef = useRef<SerializedEditorState>(undefined);
+  const editorStateRef = useRef<EditorState | undefined>(undefined);
 
   const mutation = editId
     ? useUpdateNewsMutation(editId)
@@ -49,6 +52,8 @@ export function useNewsEditorPage(editId?: string) {
     setOriginalThumbnailPreview("");
     setHasNewThumbnail(false);
     setEditingNewsId(null);
+    setInitialEditorState(undefined);
+    editorStateRef.current = undefined;
     setEditorKey((prev) => prev + 1);
   };
 
@@ -57,7 +62,6 @@ export function useNewsEditorPage(editId?: string) {
     try {
       const article = await getNewsByIdOrSlug(id, locale);
       const att = await getNewsAttachments(id);
-      // console.log(article, att);
       setEditingNewsId(article.id);
       setAttachments(att);
       setValue("title", article.title);
@@ -69,7 +73,8 @@ export function useNewsEditorPage(editId?: string) {
         article.publishedDate ? new Date(article.publishedDate) : new Date(),
       );
       setTags(Array.isArray(article.tags) ? article.tags : []);
-      editorStateRef.current = article.editorState;
+      setInitialEditorState(article.editorState);
+      editorStateRef.current = undefined;
       const thumb = article.thumbnail ?? "";
       setThumbnailPreview(thumb);
       setOriginalThumbnailPreview(thumb);
@@ -98,7 +103,7 @@ export function useNewsEditorPage(editId?: string) {
             category: formData.category,
             author: formData.authorName,
             authorId: "",
-            editorState: JSON.stringify(editorStateRef.current),
+            editorState: JSON.stringify(editorStateRef.current?.toJSON()),
             tags: tags,
             publishedDate: formData.publishedDate,
           },
@@ -114,7 +119,7 @@ export function useNewsEditorPage(editId?: string) {
             category: formData.category,
             author: formData.authorName,
             authorId: "",
-            editorState: JSON.stringify(editorStateRef.current),
+            editorState: JSON.stringify(editorStateRef.current?.toJSON()),
             tags: tags,
             publishedDate: formData.publishedDate,
           },
@@ -146,7 +151,9 @@ export function useNewsEditorPage(editId?: string) {
     onSubmit,
     isPending,
     // editor
+    editorKey,
     editorStateRef,
+    initialEditorState,
     // thumbnail
     thumbnailPreview,
     setThumbnailPreview,

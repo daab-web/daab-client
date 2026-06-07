@@ -6,7 +6,6 @@ import {
   useScientistForm,
   useScientistUpdateMutation,
 } from "./hooks";
-import NewsEditor from "@/components/news-editor";
 import {
   Form,
   FormField,
@@ -19,8 +18,8 @@ import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import router from "next/router";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
-import { SerializedEditorState } from "lexical";
+import { useEffect, useRef, useState } from "react";
+import { EditorState, SerializedEditorState } from "lexical";
 import { ComboboxMultiple } from "@/components/combobox-multiple";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useTRPC } from "@/trpc/client";
@@ -28,6 +27,12 @@ import { useQuery } from "@tanstack/react-query";
 import { ButtonGroup } from "@/components/ui/button-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { fetchScientistById } from "@/lib/api/scientists";
+import dynamic from "next/dynamic";
+
+const Editor = dynamic(
+  () => import("@/components/editor").then((m) => ({ default: m.Editor })),
+  { ssr: false }
+);
 
 export interface ScientistsEditorProps {
   scientist?: Scientist;
@@ -47,6 +52,7 @@ export default function ScientistsEditor({
   const processingText = action === "POST" ? "Creating..." : "Updating...";
   const [locale, setLocale] = useState<"en" | "az">("en");
   const [editorKey, setEditorKey] = useState(locale)
+  const editorStateRef = useRef<EditorState | undefined>(undefined);
   const { mutate, isPending } =
     action === "POST"
       ? useScientistCreateMutation(locale)
@@ -68,6 +74,7 @@ export default function ScientistsEditor({
     const loadLocaleData = async () => {
       const data = await fetchScientistById(scientist.id, locale);
       setEditorState(data.description);
+      editorStateRef.current = undefined;
       form.setValue("firstName", data.firstName)
       form.setValue("lastName", data.lastName)
       setEditorKey(locale)
@@ -82,7 +89,7 @@ export default function ScientistsEditor({
         onSubmit={form.handleSubmit((data) =>
           mutate({
             ...data,
-            description: editorState,
+            description: editorStateRef.current?.toJSON() ?? editorState,
           }),
         )}
         className="space-y-4"
@@ -215,10 +222,12 @@ export default function ScientistsEditor({
             <FormItem>
               <FormLabel>Description (optional)</FormLabel>
               <FormControl>
-                <NewsEditor
+                <Editor
                   key={editorKey}
-                  initialEditorState={editorState}
-                  onContentChange={(state) => setEditorState(state)}
+                  editorSerializedState={editorState}
+                  onChange={(state) => {
+                    editorStateRef.current = state;
+                  }}
                 />
               </FormControl>
               <FormMessage />

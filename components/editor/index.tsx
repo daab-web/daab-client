@@ -170,7 +170,7 @@ export function Editor({
         ],
         $initialEditorState(editor) {
           if (editorSerializedState) {
-            editor.parseEditorState(editorSerializedState);
+            editor.setEditorState(editor.parseEditorState(editorSerializedState));
           } else if (editorState) {
             editor.setEditorState(editorState);
           }

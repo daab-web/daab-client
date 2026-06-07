@@ -42,7 +42,9 @@ export default function NewsEditorPage({
     setValue,
     onSubmit,
     isPending,
+    editorKey,
     editorStateRef,
+    initialEditorState,
     thumbnailPreview,
     setThumbnailPreview,
     originalThumbnailPreview,
@@ -165,7 +167,13 @@ export default function NewsEditorPage({
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <Editor />
+              <Editor
+                key={editorKey}
+                editorSerializedState={initialEditorState}
+                onChange={(state) => {
+                  editorStateRef.current = state;
+                }}
+              />
             </CardContent>
           </Card>
         </div>
