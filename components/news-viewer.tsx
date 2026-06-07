@@ -48,10 +48,10 @@ function onError(error: Error) {
 }
 
 interface NewsViewerProps {
-  editorState: SerializedEditorState | null
+  editorState?: SerializedEditorState
 }
 
-function ViewerContent({ editorState }: { editorState: SerializedEditorState | null }) {
+function ViewerContent({ editorState }: { editorState?: SerializedEditorState }) {
   const [editor] = useLexicalComposerContext()
 
   useEffect(() => {

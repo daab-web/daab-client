@@ -5,7 +5,6 @@ import { AutoLinkExtension, ClickableLinkExtension, LinkExtension } from "@lexic
 import { CheckListExtension, ListExtension } from "@lexical/list";
 import { CHECK_LIST, ELEMENT_TRANSFORMERS, MULTILINE_ELEMENT_TRANSFORMERS, TEXT_FORMAT_TRANSFORMERS, TEXT_MATCH_TRANSFORMERS } from "@lexical/markdown";
 import { OverflowNode } from "@lexical/overflow";
-import { CharacterLimitPlugin } from "@lexical/react/LexicalCharacterLimitPlugin";
 import { LexicalExtensionComposer } from "@lexical/react/LexicalExtensionComposer";
 import { OnChangePlugin } from "@lexical/react/LexicalOnChangePlugin";
 import { TabIndentationPlugin } from "@lexical/react/LexicalTabIndentationPlugin";
@@ -15,13 +14,11 @@ import { TableCellNode, TableNode, TableRowNode } from "@lexical/table";
 import { type EditorState, type SerializedEditorState, configExtension, defineExtension } from "lexical";
 import { useMemo, useState } from "react";
 
-import { useBlockViewer } from "@/components/block-viewer-provider";
 import { ContentEditable } from "@/components/editor/editor-ui/content-editable";
 import { DateTimeExtension } from "@/components/editor/extensions/date-time-extension";
 import { EmojisExtension } from "@/components/editor/extensions/emojis-extension";
 import { ImagesExtension } from "@/components/editor/extensions/images-extension";
 import { MarkdownShortcutsExtension } from "@/components/editor/extensions/markdown-shortcuts-extension";
-import { MaxLengthExtension } from "@/components/editor/extensions/max-length-extension";
 import { AutocompleteNode } from "@/components/editor/nodes/autocomplete-node";
 import { TweetNode } from "@/components/editor/nodes/embeds/tweet-node";
 import { YouTubeNode } from "@/components/editor/nodes/embeds/youtube-node";
@@ -53,8 +50,6 @@ import { FloatingLinkEditorPlugin } from "@/components/editor/plugins/floating-l
 import { FloatingTextFormatToolbarPlugin } from "@/components/editor/plugins/floating-text-format-plugin";
 import { LayoutPlugin } from "@/components/editor/plugins/layout-plugin";
 import { MentionsPlugin } from "@/components/editor/plugins/mentions-plugin";
-import { DateTimePickerPlugin } from "@/components/editor/plugins/picker/date-time-picker-plugin";
-import { EmbedsPickerPlugin } from "@/components/editor/plugins/picker/embeds-picker-plugin";
 import { SpecialTextPlugin } from "@/components/editor/plugins/special-text-plugin";
 import { TabFocusPlugin } from "@/components/editor/plugins/tab-focus-plugin";
 import { BlockFormatDropDown } from "@/components/editor/plugins/toolbar/block-format-toolbar-plugin";

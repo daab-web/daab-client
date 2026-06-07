@@ -24,7 +24,7 @@ interface PreviewDialogProps {
   publishedDate: Date;
   thumbnailPreview: string;
   tags: string[];
-  editorState: SerializedEditorState | null;
+  editorState?: SerializedEditorState;
 }
 
 export function PreviewDialog({
