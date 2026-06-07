@@ -93,11 +93,17 @@ html,
 body {
   margin: 0;
   padding: 0;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
   background-image: var(--background-image);
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
-  background-attachment: fixed;
+  z-index: -1;
 }
 
 .dark {

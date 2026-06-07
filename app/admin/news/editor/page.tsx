@@ -12,7 +12,11 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Loader2, Plus, Save, Eye } from "lucide-react";
-import NewsEditor from "@/components/news-editor";
+import dynamic from "next/dynamic";
+const Editor = dynamic(
+  () => import("@/components/editor").then((m) => ({ default: m.Editor })),
+  { ssr: false }
+);
 import { ThumbnailCard } from "./thumbnail-card";
 import { MetadataCard } from "./metadata-card";
 import { TagsCard } from "./tags-card";
@@ -38,9 +42,9 @@ export default function NewsEditorPage({
     setValue,
     onSubmit,
     isPending,
-    editorState,
-    setEditorState,
     editorKey,
+    editorStateRef,
+    initialEditorState,
     thumbnailPreview,
     setThumbnailPreview,
     originalThumbnailPreview,
@@ -163,10 +167,12 @@ export default function NewsEditorPage({
               </CardDescription>
             </CardHeader>
             <CardContent>
-              <NewsEditor
+              <Editor
                 key={editorKey}
-                initialEditorState={editorState}
-                onContentChange={setEditorState}
+                editorSerializedState={initialEditorState}
+                onChange={(state) => {
+                  editorStateRef.current = state;
+                }}
               />
             </CardContent>
           </Card>
@@ -197,18 +203,18 @@ export default function NewsEditorPage({
       </div>
 
       {/* Preview dialog */}
-      <PreviewDialog
-        open={isPreviewOpen}
-        onOpenChange={setIsPreviewOpen}
-        title={watch("title")}
-        excerpt={watch("excerpt")}
-        category={watch("category")}
-        authorName={watch("authorName")}
-        publishedDate={watch("publishedDate")}
-        thumbnailPreview={thumbnailPreview}
-        tags={tags}
-        editorState={editorState}
-      />
+      {/* <PreviewDialog */}
+      {/*   open={isPreviewOpen} */}
+      {/*   onOpenChange={setIsPreviewOpen} */}
+      {/*   title={watch("title")} */}
+      {/*   excerpt={watch("excerpt")} */}
+      {/*   category={watch("category")} */}
+      {/*   authorName={watch("authorName")} */}
+      {/*   publishedDate={watch("publishedDate")} */}
+      {/*   thumbnailPreview={thumbnailPreview} */}
+      {/*   tags={tags} */}
+      {/*   editorState={editorStateRef.current} */}
+      {/* /> */}
     </div>
   );
 }
