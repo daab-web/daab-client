@@ -151,12 +151,14 @@ export function useNewsEditorPage(editId?: string) {
           router.replace(`/admin/news/editor?editId=${createdId}`);
         }
       }
-    } catch (err) {}
+    } catch (err) {
+      console.error(err);
+    }
   });
 
   useEffect(() => {
     if (editId) void loadNewsForEdit(editId);
-  }, [locale]);
+  }, [locale, editId]);
 
   return {
     // form

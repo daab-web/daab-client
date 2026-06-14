@@ -71,7 +71,8 @@ export const useCreateNewsMutation = () =>
                 { method: "POST", body: attachmentData },
               );
               if (!res.ok) failed.push(attachment.file.name);
-            } catch {
+            } catch (err) {
+              console.error(err);
               failed.push(attachment.file.name);
             }
           }),
@@ -141,7 +142,8 @@ export const useUpdateNewsMutation = (newsId: string) =>
                 { method: "POST", body: attachmentData },
               );
               if (!res.ok) failed.push(attachment.file.name);
-            } catch {
+            } catch (err) {
+              console.error(err);
               failed.push(attachment.file.name);
             }
           }),

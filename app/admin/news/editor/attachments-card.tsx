@@ -172,10 +172,20 @@ export function AttachmentsCard({
       </CardHeader>
       <CardContent className="space-y-4">
         <div
+          role="button"
+          tabIndex={disabled ? -1 : 0}
+          aria-disabled={disabled}
           onDrop={handleDrop}
           onDragOver={(e) => { e.preventDefault(); if (!disabled) setIsDragOver(true); }}
           onDragLeave={() => setIsDragOver(false)}
           onClick={() => !disabled && inputRef.current?.click()}
+          onKeyDown={(e) => {
+            if (disabled) return;
+            if (e.key === "Enter" || e.key === " ") {
+              e.preventDefault();
+              inputRef.current?.click();
+            }
+          }}
           className={cn(
             "flex flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed p-6 text-center transition-colors",
             disabled
@@ -227,6 +237,7 @@ export function AttachmentsCard({
                         <img
                           src={attachment.fileUrl}
                           alt={fileName}
+                          loading="lazy"
                           className="h-8 w-8 shrink-0 rounded object-cover"
                         />
                       ) : (
