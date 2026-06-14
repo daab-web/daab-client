@@ -12,17 +12,21 @@ export function useScientistCreateMutation(locale: string) {
   return useMutation({
     mutationFn: async (data: ScientistFormData) => {
       const { id } = await createScientist(data, locale)
-      await updateScientistTranslation(id, locale, {
+      const translationRes = await updateScientistTranslation(id, locale, {
         firstName: data.firstName,
         lastName: data.lastName,
         description: JSON.stringify(data.description)
       })
+      if (!translationRes.ok) {
+        throw new Error(`Failed to create scientist translation (${translationRes.status})`);
+      }
     },
     onSuccess: () => {
       client.invalidateQueries({ queryKey: ["scientists"] });
       toast.success("Scientist created successfully");
     },
-    onError: () => toast.error("Unable to create scientist"),
+    onError: (err: Error) =>
+      toast.error("Unable to create scientist", { description: err.message }),
   });
 }
 
@@ -31,18 +35,29 @@ export function useScientistUpdateMutation(id: string, locale: string) {
 
   return useMutation({
     mutationFn: async (data: ScientistFormData) => {
-      await updateScientistTranslation(id, locale, {
+      const translationRes = await updateScientistTranslation(id, locale, {
         firstName: data.firstName,
         lastName: data.lastName,
         description: JSON.stringify(data.description)
       })
-      await updateScientist(id, data)
+      if (!translationRes.ok) {
+        throw new Error(`Failed to update scientist translation (${translationRes.status})`);
+      }
+
+      const updateRes = await updateScientist(id, {
+        ...data,
+        dateOfBirth: data.dateOfBirth || null,
+      })
+      if (!updateRes.ok) {
+        throw new Error(`Failed to update scientist (${updateRes.status})`);
+      }
     },
     onSuccess: () => {
       client.invalidateQueries({ queryKey: ["scientists"] });
       toast.success("Scientist updated successfully");
     },
-    onError: () => toast.error("Unable to update scientist"),
+    onError: (err: Error) =>
+      toast.error("Unable to update scientist", { description: err.message }),
   });
 }
 

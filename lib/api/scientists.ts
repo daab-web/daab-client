@@ -194,6 +194,12 @@ export async function updateScientistTranslation(id: string, locale: string, dat
   });
 }
 
+export async function deleteScientistProfilePicture(id: string) {
+  return fetchAPI(`/scientists/${id}/profile-picture`, {
+    method: "DELETE",
+  });
+}
+
 export async function deleteScientist(id: string) {
   const response = await fetchAPI(`/scientists/${id}`, {
     method: "DELETE",

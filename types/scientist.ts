@@ -31,6 +31,7 @@ export interface UpdateScientistRequest {
   institutions: string[]
   countries: string[]
   areas: string[]
+  dateOfBirth?: string | null;
 }
 
 export interface UpdateScientistTranslationRequest {

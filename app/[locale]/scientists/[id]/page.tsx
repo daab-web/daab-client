@@ -10,6 +10,7 @@ import {
   Sparkles,
 } from "lucide-react";
 
+import { parse } from "date-fns";
 import { Link } from "@/i18n/navigation";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -74,10 +75,15 @@ export default async function ScientistDetailPage({ params }: Props) {
                     {t("detail.dateOfBirth")}
                   </span>
                   <p className="mt-2 text-sm font-medium">
-                    {new Date(scientist.dateOfBirth).toLocaleDateString(
-                      locale,
-                      { year: "numeric", month: "long", day: "numeric" },
-                    )}
+                    {parse(
+                      scientist.dateOfBirth,
+                      "yyyy-MM-dd",
+                      new Date(),
+                    ).toLocaleDateString(locale, {
+                      year: "numeric",
+                      month: "long",
+                      day: "numeric",
+                    })}
                   </p>
                 </div>
               )}
