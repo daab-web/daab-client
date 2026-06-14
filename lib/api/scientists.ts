@@ -124,7 +124,7 @@ export async function fetchPublicationsByScientistId(
 
 export async function createScientist(data: any, locale: string) {
   const formData = new FormData();
-  const { photo, orcId, ...rest } = data;
+  const { photo, orcid, ...rest } = data;
 
   Object.entries(rest).forEach(([key, value]) => {
     if (!value || value === "") return;
@@ -138,8 +138,8 @@ export async function createScientist(data: any, locale: string) {
     }
   });
 
-  if (orcId) {
-    formData.append("orcid", orcId);
+  if (orcid) {
+    formData.append("orcid", orcid);
   }
 
   if (photo instanceof File) {

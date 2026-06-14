@@ -19,7 +19,7 @@ export const scientistSchema = z.object({
   email: z.email().optional().or(z.literal("")),
   phoneNumber: z.string().optional(),
   linkedInUrl: z.url().optional().or(z.literal("")),
-  orcId: z.string().optional(),
+  orcid: z.string().optional(),
   website: z.url().optional().or(z.literal("")),
   dateOfBirth: z.string().optional(),
 });

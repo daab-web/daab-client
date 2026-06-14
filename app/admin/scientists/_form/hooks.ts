@@ -75,7 +75,7 @@ export const useScientistForm = (s?: Scientist) =>
       email: s?.email || "",
       phoneNumber: s?.phoneNumber || "",
       linkedInUrl: s?.linkedInUrl || "",
-      orcId: s?.orcid || "",
+      orcid: s?.orcid || "",
       website: s?.website || "",
       dateOfBirth: s?.dateOfBirth || "",
     },

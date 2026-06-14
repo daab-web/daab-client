@@ -14,6 +14,14 @@ import {
   FormControl,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import router from "next/router";
@@ -51,12 +59,13 @@ export default function ScientistsEditor({
   const buttonText = action === "POST" ? "Create" : "Update";
   const processingText = action === "POST" ? "Creating..." : "Updating...";
   const [locale, setLocale] = useState<"en" | "az">("en");
+  const [pendingLocale, setPendingLocale] = useState<"en" | "az" | null>(null);
   const [editorKey, setEditorKey] = useState(locale)
   const editorStateRef = useRef<EditorState | undefined>(undefined);
+  const createMutation = useScientistCreateMutation(locale);
+  const updateMutation = useScientistUpdateMutation(scientist?.id ?? "", locale);
   const { mutate, isPending } =
-    action === "POST"
-      ? useScientistCreateMutation(locale)
-      : useScientistUpdateMutation(scientist!.id, locale);
+    action === "POST" ? createMutation : updateMutation;
 
   const { data: areas, isLoading: areAreasLoading } = useQuery(
     trpc.areas.queryOptions({}),
@@ -75,13 +84,33 @@ export default function ScientistsEditor({
       const data = await fetchScientistById(scientist.id, locale);
       setEditorState(data.description);
       editorStateRef.current = undefined;
-      form.setValue("firstName", data.firstName)
-      form.setValue("lastName", data.lastName)
+      form.resetField("firstName", { defaultValue: data.firstName });
+      form.resetField("lastName", { defaultValue: data.lastName });
       setEditorKey(locale)
     };
 
     loadLocaleData();
-  }, [locale]);
+  }, [locale, action, scientist, form]);
+
+  const hasUnsavedTranslation = () =>
+    Boolean(form.formState.dirtyFields.firstName) ||
+    Boolean(form.formState.dirtyFields.lastName) ||
+    editorStateRef.current !== undefined;
+
+  const handleLocaleChange = (value: string) => {
+    const next = value as "en" | "az";
+    if (next === locale) return;
+    if (hasUnsavedTranslation()) {
+      setPendingLocale(next);
+    } else {
+      setLocale(next);
+    }
+  };
+
+  const confirmLocaleSwitch = () => {
+    if (pendingLocale) setLocale(pendingLocale);
+    setPendingLocale(null);
+  };
 
   return (
     <Form {...form}>
@@ -296,7 +325,7 @@ export default function ScientistsEditor({
         <div className="grid grid-cols-2 gap-4">
           <FormField
             control={form.control}
-            name="orcId"
+            name="orcid"
             render={({ field }) => (
               <FormItem>
                 <FormLabel>ORCID (optional)</FormLabel>
@@ -347,7 +376,7 @@ export default function ScientistsEditor({
 
         <div className="flex gap-2 pt-4">
           <ButtonGroup>
-            <Select defaultValue={locale} onValueChange={v => setLocale(v as "en" | "az")}>
+            <Select value={locale} onValueChange={handleLocaleChange}>
               <SelectTrigger>
                 <SelectValue placeholder="Select locale" />
               </SelectTrigger>
@@ -377,6 +406,34 @@ export default function ScientistsEditor({
           </Button>
         </div>
       </form>
+
+      <Dialog
+        open={pendingLocale !== null}
+        onOpenChange={(open) => !open && setPendingLocale(null)}
+      >
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Discard unsaved changes?</DialogTitle>
+            <DialogDescription>
+              Switching language will discard unsaved name and description
+              edits for the current language. This cannot be undone.
+            </DialogDescription>
+          </DialogHeader>
+
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setPendingLocale(null)}
+            >
+              Cancel
+            </Button>
+            <Button type="button" variant="destructive" onClick={confirmLocaleSwitch}>
+              Switch language
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Form>
   );
 }
