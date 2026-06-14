@@ -48,6 +48,7 @@ export default function NewsEditorPage({
     thumbnailPreview,
     setThumbnailPreview,
     originalThumbnailPreview,
+    setOriginalThumbnailPreview,
     hasNewThumbnail,
     setHasNewThumbnail,
     tags,
@@ -111,7 +112,7 @@ export default function NewsEditorPage({
                 <SelectItem value="az">AZ</SelectItem>
               </SelectContent>
             </Select>
-            <Button onClick={onSubmit} disabled={isPending}>
+            <Button onClick={onSubmit} disabled={isPending || isLoadingArticle}>
               {isPending ? (
                 <Loader2 className="mr-2 h-4 w-4 animate-spin" />
               ) : (
@@ -140,8 +141,8 @@ export default function NewsEditorPage({
                 <Input
                   id="title"
                   placeholder="Enter article title"
+                  disabled={isLoadingArticle}
                   {...register("title", { required: "Title is required" })}
-                  onChange={(e) => setValue("title", e.target.value)}
                 />
                 {errors.title && (
                   <p className="text-xs text-destructive">{errors.title.message}</p>
@@ -152,6 +153,7 @@ export default function NewsEditorPage({
                 <Textarea
                   id="excerpt"
                   placeholder="A brief summary of the article (1-2 sentences)"
+                  disabled={isLoadingArticle}
                   {...register("excerpt")}
                   rows={3}
                 />
@@ -188,33 +190,38 @@ export default function NewsEditorPage({
             isEditMode={!!editingNewsId}
             originalThumbnailPreview={originalThumbnailPreview}
             onPreviewChange={setThumbnailPreview}
+            onOriginalPreviewChange={setOriginalThumbnailPreview}
             onHasNewThumbnailChange={setHasNewThumbnail}
+            newsId={editingNewsId ?? undefined}
+            disabled={isLoadingArticle}
           />
 
-          <MetadataCard register={register} control={control} />
+          <MetadataCard register={register} control={control} disabled={isLoadingArticle} />
 
-          <TagsCard tags={tags} onTagsChange={setTags} />
+          <TagsCard tags={tags} onTagsChange={setTags} disabled={isLoadingArticle} />
 
           <AttachmentsCard
             attachments={attachments}
             onAttachmentsChange={setAttachments}
+            newsId={editingNewsId ?? undefined}
+            disabled={isLoadingArticle}
           />
         </div>
       </div>
 
       {/* Preview dialog */}
-      {/* <PreviewDialog */}
-      {/*   open={isPreviewOpen} */}
-      {/*   onOpenChange={setIsPreviewOpen} */}
-      {/*   title={watch("title")} */}
-      {/*   excerpt={watch("excerpt")} */}
-      {/*   category={watch("category")} */}
-      {/*   authorName={watch("authorName")} */}
-      {/*   publishedDate={watch("publishedDate")} */}
-      {/*   thumbnailPreview={thumbnailPreview} */}
-      {/*   tags={tags} */}
-      {/*   editorState={editorStateRef.current} */}
-      {/* /> */}
+      <PreviewDialog
+        open={isPreviewOpen}
+        onOpenChange={setIsPreviewOpen}
+        title={watch("title")}
+        excerpt={watch("excerpt")}
+        category={watch("category")}
+        authorName={watch("authorName")}
+        publishedDate={watch("publishedDate")}
+        thumbnailPreview={thumbnailPreview}
+        tags={tags}
+        editorState={editorStateRef.current?.toJSON()}
+      />
     </div>
   );
 }

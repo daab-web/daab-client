@@ -1,10 +1,12 @@
-import { 
+import {
   CreateNewsRequest,
   CreateNewsTranslationRequest,
   News,
+  NewsAttachment,
   NewsAttachmentsResponse,
   UntranslateNewsEntry,
   NewsApiResponse,
+  UpdateNewsRequest,
 } from "@/types/news"
 import { PagedResponse } from "@/types/paged-response"
 import { fetchAPI } from ".";
@@ -52,11 +54,11 @@ export async function getNewsByIdOrSlug(idOrSlug: string, locale: string): Promi
   } satisfies News;
 }
 
-export async function getNewsAttachments(id: string) {
+export async function getNewsAttachments(id: string): Promise<NewsAttachment[]> {
   const response = await fetchAPI(`/news/${id}/attachments`);
-  const attachments: Attachment[] = await response.json()
+  const data: NewsAttachmentsResponse = await response.json()
 
-  return attachments
+  return data.attachments
 }
 
 export async function createNews(data: CreateNewsRequest) {
@@ -112,10 +114,13 @@ export async function setThumbnail(newsId: string, image: File) {
   })
 }
 
-export async function updateNews(id: string, formData: FormData) {
+export async function updateNews(id: string, data: UpdateNewsRequest) {
   return fetchAPI(`/news/${id}`, {
     method: "PUT",
-    body: formData,
+    headers: {
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data),
   });
 }
 
@@ -129,4 +134,16 @@ export async function fetchNewsAttachments(newsId: string): Promise<NewsAttachme
   const response = await fetchAPI(`/news/${newsId}/attachments`);
   const data: NewsAttachmentsResponse = await response.json();
   return data;
+}
+
+export async function deleteNewsAttachment(newsId: string, attachmentId: string) {
+  return fetchAPI(`/news/${newsId}/attachments/${attachmentId}`, {
+    method: "DELETE",
+  });
+}
+
+export async function deleteNewsThumbnail(newsId: string) {
+  return fetchAPI(`/news/${newsId}/thumbnail`, {
+    method: "DELETE",
+  });
 }

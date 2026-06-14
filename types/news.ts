@@ -51,6 +51,12 @@ export type CreateNewsResponse = {
   id: string;
 };
 
+export type UpdateNewsRequest = {
+  category?: string;
+  tags: string[];
+  publishedDate: Date;
+};
+
 export interface UntranslateNewsEntry {
   newsId: string;
   title?: string;

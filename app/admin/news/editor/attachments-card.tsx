@@ -2,6 +2,7 @@
 
 import { useRef, useState } from "react";
 import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -9,6 +10,14 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
 import {
   Paperclip,
   Upload,
@@ -18,20 +27,34 @@ import {
   FileVideo,
   FileAudio,
   File,
+  Loader2,
+  Trash2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Attachment } from "./types";
+import { toast } from "sonner";
+import { Attachment, ExistingAttachment, isNewAttachment } from "./types";
+import { MAX_ATTACHMENT_SIZE_BYTES } from "./constants";
+import { deleteNewsAttachment } from "@/lib/api/news";
 
-function getFileIcon(file: File) {
-  if (file.type.startsWith("image/"))
+function getFileIcon(type: string) {
+  if (type.startsWith("image/"))
     return <FileImage className="h-4 w-4 text-blue-500" />;
-  if (file.type.startsWith("video/"))
+  if (type.startsWith("video/"))
     return <FileVideo className="h-4 w-4 text-purple-500" />;
-  if (file.type.startsWith("audio/"))
+  if (type.startsWith("audio/"))
     return <FileAudio className="h-4 w-4 text-green-500" />;
-  if (file.type === "application/pdf" || file.type.includes("text"))
+  if (type === "application/pdf" || type.includes("text"))
     return <FileText className="h-4 w-4 text-orange-500" />;
   return <File className="h-4 w-4 text-muted-foreground" />;
+}
+
+function getFileNameFromUrl(url: string): string {
+  try {
+    const path = new URL(url).pathname;
+    return decodeURIComponent(path.split("/").pop() ?? url);
+  } catch {
+    return url;
+  }
 }
 
 function formatBytes(bytes: number): string {
@@ -43,22 +66,46 @@ function formatBytes(bytes: number): string {
 interface AttachmentsCardProps {
   attachments: Attachment[];
   onAttachmentsChange: (attachments: Attachment[]) => void;
+  newsId?: string;
+  disabled?: boolean;
 }
 
 export function AttachmentsCard({
   attachments,
   onAttachmentsChange,
+  newsId,
+  disabled = false,
 }: AttachmentsCardProps) {
   const [isDragOver, setIsDragOver] = useState(false);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [confirmTarget, setConfirmTarget] = useState<ExistingAttachment | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
   const addFiles = (files: FileList | File[]) => {
-    const newAttachments: Attachment[] = Array.from(files).map((file) => ({
-      id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
-      file,
-      caption: null,
-    }));
-    onAttachmentsChange([...attachments, ...newAttachments]);
+    const accepted: Attachment[] = [];
+    const tooLarge: string[] = [];
+
+    for (const file of Array.from(files)) {
+      if (file.size > MAX_ATTACHMENT_SIZE_BYTES) {
+        tooLarge.push(file.name);
+        continue;
+      }
+      accepted.push({
+        id: `${Date.now()}-${Math.random().toString(36).slice(2)}`,
+        file,
+        caption: null,
+      });
+    }
+
+    if (tooLarge.length > 0) {
+      toast.error("File too large", {
+        description: `Max size is ${formatBytes(MAX_ATTACHMENT_SIZE_BYTES)}: ${tooLarge.join(", ")}`,
+      });
+    }
+
+    if (accepted.length > 0) {
+      onAttachmentsChange([...attachments, ...accepted]);
+    }
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -71,11 +118,39 @@ export function AttachmentsCard({
   const handleDrop = (e: React.DragEvent<HTMLDivElement>) => {
     e.preventDefault();
     setIsDragOver(false);
+    if (disabled) return;
     if (e.dataTransfer.files?.length) addFiles(e.dataTransfer.files);
   };
 
   const handleRemove = (id: string) => {
     onAttachmentsChange(attachments.filter((a) => a.id !== id));
+  };
+
+  const handleConfirmDelete = async () => {
+    if (!confirmTarget || !newsId) return;
+
+    const { id } = confirmTarget;
+    setDeletingId(id);
+
+    try {
+      const res = await deleteNewsAttachment(newsId, id);
+      if (!res.ok) {
+        toast.error("Delete failed", {
+          description: `Could not delete ${getFileNameFromUrl(confirmTarget.fileUrl)}.`,
+        });
+        return;
+      }
+
+      onAttachmentsChange(attachments.filter((a) => a.id !== id));
+      toast.success("Attachment deleted");
+      setConfirmTarget(null);
+    } catch {
+      toast.error("Delete failed", {
+        description: "Network error. Please try again.",
+      });
+    } finally {
+      setDeletingId(null);
+    }
   };
 
   const handleCaptionChange = (id: string, caption: string) => {
@@ -98,12 +173,15 @@ export function AttachmentsCard({
       <CardContent className="space-y-4">
         <div
           onDrop={handleDrop}
-          onDragOver={(e) => { e.preventDefault(); setIsDragOver(true); }}
+          onDragOver={(e) => { e.preventDefault(); if (!disabled) setIsDragOver(true); }}
           onDragLeave={() => setIsDragOver(false)}
-          onClick={() => inputRef.current?.click()}
+          onClick={() => !disabled && inputRef.current?.click()}
           className={cn(
-            "flex flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed p-6 text-center cursor-pointer transition-colors",
-            isDragOver
+            "flex flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed p-6 text-center transition-colors",
+            disabled
+              ? "cursor-not-allowed opacity-50 border-muted-foreground/25"
+              : "cursor-pointer",
+            !disabled && isDragOver
               ? "border-primary bg-primary/5"
               : "border-muted-foreground/25 hover:border-primary/50 hover:bg-muted/20",
           )}
@@ -116,13 +194,14 @@ export function AttachmentsCard({
               {isDragOver ? "Drop files here" : "Click or drag files"}
             </p>
             <p className="text-xs text-muted-foreground mt-0.5">
-              Any file type supported
+              Any file type supported, up to {formatBytes(MAX_ATTACHMENT_SIZE_BYTES)}
             </p>
           </div>
           <input
             ref={inputRef}
             type="file"
             multiple
+            disabled={disabled}
             className="hidden"
             onChange={handleInputChange}
           />
@@ -131,37 +210,66 @@ export function AttachmentsCard({
         {attachments.length > 0 && (
           <>
             <div className="space-y-2">
-              {attachments.map((attachment) => (
-                <div
-                  key={attachment.id}
-                  className="group rounded-lg border bg-muted/20 p-3 space-y-2 transition-colors hover:bg-muted/40"
-                >
-                  <div className="flex items-center gap-2">
-                    <div className="shrink-0">{getFileIcon(attachment.file)}</div>
-                    <div className="min-w-0 flex-1">
-                      <p className="text-sm font-medium truncate">
-                        {attachment.file.name}
-                      </p>
-                      <p className="text-xs text-muted-foreground">
-                        {formatBytes(attachment.file.size)}
-                      </p>
+              {attachments.map((attachment) => {
+                const isNew = isNewAttachment(attachment);
+                const fileType = (isNew ? attachment.file.type : attachment.fileType) ?? "";
+                const fileName = isNew
+                  ? attachment.file.name
+                  : getFileNameFromUrl(attachment.fileUrl);
+
+                return (
+                  <div
+                    key={attachment.id}
+                    className="group rounded-lg border bg-muted/20 p-3 space-y-2 transition-colors hover:bg-muted/40"
+                  >
+                    <div className="flex items-center gap-2">
+                      {!isNew && fileType.startsWith("image/") ? (
+                        <img
+                          src={attachment.fileUrl}
+                          alt={fileName}
+                          className="h-8 w-8 shrink-0 rounded object-cover"
+                        />
+                      ) : (
+                        <div className="shrink-0">{getFileIcon(fileType)}</div>
+                      )}
+                      <div className="min-w-0 flex-1">
+                        <p className="text-sm font-medium truncate">{fileName}</p>
+                        <p className="text-xs text-muted-foreground">
+                          {isNew ? formatBytes(attachment.file.size) : "Uploaded"}
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() =>
+                          isNew
+                            ? handleRemove(attachment.id)
+                            : setConfirmTarget(attachment)
+                        }
+                        disabled={disabled || deletingId === attachment.id}
+                        className={cn(
+                          "shrink-0 rounded p-0.5 text-muted-foreground transition-all hover:text-destructive hover:bg-destructive/10",
+                          deletingId === attachment.id
+                            ? "opacity-100"
+                            : "opacity-0 group-hover:opacity-100 disabled:opacity-0",
+                        )}
+                      >
+                        {deletingId === attachment.id ? (
+                          <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                        ) : (
+                          <X className="h-3.5 w-3.5" />
+                        )}
+                      </button>
                     </div>
-                    <button
-                      type="button"
-                      onClick={() => handleRemove(attachment.id)}
-                      className="shrink-0 rounded p-0.5 text-muted-foreground opacity-0 group-hover:opacity-100 hover:text-destructive hover:bg-destructive/10 transition-all"
-                    >
-                      <X className="h-3.5 w-3.5" />
-                    </button>
+                    <Input
+                      placeholder="Caption (optional)"
+                      value={attachment.caption ?? ""}
+                      onChange={(e) => handleCaptionChange(attachment.id, e.target.value)}
+                      disabled={disabled}
+                      className="h-7 text-xs"
+                    />
                   </div>
-                  <Input
-                    placeholder="Caption (optional)"
-                    value={attachment.caption ?? ""}
-                    onChange={(e) => handleCaptionChange(attachment.id, e.target.value)}
-                    className="h-7 text-xs"
-                  />
-                </div>
-              ))}
+                );
+              })}
             </div>
             <p className="text-xs text-muted-foreground">
               {attachments.length} file{attachments.length !== 1 ? "s" : ""} queued —
@@ -170,6 +278,54 @@ export function AttachmentsCard({
           </>
         )}
       </CardContent>
+
+      <Dialog
+        open={Boolean(confirmTarget)}
+        onOpenChange={(open) => {
+          if (!open && !deletingId) {
+            setConfirmTarget(null);
+          }
+        }}
+      >
+        <DialogContent className="max-w-md" showCloseButton={!deletingId}>
+          <DialogHeader>
+            <DialogTitle>Delete attachment?</DialogTitle>
+            <DialogDescription>
+              {confirmTarget
+                ? `This will permanently delete "${getFileNameFromUrl(confirmTarget.fileUrl)}".`
+                : "This action cannot be undone."}
+            </DialogDescription>
+          </DialogHeader>
+
+          <p className="text-sm text-muted-foreground">
+            This action cannot be undone.
+          </p>
+
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={() => setConfirmTarget(null)}
+              disabled={Boolean(deletingId)}
+            >
+              Cancel
+            </Button>
+            <Button
+              type="button"
+              variant="destructive"
+              onClick={() => void handleConfirmDelete()}
+              disabled={Boolean(deletingId)}
+            >
+              {deletingId ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <Trash2 className="mr-2 h-4 w-4" />
+              )}
+              Delete
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </Card>
   );
 }

@@ -4,11 +4,18 @@ import { useEffect, useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { EditorState, SerializedEditorState } from "lexical";
+import { parse } from "date-fns";
 import { toast } from "sonner";
 import { getNewsAttachments, getNewsByIdOrSlug } from "@/lib/api/news";
 import { NewsFormData, DEFAULT_FORM_VALUES } from "./types";
-import { Attachment } from "@/types/attachment";
+import { Attachment, isNewAttachment } from "@/types/attachment";
 import { useCreateNewsMutation, useUpdateNewsMutation } from "./hooks";
+
+// Keep the calendar day the user picked (local Y/M/D) when serialized to
+// UTC, so `JSON.stringify`'s `toISOString()` doesn't shift it by a day.
+function toUtcDateOnly(date: Date): Date {
+  return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
+}
 
 export function useNewsEditorPage(editId?: string) {
   const router = useRouter();
@@ -40,10 +47,9 @@ export function useNewsEditorPage(editId?: string) {
 
   const editorStateRef = useRef<EditorState | undefined>(undefined);
 
-  const mutation = editId
-    ? useUpdateNewsMutation(editId)
-    : useCreateNewsMutation();
-  const { mutateAsync, isPending } = mutation;
+  const createMutation = useCreateNewsMutation();
+  const updateMutation = useUpdateNewsMutation(editId ?? "");
+  const { mutateAsync, isPending } = editId ? updateMutation : createMutation;
 
   const resetFormForCreate = () => {
     reset(DEFAULT_FORM_VALUES);
@@ -51,6 +57,7 @@ export function useNewsEditorPage(editId?: string) {
     setThumbnailPreview("");
     setOriginalThumbnailPreview("");
     setHasNewThumbnail(false);
+    setAttachments([]);
     setEditingNewsId(null);
     setInitialEditorState(undefined);
     editorStateRef.current = undefined;
@@ -63,14 +70,24 @@ export function useNewsEditorPage(editId?: string) {
       const article = await getNewsByIdOrSlug(id, locale);
       const att = await getNewsAttachments(id);
       setEditingNewsId(article.id);
-      setAttachments(att);
+      setAttachments((prev) => [
+        ...prev.filter(isNewAttachment),
+        ...att.map((a) => ({
+          id: a.id,
+          fileUrl: a.fileUrl,
+          fileType: a.fileType,
+          caption: a.caption,
+        })),
+      ]);
       setValue("title", article.title);
       setValue("excerpt", article.excerpt ?? "");
       setValue("category", article.category ?? "");
       setValue("authorName", article.authorName ?? "");
       setValue(
         "publishedDate",
-        article.publishedDate ? new Date(article.publishedDate) : new Date(),
+        article.publishedDate
+          ? parse(article.publishedDate, "dd.MM.yyyy", new Date())
+          : new Date(),
       );
       setTags(Array.isArray(article.tags) ? article.tags : []);
       setInitialEditorState(article.editorState);
@@ -105,7 +122,7 @@ export function useNewsEditorPage(editId?: string) {
             authorId: "",
             editorState: JSON.stringify(editorStateRef.current?.toJSON()),
             tags: tags,
-            publishedDate: formData.publishedDate,
+            publishedDate: toUtcDateOnly(formData.publishedDate),
           },
           thumbnail,
           attachments,
@@ -121,7 +138,7 @@ export function useNewsEditorPage(editId?: string) {
             authorId: "",
             editorState: JSON.stringify(editorStateRef.current?.toJSON()),
             tags: tags,
-            publishedDate: formData.publishedDate,
+            publishedDate: toUtcDateOnly(formData.publishedDate),
           },
           thumbnail,
           attachments,
@@ -158,6 +175,7 @@ export function useNewsEditorPage(editId?: string) {
     thumbnailPreview,
     setThumbnailPreview,
     originalThumbnailPreview,
+    setOriginalThumbnailPreview,
     hasNewThumbnail,
     setHasNewThumbnail,
     // tags

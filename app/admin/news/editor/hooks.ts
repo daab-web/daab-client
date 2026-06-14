@@ -2,9 +2,10 @@ import {
   createNews,
   createTranslation,
   setThumbnail,
+  updateNews,
   updateTranslation,
 } from "@/lib/api/news";
-import { Attachment } from "@/types/attachment";
+import { Attachment, isNewAttachment } from "@/types/attachment";
 import { CreateNewsRequest, CreateNewsResponse } from "@/types/news";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
@@ -32,23 +33,33 @@ export const useCreateNewsMutation = () =>
       locale,
     }: createNewsOpts) => {
       const creationResponse = await createNews(data);
+      if (!creationResponse.ok) {
+        throw new Error(`Failed to create news (${creationResponse.status})`);
+      }
       const { id }: CreateNewsResponse = await creationResponse.json();
 
       if (thumbnail) {
-        await setThumbnail(id, thumbnail);
+        const thumbnailRes = await setThumbnail(id, thumbnail);
+        if (!thumbnailRes.ok) {
+          throw new Error(`Failed to upload thumbnail (${thumbnailRes.status})`);
+        }
       }
 
-      await createTranslation(id, {
+      const translationRes = await createTranslation(id, {
         locale: locale,
         title: data.title,
         excerpt: data.excerpt,
         editorState: data.editorState,
       });
+      if (!translationRes.ok) {
+        throw new Error(`Failed to create translation (${translationRes.status})`);
+      }
 
-      if (attachments.length > 0 && id) {
+      const newAttachments = attachments.filter(isNewAttachment);
+      if (newAttachments.length > 0 && id) {
         const failed: string[] = [];
         await Promise.all(
-          attachments.map(async (attachment) => {
+          newAttachments.map(async (attachment) => {
             const attachmentData = new FormData();
             attachmentData.append("file", attachment.file);
             if (attachment.caption) {
@@ -88,21 +99,37 @@ export const useUpdateNewsMutation = (newsId: string) =>
       data,
       attachments,
     }: updateNewsProps) => {
-      if (thumbnail) {
-        await setThumbnail(newsId, thumbnail);
+      const updateRes = await updateNews(newsId, {
+        category: data.category,
+        tags: data.tags,
+        publishedDate: data.publishedDate,
+      });
+      if (!updateRes.ok) {
+        throw new Error(`Failed to update news (${updateRes.status})`);
       }
 
-      await updateTranslation(newsId, {
+      if (thumbnail) {
+        const thumbnailRes = await setThumbnail(newsId, thumbnail);
+        if (!thumbnailRes.ok) {
+          throw new Error(`Failed to upload thumbnail (${thumbnailRes.status})`);
+        }
+      }
+
+      const translationRes = await updateTranslation(newsId, {
         locale: locale,
         title: data.title,
         excerpt: data.excerpt,
         editorState: data.editorState,
       });
+      if (!translationRes.ok) {
+        throw new Error(`Failed to update translation (${translationRes.status})`);
+      }
 
-      if (attachments && attachments.length > 0 && newsId) {
+      const newAttachments = (attachments ?? []).filter(isNewAttachment);
+      if (newAttachments.length > 0 && newsId) {
         const failed: string[] = [];
         await Promise.all(
-          attachments.map(async (attachment) => {
+          newAttachments.map(async (attachment) => {
             const attachmentData = new FormData();
             attachmentData.append("file", attachment.file);
             if (attachment.caption) {

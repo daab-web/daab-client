@@ -35,9 +35,10 @@ import { CATEGORIES } from "./constants";
 interface MetadataCardProps {
   register: UseFormRegister<NewsFormData>;
   control: Control<NewsFormData>;
+  disabled?: boolean;
 }
 
-export function MetadataCard({ register, control }: MetadataCardProps) {
+export function MetadataCard({ register, control, disabled = false }: MetadataCardProps) {
   return (
     <Card>
       <CardHeader>
@@ -51,7 +52,7 @@ export function MetadataCard({ register, control }: MetadataCardProps) {
             name="category"
             control={control}
             render={({ field }) => (
-              <Select value={field.value} onValueChange={field.onChange}>
+              <Select value={field.value} onValueChange={field.onChange} disabled={disabled}>
                 <SelectTrigger id="category">
                   <SelectValue placeholder="Select a category" />
                 </SelectTrigger>
@@ -72,6 +73,7 @@ export function MetadataCard({ register, control }: MetadataCardProps) {
           <Input
             id="authorName"
             placeholder="Author name"
+            disabled={disabled}
             {...register("authorName")}
           />
         </div>
@@ -86,6 +88,7 @@ export function MetadataCard({ register, control }: MetadataCardProps) {
                 <PopoverTrigger asChild>
                   <Button
                     variant="outline"
+                    disabled={disabled}
                     className={cn(
                       "w-full justify-start text-left font-normal",
                       !field.value && "text-muted-foreground",

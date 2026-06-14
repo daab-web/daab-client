@@ -17,4 +17,5 @@ export const DEFAULT_FORM_VALUES: Omit<NewsFormData, "thumbnail"> = {
 };
 
 // Re-export from global types so consumers only need one import
-export type { Attachment } from "@/types/attachment";
+export type { Attachment, NewAttachment, ExistingAttachment } from "@/types/attachment";
+export { isNewAttachment } from "@/types/attachment";

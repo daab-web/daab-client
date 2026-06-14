@@ -18,9 +18,10 @@ import { COMMON_TAGS } from "./constants";
 interface TagsCardProps {
   tags: string[];
   onTagsChange: (tags: string[]) => void;
+  disabled?: boolean;
 }
 
-export function TagsCard({ tags, onTagsChange }: TagsCardProps) {
+export function TagsCard({ tags, onTagsChange, disabled = false }: TagsCardProps) {
   const [tagInput, setTagInput] = useState("");
 
   const handleAddTag = (tag: string) => {
@@ -58,8 +59,14 @@ export function TagsCard({ tags, onTagsChange }: TagsCardProps) {
               value={tagInput}
               onChange={(e) => setTagInput(e.target.value)}
               onKeyDown={handleKeyDown}
+              disabled={disabled}
             />
-            <Button type="button" size="sm" onClick={() => handleAddTag(tagInput)}>
+            <Button
+              type="button"
+              size="sm"
+              onClick={() => handleAddTag(tagInput)}
+              disabled={disabled}
+            >
               Add
             </Button>
           </div>
@@ -73,7 +80,8 @@ export function TagsCard({ tags, onTagsChange }: TagsCardProps) {
                 <button
                   type="button"
                   onClick={() => handleRemoveTag(tag)}
-                  className="ml-1 hover:text-destructive"
+                  disabled={disabled}
+                  className="ml-1 hover:text-destructive disabled:opacity-50"
                 >
                   <X className="h-3 w-3" />
                 </button>
@@ -95,6 +103,7 @@ export function TagsCard({ tags, onTagsChange }: TagsCardProps) {
                   size="sm"
                   className="h-7 text-xs"
                   onClick={() => handleAddTag(tag)}
+                  disabled={disabled}
                 >
                   + {tag}
                 </Button>
