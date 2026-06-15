@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 
 import { useIsMobile } from "@/hooks/use-mobile";
 import {
@@ -17,6 +18,7 @@ import { Button } from "../ui/button";
 export function BottomNavigationMenu() {
   const isMobile = useIsMobile();
   const t = useTranslations("Navigation");
+  const pathname = usePathname();
 
   return (
     <NavigationMenu viewport={isMobile}>
@@ -27,7 +29,11 @@ export function BottomNavigationMenu() {
               asChild
               className={navigationMenuTriggerStyle()}
             >
-              <Button asChild variant="outline">
+              <Button
+                asChild
+                variant="ghost"
+                className="hover:bg-[#E8EFFA] dark:hover:bg-[#2a3d5a]"
+              >
                 <Link href={item.href}>{t(item.key)}</Link>
               </Button>
             </NavigationMenuLink>

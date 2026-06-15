@@ -25,7 +25,9 @@ export default function NewsCard({ article }: NewsCardProps) {
           <CardAction>
             <Badge variant="secondary">{article.category}</Badge>
           </CardAction>}
-        <CardTitle className="line-clamp-2">{article.title}</CardTitle>
+        <CardTitle className="line-clamp-2 text-[#274380] dark:text-[#C9D6F0]">
+          {article.title}
+        </CardTitle>
         <CardDescription className="line-clamp-2">{article.excerpt}</CardDescription>
       </CardHeader>
       <CardFooter className="flex flex-col gap-3 items-start pt-0">
@@ -39,7 +41,7 @@ export default function NewsCard({ article }: NewsCardProps) {
           </div>
         )}
 
-        <div className="flex items-center gap-2 text-xs text-muted-foreground w-full pt-3">
+        <div className="flex items-center gap-2 text-xs text-[#274380] dark:text-[#C9D6F0] w-full pt-3">
           <User className="h-3 w-3" />
           <span className="truncate">
             {article.authorName || "DAAB"}

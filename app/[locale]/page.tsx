@@ -1,7 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { Calendar, ChevronRight, ImageIcon } from "lucide-react";
 
-import Image from "next/image"
+import Image from "next/image";
 import { Link } from "@/i18n/navigation";
 import { fetchNews } from "@/lib/api/news";
 import { ScrollReveal } from "@/components/scroll-reveal";
@@ -80,7 +80,9 @@ export default async function Home({ params }: Props) {
                       className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
                       sizes="(min-width: 1024px) 66vw, 100vw"
                     />
-                  ) : <ImageIcon />}
+                  ) : (
+                    <ImageIcon />
+                  )}
                   {featured.category && (
                     <Badge className="absolute left-4 top-4 text-foreground bg-background/85 backdrop-blur-sm">
                       {featured.category}
@@ -88,11 +90,11 @@ export default async function Home({ params }: Props) {
                   )}
                 </div>
                 <CardHeader className="space-y-3">
-                  <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                  <div className="flex items-center gap-2 text-xs text-[#274380] dark:text-[#C9D6F0]">
                     <Calendar className="h-3.5 w-3.5" />
                     <span>{featured.publishedDate}</span>
                   </div>
-                  <CardTitle className="text-2xl leading-tight transition-colors group-hover:text-primary md:text-3xl">
+                  <CardTitle className="text-2xl leading-tight text-[#274380] transition-colors group-hover:text-[#274380]/80 dark:text-[#C9D6F0] dark:group-hover:text-[#C9D6F0]/80 md:text-3xl">
                     {featured.title}
                   </CardTitle>
                   <CardDescription className="line-clamp-3 text-sm md:text-base">
@@ -131,15 +133,23 @@ export default async function Home({ params }: Props) {
         </section>
 
         <section className="mb-12 grid gap-5 md:grid-cols-2">
-          <Card className="border-border/70 flex flex-col reveal reveal-from-left transition-all duration-300 hover:border-primary/50 hover:shadow-lg">
-            <CardHeader className="space-y-3 grow">
+          <Card className="border-border/70 relative flex flex-col overflow-hidden reveal reveal-from-left transition-all duration-300 hover:border-primary/50 hover:shadow-lg">
+            <span
+              className="pointer-events-none absolute bottom-4 left-0 top-4 w-1.5 rounded-full bg-[#274380] dark:bg-[#C9D6F0]"
+              aria-hidden
+            />
+            <CardHeader className="space-y-3 grow pl-5">
               <CardTitle className="text-2xl">{tAboutNav("mission")}</CardTitle>
               <CardDescription className="text-sm leading-6 md:text-base">
                 {tHome("missionExcerpt")}
               </CardDescription>
             </CardHeader>
-            <CardContent className="pt-0">
-              <Button asChild variant="link" className="group w-fit px-0">
+            <CardContent className="pt-0 pl-5">
+              <Button
+                asChild
+                variant="link"
+                className="group w-fit px-0 text-[#274380] dark:text-[#C9D6F0]"
+              >
                 <Link href="/about/mission">
                   {tHome("readSection")}
                   <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -148,15 +158,23 @@ export default async function Home({ params }: Props) {
             </CardContent>
           </Card>
 
-          <Card className="border-border/70 flex flex-col reveal reveal-from-right transition-all duration-300 hover:border-primary/50 hover:shadow-lg">
-            <CardHeader className="space-y-3 grow">
+          <Card className="border-border/70 relative flex flex-col overflow-hidden reveal reveal-from-right transition-all duration-300 hover:border-primary/50 hover:shadow-lg">
+            <span
+              className="pointer-events-none absolute bottom-4 left-0 top-4 w-1.5 rounded-full bg-[#274380] dark:bg-[#C9D6F0]"
+              aria-hidden
+            />
+            <CardHeader className="space-y-3 grow pl-5">
               <CardTitle className="text-2xl">{tAboutNav("vision")}</CardTitle>
               <CardDescription className="text-sm leading-6 md:text-base">
                 {tHome("visionExcerpt")}
               </CardDescription>
             </CardHeader>
-            <CardContent className="pt-0">
-              <Button asChild variant="link" className="group w-fit px-0">
+            <CardContent className="pt-0 pl-5">
+              <Button
+                asChild
+                variant="link"
+                className="group w-fit px-0 text-[#274380] dark:text-[#C9D6F0]"
+              >
                 <Link href="/about/vision">
                   {tHome("readSection")}
                   <ChevronRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
@@ -171,7 +189,9 @@ export default async function Home({ params }: Props) {
             <h2 className="text-3xl font-bold tracking-tight">
               {tHome("latestTitle")}
             </h2>
-            <p className="text-muted-foreground">{tHome("latestDescription")}</p>
+            <p className="text-muted-foreground">
+              {tHome("latestDescription")}
+            </p>
           </div>
 
           {feed.length > 0 ? (
@@ -184,18 +204,18 @@ export default async function Home({ params }: Props) {
                 >
                   <Card className="group h-full border transition-all duration-300 hover:border-primary/40 hover:scale-105">
                     <CardHeader className="space-y-2">
-                      <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                      <div className="flex items-center gap-2 text-xs text-[#274380] dark:text-[#C9D6F0]">
                         <Calendar className="h-3.5 w-3.5" />
                         <span>{article.publishedDate}</span>
                       </div>
-                      <CardTitle className="line-clamp-2 text-lg transition-colors group-hover:text-primary">
+                      <CardTitle className="line-clamp-2 text-lg text-[#274380] transition-colors group-hover:text-[#274380]/80 dark:text-[#C9D6F0] dark:group-hover:text-[#C9D6F0]/80">
                         {article.title}
                       </CardTitle>
                       <CardDescription className="line-clamp-3 text-sm">
                         {article.excerpt}
                       </CardDescription>
                     </CardHeader>
-                    <CardContent className="pt-0 text-sm font-medium text-primary">
+                    <CardContent className="pt-0 text-sm font-medium text-[#274380] dark:text-[#C9D6F0]">
                       {tHome("readArticle")}
                     </CardContent>
                   </Card>
@@ -212,15 +232,26 @@ export default async function Home({ params }: Props) {
         </section>
 
         <section className="rounded-2xl border bg-muted/20 px-6 py-10 text-center md:px-10 reveal">
-          <h2 className="text-2xl font-bold md:text-3xl">{tHome("joinTitle")}</h2>
+          <h2 className="text-2xl font-bold md:text-3xl">
+            {tHome("joinTitle")}
+          </h2>
           <p className="mx-auto mt-3 max-w-2xl text-muted-foreground">
             {tHome("joinDescription")}
           </p>
           <div className="mt-6 flex justify-center gap-3">
-            <Button asChild size="lg" className="transition-all hover:scale-105 hover:shadow-lg">
+            <Button
+              asChild
+              size="lg"
+              className="transition-all hover:scale-105 hover:shadow-lg"
+            >
               <Link href="/membership">{tNav("membership")}</Link>
             </Button>
-            <Button asChild size="lg" variant="outline" className="transition-all hover:scale-105 hover:border-primary/50">
+            <Button
+              asChild
+              size="lg"
+              variant="outline"
+              className="transition-all hover:scale-105 hover:border-primary/50"
+            >
               <Link href="/about">{tAbout("title")}</Link>
             </Button>
           </div>
