@@ -28,7 +28,7 @@ export default async function LocaleLayout(props: Props) {
 
   return (
     <NextIntlClientProvider locale={locale} messages={messages}>
-      <div lang={locale} className="min-h-screen flex flex-col gap-12">
+      <div lang={locale} className="min-h-screen flex flex-col">
         <header
           className="fixed w-full top-0 z-50 py-4 flex gap-2 
           justify-center transition-all duration-300 bg-background border-b"
@@ -38,7 +38,7 @@ export default async function LocaleLayout(props: Props) {
         <main className="flex-1 flex flex-col w-full mt-30">
           {props.children}
         </main>
-        <footer className="f-full border-t border-border backdrop-blur-xl">
+        <footer className="w-full border-t border-[#274380]/10 bg-[#EEF3FA] text-[#274380] dark:border-[#C9D6F0]/10 dark:bg-[#1a2640] dark:text-[#C9D6F0]">
           <Footer />
         </footer>
       </div>
