@@ -38,7 +38,7 @@ export default async function LocaleLayout(props: Props) {
         <main className="flex-1 flex flex-col w-full mt-30">
           {props.children}
         </main>
-        <footer className="w-full border-t border-[#274380]/10 bg-[#EEF3FA] text-[#274380] dark:border-[#C9D6F0]/10 dark:bg-[#1a2640] dark:text-[#C9D6F0]">
+        <footer className="w-full border-t border-[#274380]/10 bg-[#EEF3FA] text-[#274380] dark:border-[#C9D6F0]/10 dark:text-[#C9D6F0]">
           <Footer />
         </footer>
       </div>
