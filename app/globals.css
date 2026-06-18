@@ -96,7 +96,7 @@ body {
 }
 
 body::before {
-  content: '';
+  content: "";
   position: fixed;
   inset: 0;
   background-image: var(--background-image);
@@ -106,9 +106,32 @@ body::before {
   z-index: -1;
 }
 
+:root {
+  --hero-dark-bg: #1a2440;
+  --footer-dark-bg: #152033;
+}
+
+.hero-section {
+  background-image: url("/bg-header-light.png");
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+}
+
+.dark .hero-section {
+  background-image: url("/bg-header-dark_1.png");
+  background-color: var(--hero-dark-bg);
+}
+
+.dark footer {
+  background-image:
+    linear-gradient(rgba(10, 18, 31, 0.16), rgba(10, 18, 31, 0.16)), none;
+  background-color: var(--footer-dark-bg);
+}
+
 .dark {
   --background: oklch(0.145 0 0);
-  --background-image: url("/bg-dark2.png");
+  --background-image: none;
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
   --card-foreground: oklch(0.985 0 0);

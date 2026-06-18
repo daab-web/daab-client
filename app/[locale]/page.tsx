@@ -55,11 +55,11 @@ export default async function Home({ params }: Props) {
     <>
       <ScrollReveal />
       <div className="mx-auto w-full max-w-7xl px-4 py-8 md:py-12">
-        <section className="mb-10 space-y-4 border-b pb-8">
-          <h1 className="max-w-5xl text-4xl font-extrabold leading-tight tracking-tight md:text-6xl fade-in">
+        <section className="hero-section mb-10 space-y-4 rounded-lg border border-white/50 p-8 pb-8 shadow-sm  md:p-12 dark:border-white/10 dark:bg-transparent dark:backdrop-blur-none">
+          <h1 className="max-w-5xl text-4xl font-extrabold leading-tight tracking-tight text-[#e0e0e0] drop-shadow-sm md:text-6xl fade-in dark:text-white">
             {tGlobal("title")}
           </h1>
-          <p className="max-w-3xl text-base text-muted-foreground md:text-lg fade-in-delay">
+          <p className="max-w-3xl text-base text-[#e0e0e0] md:text-lg fade-in-delay dark:text-white/90">
             {tActivities("description")}
           </p>
         </section>
@@ -70,7 +70,7 @@ export default async function Home({ params }: Props) {
               href={`/activities/${featured.slug || featured.id}`}
               className="lg:col-span-8 reveal h-full"
             >
-              <Card className="group pt-0 h-full overflow-hidden border transition-colors hover:border-primary/40">
+              <Card className="group pt-0 h-full overflow-hidden border transition-all duration-300 hover:scale-[1.02] hover:border-primary/40">
                 <div className="relative flex items-center justify-center aspect-video overflow-hidden bg-muted">
                   {featured.thumbnail ? (
                     <Image
@@ -124,7 +124,7 @@ export default async function Home({ params }: Props) {
               ))
             ) : (
               <Card>
-                <CardContent className="py-12 text-center text-sm text-muted-foreground">
+                <CardContent className=" py-12 text-center text-sm text-muted-foreground">
                   {tActivities("noNews")}
                 </CardContent>
               </Card>
