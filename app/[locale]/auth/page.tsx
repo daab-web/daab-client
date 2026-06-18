@@ -7,11 +7,15 @@ import { Spinner } from "@/components/ui/spinner";
 
 export default function AuthPage() {
   const searchParams = useSearchParams();
+  const error = searchParams.get("error");
 
   useEffect(() => {
+    // Don't re-enter the login flow if we landed here from a failed callback —
+    // that would loop indefinitely.
+    if (error) return;
     const redirect = searchParams.get("redirect") || "/admin";
     window.location.href = `/api/auth/login?redirect=${encodeURIComponent(redirect)}`;
-  }, [searchParams]);
+  }, [searchParams, error]);
 
   return (
     <div className="flex-1 flex items-start justify-center px-4 pt-24">
@@ -32,11 +36,30 @@ export default function AuthPage() {
         />
 
         <div className="flex flex-col items-center gap-4 text-center">
-          <Spinner className="size-6 text-white/40" />
-          <p className="text-base font-medium text-white/90">Signing you in</p>
-          <p className="text-sm text-white/40 max-w-xs">
-            You're being redirected to the authentication provider
-          </p>
+          {error ? (
+            <>
+              <p className="text-base font-medium text-white/90">
+                Sign-in failed
+              </p>
+              <p className="text-sm text-white/40 max-w-xs">{error}</p>
+              <a
+                href="/api/auth/login"
+                className="text-sm font-medium text-white/90 underline"
+              >
+                Try again
+              </a>
+            </>
+          ) : (
+            <>
+              <Spinner className="size-6 text-white/40" />
+              <p className="text-base font-medium text-white/90">
+                Signing you in
+              </p>
+              <p className="text-sm text-white/40 max-w-xs">
+                You're being redirected to the authentication provider
+              </p>
+            </>
+          )}
         </div>
       </div>
     </div>

@@ -1,6 +1,6 @@
 import { cookies } from "next/headers";
 import { type NextRequest, NextResponse } from "next/server";
-import { publicOrigin } from "@/lib/origin";
+import { isSecureRequest, publicOrigin } from "@/lib/origin";
 
 const SERVER = process.env.SERVER_URL ?? process.env.NEXT_PUBLIC_SERVER!;
 const ACCESS_TOKEN_MAX_AGE = 15 * 60; // matches backend access-token lifetime
@@ -51,7 +51,7 @@ export async function GET(req: NextRequest) {
     refresh_token?: string;
   };
 
-  const secure = process.env.NODE_ENV === "production";
+  const secure = isSecureRequest(req);
   jar.set("daab.accessToken", tokens.access_token, {
     httpOnly: true,
     sameSite: "lax",

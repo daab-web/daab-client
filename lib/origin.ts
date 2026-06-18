@@ -14,3 +14,10 @@ export function publicOrigin(req: NextRequest): string {
 
   return host ? `${proto}://${host}` : req.nextUrl.origin;
 }
+
+// Whether the public-facing connection is HTTPS. Used to decide the `secure`
+// cookie flag — forcing `secure` on a plain-HTTP deployment makes the browser
+// silently drop the cookie.
+export function isSecureRequest(req: NextRequest): boolean {
+  return publicOrigin(req).startsWith("https://");
+}

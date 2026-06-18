@@ -1,7 +1,7 @@
 import crypto from "crypto";
 import { cookies } from "next/headers";
 import { type NextRequest, NextResponse } from "next/server";
-import { publicOrigin } from "@/lib/origin";
+import { isSecureRequest, publicOrigin } from "@/lib/origin";
 
 const SERVER = process.env.SERVER_URL ?? process.env.NEXT_PUBLIC_SERVER!;
 const CLIENT_ID = process.env.OAUTH_CLIENT_ID ?? "test-client-id";
@@ -33,7 +33,7 @@ export async function GET(req: NextRequest) {
     sameSite: "lax",
     path: "/",
     maxAge: 600,
-    secure: process.env.NODE_ENV === "production",
+    secure: isSecureRequest(req),
   });
 
   const authorizeUrl = new URL(`${SERVER}/authorize`);
