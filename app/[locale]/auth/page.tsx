@@ -2,13 +2,16 @@
 
 import Image from "next/image";
 import { useEffect } from "react";
+import { useSearchParams } from "next/navigation";
 import { Spinner } from "@/components/ui/spinner";
-import { authClient } from "@/lib/auth-client";
 
 export default function AuthPage() {
+  const searchParams = useSearchParams();
+
   useEffect(() => {
-    authClient.signIn.oauth2({ providerId: "backend", callbackURL: "/admin" });
-  }, []);
+    const redirect = searchParams.get("redirect") || "/admin";
+    window.location.href = `/api/auth/login?redirect=${encodeURIComponent(redirect)}`;
+  }, [searchParams]);
 
   return (
     <div className="flex-1 flex items-start justify-center px-4 pt-24">

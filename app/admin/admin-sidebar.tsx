@@ -24,7 +24,6 @@ import {
   Briefcase,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { authClient } from "@/lib/auth-client";
 import { useRouter } from "next/navigation";
 
 export default function AdminSidebar() {
@@ -140,11 +139,10 @@ export default function AdminSidebar() {
           <Button
             variant="outline"
             size="icon"
-            onClick={() =>
-              authClient.signOut({
-                fetchOptions: { onSuccess: () => router.push("/") },
-              })
-            }
+            onClick={async () => {
+              await fetch("/api/auth/logout", { method: "POST" });
+              router.push("/");
+            }}
           >
             <LogOut />
           </Button>
