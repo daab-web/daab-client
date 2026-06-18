@@ -30,7 +30,7 @@ import { useEffect, useRef, useState } from "react";
 import { EditorState, SerializedEditorState } from "lexical";
 import { ComboboxMultiple } from "@/components/combobox-multiple";
 import { Skeleton } from "@/components/ui/skeleton";
-import { useTRPC } from "@/trpc/client";
+import { getTranslationNames } from "@/lib/api/translations";
 import { useQuery } from "@tanstack/react-query";
 import { ButtonGroup } from "@/components/ui/button-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -51,7 +51,6 @@ export default function ScientistsEditor({
   scientist,
   action,
 }: ScientistsEditorProps) {
-  const trpc = useTRPC();
   const form = useScientistForm(scientist);
   const [editorState, setEditorState] = useState<
     SerializedEditorState | undefined
@@ -67,15 +66,18 @@ export default function ScientistsEditor({
   const { mutate, isPending } =
     action === "POST" ? createMutation : updateMutation;
 
-  const { data: areas, isLoading: areAreasLoading } = useQuery(
-    trpc.areas.queryOptions({}),
-  );
-  const { data: countries, isLoading: areCountriesLoading } = useQuery(
-    trpc.countries.queryOptions({}),
-  );
-  const { data: institutions, isLoading: areInstitutionsLoading } = useQuery(
-    trpc.institutions.queryOptions({ locale: "en" }),
-  );
+  const { data: areas, isLoading: areAreasLoading } = useQuery({
+    queryKey: ["translation-names", "areas"],
+    queryFn: () => getTranslationNames("areas").then((n) => n.map((e) => e.key)),
+  });
+  const { data: countries, isLoading: areCountriesLoading } = useQuery({
+    queryKey: ["translation-names", "countries"],
+    queryFn: () => getTranslationNames("countries").then((n) => n.map((e) => e.key)),
+  });
+  const { data: institutions, isLoading: areInstitutionsLoading } = useQuery({
+    queryKey: ["translation-names", "institutions"],
+    queryFn: () => getTranslationNames("institutions").then((n) => n.map((e) => e.key)),
+  });
 
   useEffect(() => {
     if (action !== "PUT" || !scientist) return;

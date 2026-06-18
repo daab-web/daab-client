@@ -25,7 +25,7 @@ import { Skeleton } from "./ui/skeleton";
 import { Search } from "lucide-react";
 import { useScientists } from "@/hooks/use-scientists";
 import { Badge } from "./ui/badge";
-import { useTRPC } from "@/trpc/client";
+import { getTranslationNames } from "@/lib/api/translations";
 import { useQuery } from "@tanstack/react-query";
 
 function ScientistsTableSkeleton() {
@@ -51,8 +51,6 @@ export function ScientistsTable() {
   const [selectedCountry, setSelectedCountry] = useState<string>("");
   const [selectedArea, setSelectedArea] = useState<string>("");
 
-  const trpc = useTRPC();
-
   useEffect(() => {
     const timer = setTimeout(() => {
       setDebouncedSearch(searchQuery);
@@ -62,8 +60,14 @@ export function ScientistsTable() {
     return () => clearTimeout(timer);
   }, [searchQuery]);
 
-  const { data: countries } = useQuery(trpc.countries.queryOptions({}));
-  const { data: areas } = useQuery(trpc.areas.queryOptions({}));
+  const { data: countries } = useQuery({
+    queryKey: ["translation-names", "countries"],
+    queryFn: () => getTranslationNames("countries").then((n) => n.map((e) => e.key)),
+  });
+  const { data: areas } = useQuery({
+    queryKey: ["translation-names", "areas"],
+    queryFn: () => getTranslationNames("areas").then((n) => n.map((e) => e.key)),
+  });
   const { data: scientists, isLoading } = useScientists(
     locale,
     page,
