@@ -1,6 +1,7 @@
 import crypto from "crypto";
 import { cookies } from "next/headers";
 import { type NextRequest, NextResponse } from "next/server";
+import { publicOrigin } from "@/lib/origin";
 
 const SERVER = process.env.SERVER_URL ?? process.env.NEXT_PUBLIC_SERVER!;
 const CLIENT_ID = process.env.OAUTH_CLIENT_ID ?? "test-client-id";
@@ -42,7 +43,7 @@ export async function GET(req: NextRequest) {
   authorizeUrl.searchParams.set("code_challenge_method", "S256");
   authorizeUrl.searchParams.set(
     "redirect_uri",
-    `${req.nextUrl.origin}/api/auth/callback`,
+    `${publicOrigin(req)}/api/auth/callback`,
   );
   authorizeUrl.searchParams.set("scope", SCOPE);
   authorizeUrl.searchParams.set("state", state);
