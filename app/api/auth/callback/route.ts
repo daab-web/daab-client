@@ -1,5 +1,6 @@
 import { cookies } from "next/headers";
 import { type NextRequest, NextResponse } from "next/server";
+import { publicOrigin } from "@/lib/origin";
 
 const SERVER = process.env.SERVER_URL ?? process.env.NEXT_PUBLIC_SERVER!;
 const ACCESS_TOKEN_MAX_AGE = 15 * 60; // matches backend access-token lifetime
@@ -8,7 +9,7 @@ const REFRESH_TOKEN_MAX_AGE = 7 * 24 * 60 * 60;
 // OAuth2.1 redirect target. Exchanges the authorization code for tokens
 // server-side and stores them in HttpOnly cookies on this (the Next) origin.
 export async function GET(req: NextRequest) {
-  const origin = req.nextUrl.origin;
+  const origin = publicOrigin(req);
   const fail = (reason: string) =>
     NextResponse.redirect(new URL(`/en/auth?error=${reason}`, origin));
 
