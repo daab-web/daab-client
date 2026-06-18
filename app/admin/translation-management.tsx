@@ -43,6 +43,13 @@ import {
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  createTranslation,
+  deleteTranslation,
+  getTranslationEntry,
+  getTranslationNames,
+  updateTranslation,
+} from "@/lib/api/translations";
 
 const translationFormSchema = z.object({
   nameEn: z.string().trim().min(1, "English name is required"),
@@ -57,19 +64,12 @@ const translationFormSchema = z.object({
 type TranslationFormValues = z.infer<typeof translationFormSchema>;
 type TranslationNamespace = "areas" | "countries" | "institutions";
 
-type TranslationRecord = {
-  nameEn: string;
-  translations: { locale: string; name: string }[];
-};
-
 type TranslationSectionConfig = {
   title: string;
   description: string;
-  endpoint: string;
   namespace: TranslationNamespace;
 };
 
-type TranslationFormCardProps = TranslationSectionConfig;
 type TranslationManagementTabProps = TranslationSectionConfig & {
   isActive: boolean;
 };
@@ -80,20 +80,17 @@ const translationSections: TranslationSectionConfig[] = [
   {
     title: "Areas",
     description: "Create localized research area names for the public site and admin tools.",
-    endpoint: "/api/areas",
     namespace: "areas",
   },
   {
     title: "Countries",
     description: "Create localized country names with an English default and per-locale labels.",
-    endpoint: "/api/countries",
     namespace: "countries",
   },
   {
     title: "Institutions",
     description:
       "Create localized institution names so scientist entries can stay consistent across locales.",
-    endpoint: "/api/institutions",
     namespace: "institutions",
   },
 ];
@@ -105,39 +102,9 @@ function getDefaultFormValues(): TranslationFormValues {
   };
 }
 
-async function parseResponse(response: Response) {
-  return (await response.json().catch(() => null)) as
-    | Record<string, unknown>
-    | { title?: string }
-    | null;
-}
-
-function getNamespaceValues(
-  data: Record<string, unknown> | null,
-  namespace: TranslationNamespace,
-) {
-  if (!data) {
-    return [];
-  }
-
-  const nestedNamespace = data[namespace];
-  if (nestedNamespace && typeof nestedNamespace === "object") {
-    return Object.values(nestedNamespace as Record<string, unknown>).filter(
-      (value): value is string => typeof value === "string" && value.trim().length > 0,
-    );
-  }
-
-  const prefix = `${namespace}.`;
-  return Object.entries(data)
-    .filter(([key, value]) => key.startsWith(prefix) && typeof value === "string")
-    .map(([, value]) => value as string)
-    .filter((value) => value.trim().length > 0);
-}
-
 function TranslationFormCard({
   title,
   description,
-  endpoint,
   namespace,
   isActive,
 }: TranslationManagementTabProps) {
@@ -178,22 +145,10 @@ function TranslationFormCard({
     setIsListLoading(true);
 
     try {
-      const response = await fetch(`${endpoint}?locale=en`, {
-        cache: "no-store",
-      });
-      const data = await parseResponse(response);
-
-      if (!response.ok) {
-        throw new Error(
-          (data && "title" in data && typeof data.title === "string" && data.title) ||
-            `Failed to load ${title.toLowerCase()}.`,
-        );
-      }
-
-      const values =
-        data && typeof data === "object"
-          ? getNamespaceValues(data as Record<string, unknown>, namespace)
-          : [];
+      const names = await getTranslationNames(namespace);
+      const values = names
+        .map((entry) => entry.name)
+        .filter((value) => value.trim().length > 0);
 
       setEntries(values.sort((a, b) => a.localeCompare(b)));
     } catch (error) {
@@ -211,12 +166,13 @@ function TranslationFormCard({
     }
 
     void loadEntries();
-  }, [endpoint, isActive]);
+  }, [namespace, isActive]);
 
   async function onSubmit(values: TranslationFormValues) {
     setIsSubmitting(true);
 
     const payload = {
+      namespace,
       nameEn: values.nameEn.trim(),
       translations: values.translations.map((translation) => ({
         locale: translation.locale.trim(),
@@ -226,21 +182,10 @@ function TranslationFormCard({
     };
 
     try {
-      const response = await fetch(endpoint, {
-        method: editingName ? "PUT" : "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(payload),
-      });
-
-      const data = await parseResponse(response);
-
-      if (!response.ok) {
-        throw new Error(
-          (data && "title" in data && typeof data.title === "string" && data.title) ||
-            `Failed to save ${title.toLowerCase()}.`,
-        );
+      if (editingName) {
+        await updateTranslation(payload);
+      } else {
+        await createTranslation(payload);
       }
 
       toast.success(
@@ -261,16 +206,10 @@ function TranslationFormCard({
     setLoadingEntryName(nameEn);
 
     try {
-      const response = await fetch(`${endpoint}?nameEn=${encodeURIComponent(nameEn)}`, {
-        cache: "no-store",
-      });
-      const data = (await parseResponse(response)) as TranslationRecord | { title?: string } | null;
+      const data = await getTranslationEntry(namespace, nameEn);
 
-      if (!response.ok || !data || !("nameEn" in data) || !Array.isArray(data.translations)) {
-        throw new Error(
-          (data && "title" in data && typeof data.title === "string" && data.title) ||
-            `Failed to load ${title.toLowerCase()} translation.`,
-        );
+      if (!data) {
+        throw new Error(`Failed to load ${title.toLowerCase()} translation.`);
       }
 
       form.reset({
@@ -303,21 +242,7 @@ function TranslationFormCard({
     setDeletingName(deleteTarget);
 
     try {
-      const response = await fetch(endpoint, {
-        method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ nameEn: deleteTarget }),
-      });
-      const data = await parseResponse(response);
-
-      if (!response.ok) {
-        throw new Error(
-          (data && "title" in data && typeof data.title === "string" && data.title) ||
-            `Failed to delete ${title.toLowerCase()} translation.`,
-        );
-      }
+      await deleteTranslation(namespace, deleteTarget);
 
       if (editingName === deleteTarget) {
         resetForm();

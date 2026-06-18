@@ -3,7 +3,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import { Geist, Geist_Mono, Inter } from "next/font/google";
 import type { Metadata } from "next";
 import { cn } from "@/lib/utils";
-import { TRPCReactProvider } from "@/trpc/client";
+import { QueryProvider } from "@/components/query-provider";
 
 const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
@@ -38,10 +38,10 @@ export default async function MainLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <TRPCReactProvider>
+          <QueryProvider>
             {children}
             <Toaster position="top-center" />
-          </TRPCReactProvider>
+          </QueryProvider>
         </ThemeProvider>
       </body>
     </html>
