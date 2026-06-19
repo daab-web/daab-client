@@ -1,8 +1,8 @@
-name: Deploy to VPS using Docker
+name: Deploy to dev VPS
 
 on:
   push:
-    branches: [master]
+    branches: [dev]
     paths-ignore:
       - "data/**"
       - ".gitignore"
@@ -12,7 +12,7 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-    environment: development
+    environment: Development
     permissions:
       packages: write
       contents: read
