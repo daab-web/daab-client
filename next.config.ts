@@ -8,11 +8,12 @@ const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
       {
-        protocol: "https",
-        hostname: "**.unsplash.com",
+        protocol: 'https',
+        hostname: 'api.95.217.17.141.nip.io',
       },
       {
-        hostname: "lh3.googleusercontent.com",
+        protocol: 'https',
+        hostname: 'minio.95.217.17.141.nip.io',
       },
       {
         protocol: "http",
