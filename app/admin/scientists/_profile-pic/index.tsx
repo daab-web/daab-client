@@ -24,7 +24,10 @@ import { useState, useEffect, useRef } from "react";
 import { toast } from "sonner";
 import { useMutation } from "@tanstack/react-query";
 import { Scientist } from "@/types/scientist";
-import { deleteScientistProfilePicture } from "@/lib/api/scientists";
+import {
+  deleteScientistProfilePicture,
+  uploadScientistProfilePicture,
+} from "@/lib/api/scientists";
 import Image from "next/image"
 
 export default function ScientistProfilePicture({
@@ -101,16 +104,7 @@ export default function ScientistProfilePicture({
     mutationFn: async () => {
       if (!file) return;
 
-      const formData = new FormData();
-      formData.append("image", file);
-
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_SERVER}/scientists/${scientist.id}/profile-picture`,
-        {
-          method: "PUT",
-          body: formData,
-        },
-      );
+      const res = await uploadScientistProfilePicture(scientist.id, file);
 
       if (!res.ok) {
         throw new Error(`Failed to update profile picture (${res.status})`);

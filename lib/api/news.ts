@@ -10,7 +10,6 @@ import {
 } from "@/types/news"
 import { PagedResponse } from "@/types/paged-response"
 import { fetchAPI } from ".";
-import { Attachment } from "@/types/attachment";
 
 export async function fetchNews(
   page: number = 1,
@@ -112,6 +111,20 @@ export async function setThumbnail(newsId: string, image: File) {
     method: "POST",
     body: formData
   })
+}
+
+export async function uploadNewsAttachment(
+  newsId: string,
+  file: File,
+  caption?: string | null,
+) {
+  const formData = new FormData();
+  formData.append("file", file);
+  if (caption) formData.append("caption", caption);
+  return fetchAPI(`/news/${newsId}/attachments`, {
+    method: "POST",
+    body: formData,
+  });
 }
 
 export async function updateNews(id: string, data: UpdateNewsRequest) {
