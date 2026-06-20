@@ -4,6 +4,7 @@ import {
   setThumbnail,
   updateNews,
   updateTranslation,
+  uploadNewsAttachment,
 } from "@/lib/api/news";
 import { Attachment, isNewAttachment } from "@/types/attachment";
 import { CreateNewsRequest, CreateNewsResponse } from "@/types/news";
@@ -60,15 +61,11 @@ export const useCreateNewsMutation = () =>
         const failed: string[] = [];
         await Promise.all(
           newAttachments.map(async (attachment) => {
-            const attachmentData = new FormData();
-            attachmentData.append("file", attachment.file);
-            if (attachment.caption) {
-              attachmentData.append("caption", attachment.caption);
-            }
             try {
-              const res = await fetch(
-                `${process.env.NEXT_PUBLIC_SERVER}/news/${id}/attachments`,
-                { method: "POST", body: attachmentData },
+              const res = await uploadNewsAttachment(
+                id,
+                attachment.file,
+                attachment.caption,
               );
               if (!res.ok) failed.push(attachment.file.name);
             } catch (err) {
@@ -131,15 +128,11 @@ export const useUpdateNewsMutation = (newsId: string) =>
         const failed: string[] = [];
         await Promise.all(
           newAttachments.map(async (attachment) => {
-            const attachmentData = new FormData();
-            attachmentData.append("file", attachment.file);
-            if (attachment.caption) {
-              attachmentData.append("caption", attachment.caption);
-            }
             try {
-              const res = await fetch(
-                `${process.env.NEXT_PUBLIC_SERVER}/news/${newsId}/attachments`,
-                { method: "POST", body: attachmentData },
+              const res = await uploadNewsAttachment(
+                newsId,
+                attachment.file,
+                attachment.caption,
               );
               if (!res.ok) failed.push(attachment.file.name);
             } catch (err) {

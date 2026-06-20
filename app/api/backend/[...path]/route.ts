@@ -16,10 +16,16 @@ async function handler(
   const jar = await cookies();
   const accessToken = jar.get("daab.accessToken")?.value;
 
-  const headers = new Headers();
-  const contentType = req.headers.get("content-type");
-  if (contentType) headers.set("content-type", contentType);
+  // Forward the browser's headers as-is, stripping only what the proxy must
+  // control. Allowlisting individual headers silently dropped things like
+  // Accept-Language; a denylist keeps the pipe transparent.
+  const headers = new Headers(req.headers);
+  headers.delete("host"); // would point at the proxy, breaks vhost/redirects
+  headers.delete("cookie"); // don't leak HttpOnly app cookies to backend
+  headers.delete("connection"); // hop-by-hop
+  headers.delete("content-length"); // refetch recomputes from body
   if (accessToken) headers.set("authorization", `Bearer ${accessToken}`);
+  else headers.delete("authorization"); // browser cannot spoof a bearer
 
   const method = req.method;
   const body =

@@ -86,7 +86,11 @@ export async function fetchUntranslatedScientists(): Promise<UntranslatedScienti
 }
 
 export async function fetchScientistById(idOrSlug: string, locale: string): Promise<Scientist> {
-  const response = await fetchAPI(`/scientists/${idOrSlug}?locale=${locale}`);
+  const response = await fetchAPI(`/scientists/${idOrSlug}`, {
+    headers: {
+      "Accept-Language": locale
+    }
+  });
 
   if (!response.ok) {
     throw new Error(`Failed to fetch scientist: ${response.status}`);
@@ -191,6 +195,15 @@ export async function updateScientistTranslation(id: string, locale: string, dat
       "Content-Type": "application/json",
     },
     body: JSON.stringify(data),
+  });
+}
+
+export async function uploadScientistProfilePicture(id: string, image: File) {
+  const formData = new FormData();
+  formData.append("image", image);
+  return fetchAPI(`/scientists/${id}/profile-picture`, {
+    method: "PUT",
+    body: formData,
   });
 }
 
