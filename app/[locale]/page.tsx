@@ -63,7 +63,15 @@ export default async function Home({ params }: Props) {
             {tActivities("description")}
           </p>
           <div className="flex gap-3">
-            <Button className="py-5 px-6 font-semibold text-[oklch(0.28 0.09 262)] shadow-sm cursor-pointer" variant="outline">{tGlobal("become-member")} <ArrowRight size={15} /></Button>
+            <Button
+              className="py-5 px-6 font-semibold text-[oklch(0.28 0.09 262)] shadow-sm cursor-pointer"
+              variant="outline"
+            >
+              <Link href="/membership" className="flex items-center gap-1">
+                {tGlobal("become-member")}
+                <ArrowRight size={15} />
+              </Link>
+            </Button>
             <Button asChild variant="outline" className="font-semibold border-gray-500 text-white py-5 px-6 bg-white/10 shadow-sm">
               <Link href="/about" className="hover:bg-white/10 hover:text-white">{tAbout("title")}</Link>
             </Button>
