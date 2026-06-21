@@ -18,6 +18,10 @@ const nextConfig: NextConfig = {
         protocol: "http",
         hostname: "95.217.17.141",
       },
+      {
+        protocol: "https",
+        hostname: "api.95.217.17.141.nip.io"
+      }
     ],
   },
 };

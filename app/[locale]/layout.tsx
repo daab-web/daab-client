@@ -35,7 +35,7 @@ export default async function LocaleLayout(props: Props) {
         >
           <Navbar />
         </header>
-        <main className="flex-1 flex flex-col w-full mt-30">
+        <main className="flex-1 flex flex-col w-full mt-15">
           {props.children}
         </main>
         <footer className="w-full border-t border-[#274380]/10 bg-[#EEF3FA] text-[#274380] dark:border-[#C9D6F0]/10 dark:text-[#C9D6F0]">

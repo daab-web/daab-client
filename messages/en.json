@@ -3,6 +3,8 @@
     "title": "WAAS - World Association of Azerbaijani Scientists",
     "title-short": "WAAS",
     "title-long": "World Association of Azerbaijani Scientists",
+    "featured-news": "Featured News",
+    "become-member": "Become a member",
     "description": "Official website of WAAS"
   },
   "AboutPage": {
@@ -12,6 +14,7 @@
   },
   "ActivitiesPage": {
     "title": "News & Activities",
+    "view-all": "View all",
     "description": "Stay updated with the latest news, events, and activities from our association",
     "noNews": "No news articles available at the moment."
   },
