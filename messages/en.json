@@ -1,6 +1,8 @@
 {
   "Global": {
     "title": "WAAS - World Association of Azerbaijani Scientists",
+    "title-short": "WAAS",
+    "title-long": "World Association of Azerbaijani Scientists",
     "description": "Official website of WAAS"
   },
   "AboutPage": {

@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { useLocale } from "next-intl";
 import { Button } from "@/components/ui/button";
+import { ChevronDown } from "lucide-react";
 
 export function LanguageSwitcher() {
   const locale = useLocale();
@@ -22,8 +23,8 @@ export function LanguageSwitcher() {
   return (
     <DropdownMenu modal={false}>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" size="icon">
-          {locale}
+        <Button variant="outline" className="bg-transparent">
+          {locale} <ChevronDown />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
