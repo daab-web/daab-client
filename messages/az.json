@@ -1,6 +1,10 @@
 {
   "Global": {
     "title": "DAAB - Dünya Azərbaycanlı Alimlər Birliyi",
+    "title-short": "DAAB",
+    "title-long": "Dünya Azərbaycanlı Alimlər Birliyi",
+    "featured-news": "Seçilmiş Xəbərlər",
+    "become-member": "Üzv olun",
     "description": "DAAB-ın rəsmi veb saytı"
   },
   "AboutPage": {
@@ -10,6 +14,7 @@
   },
   "ActivitiesPage": {
     "title": "Xəbərlər və Fəaliyyətlər",
+    "view-all": "Hamısına baxın",
     "description": "Birliyin ən son xəbərləri, tədbirləri və fəaliyyətləri ilə tanış olun",
     "noNews": "Hazırda xəbər məqaləsi yoxdur."
   },

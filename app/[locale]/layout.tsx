@@ -30,12 +30,12 @@ export default async function LocaleLayout(props: Props) {
     <NextIntlClientProvider locale={locale} messages={messages}>
       <div lang={locale} className="min-h-screen flex flex-col">
         <header
-          className="fixed w-full top-0 z-50 py-4 flex gap-2 
-          justify-center transition-all duration-300 bg-background border-b"
+          className="fixed w-full top-0 z-50 py-4 flex gap-2 bg-white dark:bg-[#14141e]
+          justify-center transition-all duration-300 border-b shadow-xs"
         >
           <Navbar />
         </header>
-        <main className="flex-1 flex flex-col w-full mt-30">
+        <main className="flex-1 flex flex-col w-full mt-15">
           {props.children}
         </main>
         <footer className="w-full border-t border-[#274380]/10 bg-[#EEF3FA] text-[#274380] dark:border-[#C9D6F0]/10 dark:text-[#C9D6F0]">
