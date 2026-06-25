@@ -64,7 +64,7 @@ export default async function Home({ params }: Props) {
           </p>
           <div className="flex gap-3">
             <Button
-              className="py-5 px-6 font-semibold text-[oklch(0.28 0.09 262)] shadow-sm cursor-pointer"
+              className="py-5 px-6 font-semibold bg-background text-foreground shadow-sm cursor-pointer"
               variant="outline"
             >
               <Link href="/membership" className="flex items-center gap-1">
@@ -83,10 +83,10 @@ export default async function Home({ params }: Props) {
             <>
               <div className="col-span-12 flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <span className="inline-block w-1.5 h-6 bg-[#274380] dark:bg-[#C9D6F0] rounded-full" />
+                  <span className="inline-block w-1.5 h-6 bg-brand-accent rounded-full" />
                   <h2 className="font-bold text-xl">{tGlobal("featured-news")}</h2>
                 </div>
-                <Link href="/activities" className="flex items-center gap-1">
+                <Link href="/activities" className="flex items-center gap-1 text-brand-accent">
                   {tActivities("view-all")}
                   <ArrowRight size={12} />
                 </Link>
@@ -95,7 +95,7 @@ export default async function Home({ params }: Props) {
                 href={`/activities/${featured.slug || featured.id}`}
                 className="lg:col-span-8 reveal h-full"
               >
-                <Card className="group pt-0 h-full overflow-hidden border transition-all duration-300 hover:scale-[1.02] hover:border-primary/40">
+                <Card className="group pt-0 h-full overflow-hidden border transition-all duration-300 shadow-lg hover:scale-[1.02] hover:border-primary/40">
                   <div className="relative flex items-center justify-center aspect-video overflow-hidden bg-muted">
                     {featured.thumbnail ? (
                       <Image
@@ -115,11 +115,11 @@ export default async function Home({ params }: Props) {
                     )}
                   </div>
                   <CardHeader className="space-y-3">
-                    <div className="flex items-center gap-2 text-xs text-[#274380] dark:text-[#C9D6F0]">
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground bg-muted py-1 px-3 rounded-full w-fit">
                       <Calendar className="h-3.5 w-3.5" />
                       <span>{featured.publishedDate}</span>
                     </div>
-                    <CardTitle className="text-2xl leading-tight text-[#274380] transition-colors group-hover:text-[#274380]/80 dark:text-[#C9D6F0] dark:group-hover:text-[#C9D6F0]/80 md:text-3xl">
+                    <CardTitle className="text-2xl leading-tight text-foreground transition-colors md:text-3xl">
                       {featured.title}
                     </CardTitle>
                     <CardDescription className="line-clamp-3 text-sm md:text-base">
@@ -161,7 +161,7 @@ export default async function Home({ params }: Props) {
         <section className="mb-12 grid gap-5 md:grid-cols-2">
           <Card className="border-border/70 relative flex flex-col overflow-hidden reveal reveal-from-left transition-all duration-300 hover:border-primary/50 hover:shadow-lg">
             <span
-              className="pointer-events-none absolute bottom-4 left-0 h-full top-0 w-1.5 bg-[#274380] dark:bg-[#C9D6F0]"
+              className="pointer-events-none absolute bottom-4 left-0 h-full top-0 w-1.5 bg-brand-accent"
               aria-hidden
             />
             <CardHeader className="space-y-3 grow pl-5">
@@ -174,7 +174,7 @@ export default async function Home({ params }: Props) {
               <Button
                 asChild
                 variant="link"
-                className="group w-fit px-0 text-[#274380] dark:text-[#C9D6F0]"
+                className="group w-fit px-0 text-brand-accent"
               >
                 <Link href="/about/mission">
                   {tHome("readSection")}
@@ -186,7 +186,7 @@ export default async function Home({ params }: Props) {
 
           <Card className="border-border/70 relative flex flex-col overflow-hidden reveal reveal-from-right transition-all duration-300 hover:border-primary/50 hover:shadow-lg">
             <span
-              className="pointer-events-none absolute bottom-4 left-0 h-full top-0 w-1.5 bg-[#274380] dark:bg-[#C9D6F0]"
+              className="pointer-events-none absolute bottom-4 left-0 h-full top-0 w-1.5 bg-brand-accent"
               aria-hidden
             />
             <CardHeader className="space-y-3 grow pl-5">
@@ -199,7 +199,7 @@ export default async function Home({ params }: Props) {
               <Button
                 asChild
                 variant="link"
-                className="group w-fit px-0 text-[#274380] dark:text-[#C9D6F0]"
+                className="group w-fit px-0 text-brand-accent"
               >
                 <Link href="/about/vision">
                   {tHome("readSection")}
@@ -212,7 +212,7 @@ export default async function Home({ params }: Props) {
 
         <section className="mb-12 space-y-5">
           <div className="flex gap-4">
-            <span className="w-1.5 bg-[#274380] dark:bg-[#C9D6F0] rounded-full" />
+            <span className="w-1.5 bg-brand-accent rounded-full" />
 
             <div className="space-y-2 reveal">
               <h2 className="text-3xl font-bold tracking-tight">
@@ -227,29 +227,32 @@ export default async function Home({ params }: Props) {
           {feed.length > 0 ? (
             <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
               {feed.map((article, index) => (
-                <Link
+                <Card
                   key={article.id}
-                  href={`/activities/${article.slug || article.id}`}
-                  className={`reveal reveal-delay-${(index % 3) + 1}`}
+                  className={`reveal reveal-delay-${(index % 3) + 1} group h-full border transition-all hover:border-primary/40`}
                 >
-                  <Card className="group h-full border transition-all duration-300 hover:border-primary/40 hover:scale-105">
-                    <CardHeader className="space-y-2">
-                      <div className="flex items-center gap-2 text-xs text-[#274380] dark:text-[#C9D6F0]">
-                        <Calendar className="h-3.5 w-3.5" />
-                        <span>{article.publishedDate}</span>
-                      </div>
-                      <CardTitle className="line-clamp-2 text-lg text-[#274380] transition-colors group-hover:text-[#274380]/80 dark:text-[#C9D6F0] dark:group-hover:text-[#C9D6F0]/80">
-                        {article.title}
-                      </CardTitle>
-                      <CardDescription className="line-clamp-3 text-sm">
-                        {article.excerpt}
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="pt-0 text-sm font-medium text-[#274380] dark:text-[#C9D6F0]">
+                  <CardHeader className="space-y-2">
+                    <div className="flex items-center gap-2 text-xs text-muted-foreground">
+                      <Calendar className="h-3.5 w-3.5" />
+                      <span>{article.publishedDate}</span>
+                    </div>
+                    <CardTitle className="line-clamp-2 text-lg text-foreground transition-colors">
+                      {article.title}
+                    </CardTitle>
+                    <CardDescription className="line-clamp-3 text-sm">
+                      {article.excerpt}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent className="pt-0 text-sm font-medium text-brand-accent">
+                    <Link
+                      key={article.id}
+                      href={`/activities/${article.slug || article.id}`}
+                      className="hover:underline"
+                    >
                       {tHome("readArticle")}
-                    </CardContent>
-                  </Card>
-                </Link>
+                    </Link>
+                  </CardContent>
+                </Card>
               ))}
             </div>
           ) : (
