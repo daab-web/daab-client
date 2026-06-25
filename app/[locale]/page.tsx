@@ -55,14 +55,14 @@ export default async function Home({ params }: Props) {
     <>
       <ScrollReveal />
       <div className="mx-auto w-full max-w-7xl px-4 py-8 md:py-12">
-        <section className="hero-section mb-10 space-y-4 rounded-lg p-16 shadow-sm  md:p-16 dark:border-white/10 dark:bg-transparent dark:backdrop-blur-none">
+        <section className="hero-section mb-10 space-y-4 rounded-lg p-6 shadow-sm sm:p-10 md:p-16 dark:border-white/10 dark:bg-transparent dark:backdrop-blur-none">
           <h1 className="max-w-5xl text-4xl font-extrabold leading-tight tracking-tight text-[#e0e0e0] drop-shadow-sm md:text-6xl fade-in dark:text-white">
             {tGlobal("title")}
           </h1>
           <p className="max-w-3xl text-base text-[#e0e0e0] md:text-lg fade-in-delay dark:text-white/90">
             {tActivities("description")}
           </p>
-          <div className="flex gap-3">
+          <div className="flex flex-col gap-3 sm:flex-row">
             <Button
               className="py-5 px-6 font-semibold bg-background text-foreground shadow-sm cursor-pointer"
               variant="outline"
@@ -81,7 +81,7 @@ export default async function Home({ params }: Props) {
         <section className="mb-12 grid items-start gap-5 lg:grid-cols-12">
           {featured ? (
             <>
-              <div className="col-span-12 flex items-center justify-between">
+              <div className="lg:col-span-12 flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <span className="inline-block w-1.5 h-6 bg-brand-accent rounded-full" />
                   <h2 className="font-bold text-xl">{tGlobal("featured-news")}</h2>
@@ -95,7 +95,7 @@ export default async function Home({ params }: Props) {
                 href={`/activities/${featured.slug || featured.id}`}
                 className="lg:col-span-8 reveal h-full"
               >
-                <Card className="group pt-0 h-full overflow-hidden border transition-all duration-300 shadow-lg hover:scale-[1.02] hover:border-primary/40">
+                <Card className="group pt-0 h-full overflow-hidden border transition-all duration-300 shadow-lg hover:-translate-y-1 hover:border-primary/40 hover:shadow-xl">
                   <div className="relative flex items-center justify-center aspect-video overflow-hidden bg-muted">
                     {featured.thumbnail ? (
                       <Image
@@ -159,7 +159,7 @@ export default async function Home({ params }: Props) {
         </section>
 
         <section className="mb-12 grid gap-5 md:grid-cols-2">
-          <Card className="border-border/70 relative flex flex-col overflow-hidden reveal reveal-from-left transition-all duration-300 hover:border-primary/50 hover:shadow-lg">
+          <Card className="border-border/70 relative flex flex-col overflow-hidden reveal reveal-from-left shadow-sm transition-all duration-300 hover:border-primary/50 hover:shadow-md dark:ring-1 dark:ring-white/10">
             <span
               className="pointer-events-none absolute bottom-4 left-0 h-full top-0 w-1.5 bg-brand-accent"
               aria-hidden
@@ -184,7 +184,7 @@ export default async function Home({ params }: Props) {
             </CardContent>
           </Card>
 
-          <Card className="border-border/70 relative flex flex-col overflow-hidden reveal reveal-from-right transition-all duration-300 hover:border-primary/50 hover:shadow-lg">
+          <Card className="border-border/70 relative flex flex-col overflow-hidden reveal reveal-from-right shadow-sm transition-all duration-300 hover:border-primary/50 hover:shadow-md dark:ring-1 dark:ring-white/10">
             <span
               className="pointer-events-none absolute bottom-4 left-0 h-full top-0 w-1.5 bg-brand-accent"
               aria-hidden
@@ -229,7 +229,7 @@ export default async function Home({ params }: Props) {
               {feed.map((article, index) => (
                 <Card
                   key={article.id}
-                  className={`reveal reveal-delay-${(index % 3) + 1} group h-full border transition-all hover:border-primary/40`}
+                  className={`reveal reveal-delay-${(index % 3) + 1} group h-full border shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-md dark:ring-1 dark:ring-white/10`}
                 >
                   <CardHeader className="space-y-2">
                     <div className="flex items-center gap-2 text-xs text-muted-foreground">
