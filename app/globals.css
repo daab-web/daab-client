@@ -33,6 +33,7 @@
   --brand-foreground: oklch(0.985 0.005 250);
   --brand-subtle: oklch(0.95 0.03 256);
   --brand-subtle-foreground: oklch(0.5 0.17 262);
+  --brand-accent: #274380;
 
   --sidebar-primary: oklch(0.24 0.012 80);
   --sidebar-primary-foreground: oklch(0.985 0.004 83);
@@ -61,6 +62,7 @@
 
 @theme inline {
   --color-foreground: var(--foreground);
+  --color-brand-accent: var(--brand-accent);
   --font-sans: var(--font-sans);
   --font-mono: var(--font-geist-mono);
   --color-sidebar-ring: var(--sidebar-ring);
@@ -126,7 +128,14 @@ body::before {
 
 :root {
   --hero-dark-bg: #1a2440;
-  --footer-dark-bg: #152033;
+  --footer-light-bg: #172034;
+  --navbar-dark-bg: #14141e;
+}
+
+/* Footer dark in both themes → force light brand-accent for text/borders */
+footer {
+  background-color: var(--footer-light-bg);
+  --brand-accent: #8197c2;
 }
 
 .hero-section {
@@ -142,13 +151,12 @@ body::before {
 }
 
 .dark footer {
-  background-image:
-    linear-gradient(rgba(10, 18, 31, 0.16), rgba(10, 18, 31, 0.16)), none;
-  background-color: var(--footer-dark-bg);
+  background-color: var(--navbar-dark-bg);
 }
 
 .dark {
   --background: oklch(0.145 0 0);
+  --brand-accent: #8197C2;
   --background-image: none;
   --foreground: oklch(0.985 0 0);
   --card: oklch(0.205 0 0);
