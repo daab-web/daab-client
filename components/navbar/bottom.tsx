@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import { useTranslations } from "next-intl";
 import { NAV_ITEMS } from "@/lib/navigation";
+import { Button } from "@/components/ui/button"
 
 export function BottomNavigationMenu() {
   const isMobile = useIsMobile();
