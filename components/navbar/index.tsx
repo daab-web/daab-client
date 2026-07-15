@@ -7,8 +7,12 @@ export default async function Navbar() {
     <div className="w-full max-w-7xl px-4">
       <div className="flex min-h-16 items-center justify-between gap-4 md:min-h-20">
         <LogoSection />
-        <div className="hidden flex-1 justify-center px-8 lg:flex">
-          <BottomNavigationMenu />
+        <div className="flex items-center gap-4">
+          <div className="hidden lg:flex items-center gap-4">
+            <BottomNavigationMenu />
+            <Separator orientation="vertical" />
+          </div>
+          <ControlsSection />
         </div>
       </div>
     </div>
