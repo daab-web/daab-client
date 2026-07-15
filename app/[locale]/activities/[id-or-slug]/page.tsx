@@ -15,7 +15,10 @@ type Props = {
   params: Promise<{ locale: string; "id-or-slug": string }>;
 };
 
-async function getArticleWithContent(idOrSlug: string, locale: string): Promise<News | null> {
+async function getArticleWithContent(
+  idOrSlug: string,
+  locale: string,
+): Promise<News | null> {
   try {
     const article: News = await getNewsByIdOrSlug(idOrSlug, locale);
     return article;

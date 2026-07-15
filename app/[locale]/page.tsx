@@ -248,9 +248,9 @@ export default async function Home({ params }: Props) {
               {featured && (
                 <Link
                   href={`/activities/${featured.slug || featured.id}`}
-                  className="group lg:col-span-8"
+                  className="group block h-full lg:col-span-8"
                 >
-                  <Card className="h-full overflow-hidden border-slate-200/80 bg-white shadow-[0_18px_36px_rgba(15,23,42,0.08)] transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-[0_22px_44px_rgba(15,23,42,0.12)] dark:border-white/10 dark:bg-[#1b1b1b] dark:shadow-[0_18px_36px_rgba(0,0,0,0.32)] dark:group-hover:shadow-[0_22px_44px_rgba(0,0,0,0.5)]">
+                  <Card className="h-full overflow-hidden border-slate-200/80 bg-white shadow-[0_18px_36px_rgba(15,23,42,0.08)] transition-colors duration-200 dark:border-white/10 dark:bg-[#1b1b1b] dark:shadow-[0_18px_36px_rgba(0,0,0,0.32)]">
                     <div className="relative aspect-16/10 overflow-hidden bg-slate-100 dark:bg-[#121212]">
                       <NewsImage article={featured} />
                     </div>
@@ -278,9 +278,9 @@ export default async function Home({ params }: Props) {
                   <Link
                     key={article.id}
                     href={`/activities/${article.slug || article.id}`}
-                    className="group"
+                    className="group block h-full"
                   >
-                    <Card className="overflow-hidden border-slate-200/80 bg-white shadow-[0_16px_34px_rgba(15,23,42,0.07)] transition-all duration-300 group-hover:-translate-y-1 group-hover:shadow-[0_20px_40px_rgba(15,23,42,0.12)] dark:border-white/10 dark:bg-[#1b1b1b] dark:shadow-[0_16px_34px_rgba(0,0,0,0.3)]">
+                    <Card className="h-full overflow-hidden border-slate-200/80 bg-white shadow-[0_16px_34px_rgba(15,23,42,0.07)] transition-colors duration-200 dark:border-white/10 dark:bg-[#1b1b1b] dark:shadow-[0_16px_34px_rgba(0,0,0,0.3)]">
                       <div className="relative aspect-video overflow-hidden bg-slate-100 dark:bg-[#121212]">
                         <NewsImage article={article} compact />
                       </div>
@@ -300,7 +300,7 @@ export default async function Home({ params }: Props) {
                         </p>
                         <span className="inline-flex items-center gap-1 text-sm font-medium text-[#274380] dark:text-[#5e7ed8]">
                           Read more
-                          <ChevronRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-1" />
+                          <ChevronRight className="h-4 w-4" />
                         </span>
                       </CardContent>
                     </Card>

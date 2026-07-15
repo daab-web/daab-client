@@ -40,7 +40,7 @@ function isImageFile(attachment: NewsAttachment): boolean {
   if (attachment.fileType?.startsWith("image/")) return true;
   const imageExtensions = [".jpg", ".jpeg", ".png", ".gif", ".webp", ".svg"];
   return imageExtensions.some((ext) =>
-    attachment.fileUrl.toLowerCase().endsWith(ext)
+    attachment.fileUrl.toLowerCase().endsWith(ext),
   );
 }
 
@@ -70,7 +70,7 @@ function AttachmentThumbnail({
           <Maximize2 className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 h-8 w-8" />
         </div>
         {attachment.caption && (
-          <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3">
+          <div className="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/70 to-transparent p-3">
             <p className="text-white text-sm line-clamp-2">
               {attachment.caption}
             </p>
@@ -201,7 +201,7 @@ export function NewsAttachmentsCarousel({
                     onClick={() => {
                       if (isImageFile(attachment)) {
                         const imageIndex = imageAttachments.findIndex(
-                          (a) => a.id === attachment.id
+                          (a) => a.id === attachment.id,
                         );
                         setSelectedIndex(imageIndex);
                       }
@@ -228,7 +228,7 @@ export function NewsAttachmentsCarousel({
                   "w-2 h-2 rounded-full transition-colors",
                   current === index + 1
                     ? "bg-primary"
-                    : "bg-muted-foreground/30 hover:bg-muted-foreground/50"
+                    : "bg-muted-foreground/30 hover:bg-muted-foreground/50",
                 )}
                 onClick={() => api?.scrollTo(index)}
                 aria-label={`Go to slide ${index + 1}`}
@@ -251,7 +251,8 @@ export function NewsAttachmentsCarousel({
             {imageAttachments[selectedIndex ?? 0]?.caption || "Image preview"}
           </DialogTitle>
           <DialogDescription className="sr-only">
-            Viewing image {(selectedIndex ?? 0) + 1} of {imageAttachments.length}
+            Viewing image {(selectedIndex ?? 0) + 1} of{" "}
+            {imageAttachments.length}
           </DialogDescription>
           {selectedIndex !== null && imageAttachments[selectedIndex] && (
             <div className="relative flex items-center justify-center min-h-[60vh] max-h-[90vh]">
@@ -291,7 +292,7 @@ export function NewsAttachmentsCarousel({
               )}
 
               {/* Caption and counter */}
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent p-4">
+              <div className="absolute bottom-0 left-0 right-0 bg-linear-to-t from-black/80 to-transparent p-4">
                 <div className="flex items-center justify-between text-white">
                   <p className="text-sm">
                     {imageAttachments[selectedIndex].caption || ""}
