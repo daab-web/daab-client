@@ -1,3 +1,4 @@
+import { Separator } from "../ui/separator";
 import { BottomNavigationMenu } from "./bottom";
 import { LogoSection, ControlsSection } from "./top";
 
@@ -9,7 +10,6 @@ export default async function Navbar() {
         <div className="hidden flex-1 justify-center px-8 lg:flex">
           <BottomNavigationMenu />
         </div>
-        <ControlsSection />
       </div>
     </div>
   );

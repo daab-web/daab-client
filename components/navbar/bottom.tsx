@@ -9,11 +9,9 @@ import {
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import { useTranslations } from "next-intl";
 import { NAV_ITEMS } from "@/lib/navigation";
-import { Button } from "../ui/button";
 
 export function BottomNavigationMenu() {
   const isMobile = useIsMobile();
@@ -26,7 +24,6 @@ export function BottomNavigationMenu() {
           <NavigationMenuItem key={item.key}>
             <NavigationMenuLink
               asChild
-              className={navigationMenuTriggerStyle()}
             >
               <Button
                 asChild
