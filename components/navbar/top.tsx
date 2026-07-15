@@ -11,17 +11,19 @@ export async function LogoSection() {
   return (
     <Link
       href="/"
-      className="flex items-center gap-2 text-[#274380] dark:text-[#C9D6F0] font-bold shrink-0"
+      className="flex shrink-0 items-center gap-3 text-[#274380] font-semibold dark:text-[#C9D6F0]"
     >
-      <Image src="/daab-logo.png" alt="logo" width={80} height={80} />
-      <h1 className="hidden lg:block whitespace-nowrap">{t("title")}</h1>
+      <Image src="/daab-logo.png" alt="logo" width={42} height={42} />
+      <h1 className="hidden whitespace-nowrap text-[0.95rem] font-semibold leading-tight lg:block">
+        {t("title")}
+      </h1>
     </Link>
   );
 }
 
 export function ControlsSection() {
   return (
-    <div className="flex items-center gap-2 shrink-0">
+    <div className="flex shrink-0 items-center gap-2">
       <ModeToggle />
       <LanguageSwitcher />
       <MobileMenu />
@@ -36,10 +38,12 @@ export async function TopNavigation() {
     <div className="flex items-center gap-8">
       <Link
         href="/"
-        className="flex items-center gap-2 text-[#274380] dark:text-[#C9D6F0] font-bold shrink-0"
+        className="flex shrink-0 items-center gap-3 text-[#274380] font-semibold dark:text-[#C9D6F0]"
       >
-        <Image src="/daab-logo.png" alt="logo" width={80} height={80} />
-        <h1 className="hidden lg:block whitespace-nowrap">{t("title")}</h1>
+        <Image src="/daab-logo.png" alt="logo" width={42} height={42} />
+        <h1 className="hidden whitespace-nowrap text-[0.95rem] font-semibold leading-tight lg:block">
+          {t("title")}
+        </h1>
       </Link>
       <div className="flex items-center gap-2 shrink-0">
         <ModeToggle />

@@ -9,16 +9,13 @@ import {
   NavigationMenuItem,
   NavigationMenuLink,
   NavigationMenuList,
-  navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
 import { useTranslations } from "next-intl";
 import { NAV_ITEMS } from "@/lib/navigation";
-import { Button } from "../ui/button";
 
 export function BottomNavigationMenu() {
   const isMobile = useIsMobile();
   const t = useTranslations("Navigation");
-  const pathname = usePathname();
 
   return (
     <NavigationMenu viewport={isMobile}>
@@ -27,12 +24,11 @@ export function BottomNavigationMenu() {
           <NavigationMenuItem key={item.key}>
             <NavigationMenuLink
               asChild
-              className={navigationMenuTriggerStyle()}
             >
               <Button
                 asChild
                 variant="ghost"
-                className="hover:bg-[#E8EFFA] dark:hover:bg-[#2a3d5a]"
+                className="rounded-full px-4 py-2 text-sm font-medium text-[#274380] hover:bg-[#E8EFFA] dark:text-[#C9D6F0] dark:hover:bg-[#2a3d5a]"
               >
                 <Link href={item.href}>{t(item.key)}</Link>
               </Button>

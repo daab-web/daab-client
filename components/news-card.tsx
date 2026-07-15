@@ -17,7 +17,7 @@ export interface NewsCardProps {
 
 export default function NewsCard({ article }: NewsCardProps) {
   return (
-    <Card className="group mx-auto h-full w-full max-w-sm overflow-hidden pt-0 transition-all duration-300 hover:scale-[1.02] hover:border-primary/40">
+    <Card className="group mx-auto h-full w-full max-w-sm overflow-hidden pt-0 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:border-primary/40 hover:shadow-md dark:ring-1 dark:ring-white/10">
       <div className="relative flex aspect-video w-full items-center justify-center overflow-hidden">
         {article.thumbnail ? (
           <Image

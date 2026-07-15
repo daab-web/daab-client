@@ -1,6 +1,10 @@
 {
   "Global": {
     "title": "WAAS - World Association of Azerbaijani Scientists",
+    "title-short": "WAAS",
+    "title-long": "World Association of Azerbaijani Scientists",
+    "featured-news": "Featured News",
+    "become-member": "Become a member",
     "description": "Official website of WAAS"
   },
   "AboutPage": {
@@ -10,6 +14,7 @@
   },
   "ActivitiesPage": {
     "title": "News & Activities",
+    "view-all": "View all",
     "description": "Stay updated with the latest news, events, and activities from our association",
     "noNews": "No news articles available at the moment."
   },
@@ -22,10 +27,27 @@
     "attachments": "Attachments"
   },
   "HomePage": {
+    "heroEyebrow": "World Association of Azerbaijani Scientists",
+    "heroTitle": "Connecting Azerbaijani scientists across the world",
+    "heroDescription": "A global platform supporting scientific collaboration, academic exchange, and the contribution of Azerbaijani scholars worldwide.",
+    "aboutEyebrow": "About WAAS",
+    "aboutTitle": "A global network for Azerbaijani scientific collaboration",
+    "aboutDescription": "WAAS connects Azerbaijani scientists, researchers, and academic professionals around the world to support collaboration, knowledge exchange, and international scientific initiatives.",
+    "purposeEyebrow": "Our purpose",
+    "purposeTitle": "Built around collaboration, knowledge exchange, and scientific contribution",
+    "purposeDescription": "WAAS supports Azerbaijani scientists worldwide through shared values, long-term vision, and international academic collaboration.",
     "missionExcerpt": "We connect Azerbaijani scholars globally and support strategic development in science, technology, education, healthcare, and culture.",
     "visionExcerpt": "We aim to be an internationally respected platform that advances innovation and strengthens Azerbaijan's scientific contribution worldwide.",
+    "valuesExcerpt": "We promote collaboration, academic integrity, cultural identity, innovation, and global scientific exchange.",
+    "linkLabel": "Open section",
+    "latestEyebrow": "Latest updates",
     "latestTitle": "News Feed",
     "latestDescription": "Recent publications, events, and announcements.",
+    "latestFeedTitle": "Latest News & Activities",
+    "latestFeedDescription": "Recent updates, events, and collaborations from the World Association of Azerbaijani Scientists.",
+    "globalEyebrow": "Global network",
+    "globalTitle": "A growing network of Azerbaijani scientists abroad",
+    "globalDescription": "Explore Azerbaijani researchers, academics, and professionals contributing to science, education, and innovation across different countries and disciplines.",
     "joinTitle": "Join our global scientific network",
     "joinDescription": "Contribute your expertise, collaborate across borders, and support DAAB initiatives.",
     "readArticle": "Read article",
@@ -200,13 +222,27 @@
     "errorMessage": "Failed to submit application. Please try again.",
     "submitting": "Submitting...",
     "submitButton": "Submit Application",
+    "applicationSteps": "Application steps",
+    "applicationStepsDescription": "Complete the application in short, focused parts.",
+    "back": "Back",
+    "continue": "Continue",
+    "eyebrow": "Membership",
+    "stepProgress": "Step {current} of {total}",
 
     "sections": {
       "personal": "Personal Information",
       "academic": "Academic Information",
       "professional": "Professional Information",
+      "professionalScientific": "Professional & Scientific Information",
       "scientificFields": "Scientific Fields of Engagement",
       "additional": "Additional Information"
+    },
+
+    "stepDescriptions": {
+      "personal": "Start with your contact details.",
+      "academic": "Share your educational background and academic titles.",
+      "professional": "Add your current role and scientific fields.",
+      "additional": "Finish with your contribution statement and extra notes."
     },
 
     "fields": {
