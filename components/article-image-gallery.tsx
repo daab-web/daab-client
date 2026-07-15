@@ -2,7 +2,13 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { ChevronLeft, ChevronRight, Maximize2, XIcon } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  ImageIcon,
+  Maximize2,
+  XIcon,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -24,6 +30,7 @@ type Props = {
 
 export function ArticleImageGallery({ title, images }: Props) {
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
+  const [failedImages, setFailedImages] = useState<string[]>([]);
 
   if (images.length === 0) {
     return null;
@@ -32,6 +39,13 @@ export function ArticleImageGallery({ title, images }: Props) {
   const selectedImage = selectedIndex === null ? null : images[selectedIndex];
   const heroImage = images[0];
   const thumbnailImages = images.slice(1, 5);
+  const isImageFailed = (src: string) => failedImages.includes(src);
+
+  const markImageAsFailed = (src: string) => {
+    setFailedImages((current) =>
+      current.includes(src) ? current : [...current, src],
+    );
+  };
 
   const openAt = (index: number) => setSelectedIndex(index);
   const close = () => setSelectedIndex(null);
@@ -48,23 +62,32 @@ export function ArticleImageGallery({ title, images }: Props) {
     <>
       <section className="overflow-hidden rounded-[26px] border border-slate-200/80 bg-white/92 shadow-[0_18px_60px_rgba(15,23,42,0.06)] backdrop-blur dark:border-white/10 dark:bg-[#171717]/95 dark:shadow-[0_18px_60px_rgba(0,0,0,0.35)]">
         <div className="space-y-3 p-4 md:p-5">
-          <div className="relative aspect-4/3 overflow-hidden rounded-[22px] bg-muted dark:bg-[#121212]">
-            <button
-              type="button"
-              className="absolute inset-0 z-10"
-              onClick={() => openAt(0)}
-              aria-label={`Open ${title}`}
-            />
-            <Image
-              src={heroImage.src}
-              alt={heroImage.alt}
-              fill
-              className="object-cover"
-              sizes="(max-width: 1280px) 100vw, 390px"
-              priority
-            />
-            <div className="pointer-events-none absolute right-3 top-3 rounded-full bg-black/45 p-2 text-white opacity-0 transition-opacity duration-300 hover:opacity-100" />
-            <Maximize2 className="pointer-events-none absolute right-3 top-3 h-4 w-4 text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+          <div className="group relative aspect-4/3 overflow-hidden rounded-[22px] bg-muted dark:bg-[#121212]">
+            {!isImageFailed(heroImage.src) ? (
+              <>
+                <button
+                  type="button"
+                  className="absolute inset-0 z-10"
+                  onClick={() => openAt(0)}
+                  aria-label={`Open ${title}`}
+                />
+                <Image
+                  src={heroImage.src}
+                  alt={heroImage.alt}
+                  fill
+                  className="object-cover"
+                  sizes="(max-width: 1280px) 100vw, 390px"
+                  priority
+                  onError={() => markImageAsFailed(heroImage.src)}
+                />
+                <div className="pointer-events-none absolute right-3 top-3 rounded-full bg-black/45 p-2 text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+                <Maximize2 className="pointer-events-none absolute right-3 top-3 h-4 w-4 text-white opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+              </>
+            ) : (
+              <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-slate-100 via-white to-slate-200 text-slate-400 dark:from-[#1a1a1a] dark:via-[#141414] dark:to-[#202020]">
+                <ImageIcon className="h-10 w-10" />
+              </div>
+            )}
           </div>
 
           {thumbnailImages.length > 0 && (
@@ -72,23 +95,32 @@ export function ArticleImageGallery({ title, images }: Props) {
               {thumbnailImages.map((image, index) => {
                 const realIndex = index + 1;
                 const showMore = index === 3 && images.length > 5;
+                const failed = isImageFailed(image.src);
 
                 return (
                   <button
                     key={`${image.src}-${index}`}
                     type="button"
                     className="relative aspect-square overflow-hidden rounded-xl border border-slate-200/80 bg-muted dark:border-white/10"
-                    onClick={() => openAt(realIndex)}
-                    aria-label={`Open ${image.alt}`}
+                    onClick={() => !failed && openAt(realIndex)}
+                    aria-label={failed ? `${image.alt} unavailable` : `Open ${image.alt}`}
+                    disabled={failed}
                   >
-                    <Image
-                      src={image.src}
-                      alt={image.alt}
-                      fill
-                      className="object-cover"
-                      sizes="96px"
-                    />
-                    {showMore && (
+                    {!failed ? (
+                      <Image
+                        src={image.src}
+                        alt={image.alt}
+                        fill
+                        className="object-cover"
+                        sizes="96px"
+                        onError={() => markImageAsFailed(image.src)}
+                      />
+                    ) : (
+                      <div className="flex h-full w-full items-center justify-center bg-linear-to-br from-slate-100 via-white to-slate-200 text-slate-400 dark:from-[#1a1a1a] dark:via-[#141414] dark:to-[#202020]">
+                        <ImageIcon className="h-7 w-7" />
+                      </div>
+                    )}
+                    {showMore && !failed && (
                       <div className="absolute inset-0 flex items-center justify-center bg-black/45 text-base font-semibold text-white">
                         +{images.length - 5}
                       </div>
