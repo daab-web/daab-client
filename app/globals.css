@@ -108,7 +108,7 @@ body::before {
 
 :root {
   --hero-dark-bg: #1a2440;
-  --footer-dark-bg: #152033;
+  --footer-dark-bg: #19191a;
 }
 
 .hero-section {
@@ -124,8 +124,7 @@ body::before {
 }
 
 .dark footer {
-  background-image:
-    linear-gradient(rgba(10, 18, 31, 0.16), rgba(10, 18, 31, 0.16)), none;
+  background-image: none;
   background-color: var(--footer-dark-bg);
 }
 

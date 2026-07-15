@@ -217,13 +217,27 @@
     "errorMessage": "Failed to submit application. Please try again.",
     "submitting": "Submitting...",
     "submitButton": "Submit Application",
+    "applicationSteps": "Application steps",
+    "applicationStepsDescription": "Complete the application in short, focused parts.",
+    "back": "Back",
+    "continue": "Continue",
+    "eyebrow": "Membership",
+    "stepProgress": "Step {current} of {total}",
 
     "sections": {
       "personal": "Personal Information",
       "academic": "Academic Information",
       "professional": "Professional Information",
+      "professionalScientific": "Professional & Scientific Information",
       "scientificFields": "Scientific Fields of Engagement",
       "additional": "Additional Information"
+    },
+
+    "stepDescriptions": {
+      "personal": "Start with your contact details.",
+      "academic": "Share your educational background and academic titles.",
+      "professional": "Add your current role and scientific fields.",
+      "additional": "Finish with your contribution statement and extra notes."
     },
 
     "fields": {

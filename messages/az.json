@@ -217,13 +217,27 @@
     "errorMessage": "Ərizə göndərilmədi. Zəhmət olmasa yenidən cəhd edin.",
     "submitting": "Göndərilir...",
     "submitButton": "Ərizəni Göndər",
+    "applicationSteps": "Ərizə mərhələləri",
+    "applicationStepsDescription": "Ərizəni qısa və fokuslanmış hissələrlə tamamlayın.",
+    "back": "Geri",
+    "continue": "Davam et",
+    "eyebrow": "Üzvlük",
+    "stepProgress": "{total} addımdan {current}",
 
     "sections": {
       "personal": "Şəxsi Məlumat",
       "academic": "Akademik Məlumat",
       "professional": "Peşəkar Məlumat",
+      "professionalScientific": "Peşəkar və Elmi Məlumat",
       "scientificFields": "Məşğul Olduğunuz Elmi Sahələr",
       "additional": "Əlavə Məlumat"
+    },
+
+    "stepDescriptions": {
+      "personal": "Əlaqə məlumatlarınızdan başlayın.",
+      "academic": "Təhsil tarixçənizi və akademik rütbələrinizi paylaşın.",
+      "professional": "Hazırkı rolunuzu və elmi sahələrinizi əlavə edin.",
+      "additional": "Töhfə barədə məlumatı və əlavə qeydləri tamamlayın."
     },
 
     "fields": {
