@@ -201,6 +201,7 @@ export default function ApplicationForm() {
     reset,
     formState: { errors, isSubmitting },
   } = useForm<FormData>({
+    shouldUnregister: false,
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: "",
@@ -335,8 +336,8 @@ export default function ApplicationForm() {
     [reset, t],
   );
 
-  const renderStepContent = () => {
-    switch (activeStep) {
+  const renderStepContent = (stepIndex: number) => {
+    switch (stepIndex) {
       case 0:
         return (
           <div className="space-y-4">
@@ -826,7 +827,17 @@ export default function ApplicationForm() {
               )}
 
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
-                {renderStepContent()}
+                <div className="space-y-8">
+                  {steps.map((step, index) => (
+                    <div
+                      key={step.key}
+                      className={index === activeStep ? "block" : "hidden"}
+                      aria-hidden={index !== activeStep}
+                    >
+                      {renderStepContent(index)}
+                    </div>
+                  ))}
+                </div>
 
                 <div className="flex items-center justify-between pt-4">
                   <Button
