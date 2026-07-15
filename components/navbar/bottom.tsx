@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 
 import { useIsMobile } from "@/hooks/use-mobile";
 import {
@@ -13,12 +12,11 @@ import {
 } from "@/components/ui/navigation-menu";
 import { useTranslations } from "next-intl";
 import { NAV_ITEMS } from "@/lib/navigation";
-import { Button } from "../ui/button";
+import { Button } from "@/components/ui/button";
 
 export function BottomNavigationMenu() {
   const isMobile = useIsMobile();
   const t = useTranslations("Navigation");
-  const pathname = usePathname();
 
   return (
     <NavigationMenu viewport={isMobile}>
