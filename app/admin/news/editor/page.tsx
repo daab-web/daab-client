@@ -25,7 +25,11 @@ import { PreviewDialog } from "./preview-dialog";
 import { useNewsEditorPage } from "./use-news-editor-page";
 import { ButtonGroup } from "@/components/ui/button-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { TranslateDraftDialog } from "@/components/translate-draft-dialog";
+import { ApproveTranslationDialog } from "@/components/approve-translation-dialog";
+import { ContentType } from "@/types/translation-memory";
 import { use } from "react";
+import { getNewsByIdOrSlug } from "@/lib/api/news";
 
 export default function NewsEditorPage({
   searchParams,
@@ -45,6 +49,7 @@ export default function NewsEditorPage({
     editorKey,
     editorStateRef,
     initialEditorState,
+    applyTranslatedContent,
     thumbnailPreview,
     setThumbnailPreview,
     originalThumbnailPreview,
@@ -121,6 +126,15 @@ export default function NewsEditorPage({
               {editingNewsId ? "Update" : "Save"}
             </Button>
           </ButtonGroup>
+          <ApproveTranslationDialog
+            contentType={ContentType.Article}
+            entityId={editingNewsId ?? undefined}
+            getLocaleEditorStateJson={async (loc) => {
+              const article = await getNewsByIdOrSlug(editingNewsId!, loc);
+              return article.editorState ? JSON.stringify(article.editorState) : undefined;
+            }}
+            disabled={isLoadingArticle}
+          />
         </div>
       </div>
 
@@ -162,11 +176,23 @@ export default function NewsEditorPage({
           </Card>
 
           <Card>
-            <CardHeader>
-              <CardTitle>Content</CardTitle>
-              <CardDescription>
-                Write your article content using the rich text editor
-              </CardDescription>
+            <CardHeader className="flex items-start justify-between gap-4">
+              <div>
+                <CardTitle>Content</CardTitle>
+                <CardDescription>
+                  Write your article content using the rich text editor
+                </CardDescription>
+              </div>
+              <TranslateDraftDialog
+                contentType={ContentType.Article}
+                sourceLocale={locale}
+                getSourceStateJson={() => {
+                  const state = editorStateRef.current?.toJSON() ?? initialEditorState;
+                  return state ? JSON.stringify(state) : undefined;
+                }}
+                onApply={applyTranslatedContent}
+                disabled={isLoadingArticle}
+              />
             </CardHeader>
             <CardContent>
               <Editor

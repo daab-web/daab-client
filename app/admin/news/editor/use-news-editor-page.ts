@@ -160,6 +160,12 @@ export function useNewsEditorPage(editId?: string) {
     if (editId) void loadNewsForEdit(editId);
   }, [locale, editId]);
 
+  const applyTranslatedContent = (state: SerializedEditorState) => {
+    setInitialEditorState(state);
+    editorStateRef.current = undefined;
+    setEditorKey((prev) => prev + 1);
+  };
+
   return {
     // form
     register,
@@ -173,6 +179,7 @@ export function useNewsEditorPage(editId?: string) {
     editorKey,
     editorStateRef,
     initialEditorState,
+    applyTranslatedContent,
     // thumbnail
     thumbnailPreview,
     setThumbnailPreview,

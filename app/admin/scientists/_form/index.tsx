@@ -36,6 +36,9 @@ import { ButtonGroup } from "@/components/ui/button-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { fetchScientistById } from "@/lib/api/scientists";
 import dynamic from "next/dynamic";
+import { TranslateDraftDialog } from "@/components/translate-draft-dialog";
+import { ApproveTranslationDialog } from "@/components/approve-translation-dialog";
+import { ContentType } from "@/types/translation-memory";
 
 const Editor = dynamic(
   () => import("@/components/editor").then((m) => ({ default: m.Editor })),
@@ -59,7 +62,7 @@ export default function ScientistsEditor({
   const processingText = action === "POST" ? "Creating..." : "Updating...";
   const [locale, setLocale] = useState<"en" | "az">("en");
   const [pendingLocale, setPendingLocale] = useState<"en" | "az" | null>(null);
-  const [editorKey, setEditorKey] = useState(locale)
+  const [editorKey, setEditorKey] = useState(0)
   const editorStateRef = useRef<EditorState | undefined>(undefined);
   const createMutation = useScientistCreateMutation(locale);
   const updateMutation = useScientistUpdateMutation(scientist?.id ?? "", locale);
@@ -88,11 +91,17 @@ export default function ScientistsEditor({
       editorStateRef.current = undefined;
       form.resetField("firstName", { defaultValue: data.firstName });
       form.resetField("lastName", { defaultValue: data.lastName });
-      setEditorKey(locale)
+      setEditorKey((k) => k + 1)
     };
 
     loadLocaleData();
   }, [locale, action, scientist, form]);
+
+  const applyTranslatedDescription = (state: SerializedEditorState) => {
+    setEditorState(state);
+    editorStateRef.current = undefined;
+    setEditorKey((k) => k + 1);
+  };
 
   const hasUnsavedTranslation = () =>
     Boolean(form.formState.dirtyFields.firstName) ||
@@ -251,7 +260,19 @@ export default function ScientistsEditor({
           name="description"
           render={() => (
             <FormItem>
-              <FormLabel>Description (optional)</FormLabel>
+              <div className="flex items-center justify-between gap-4">
+                <FormLabel>Description (optional)</FormLabel>
+                <TranslateDraftDialog
+                  contentType={ContentType.Scientist}
+                  sourceLocale={locale}
+                  getSourceStateJson={() => {
+                    const state = editorStateRef.current?.toJSON() ?? editorState;
+                    return state ? JSON.stringify(state) : undefined;
+                  }}
+                  onApply={applyTranslatedDescription}
+                  disabled={isPending}
+                />
+              </div>
               <FormControl>
                 <Editor
                   key={editorKey}
@@ -398,6 +419,15 @@ export default function ScientistsEditor({
               )}
             </Button>
           </ButtonGroup>
+          <ApproveTranslationDialog
+            contentType={ContentType.Scientist}
+            entityId={scientist?.id}
+            getLocaleEditorStateJson={async (loc) => {
+              const data = await fetchScientistById(scientist!.id, loc);
+              return data.description ? JSON.stringify(data.description) : undefined;
+            }}
+            disabled={isPending}
+          />
           <Button
             type="button"
             variant="outline"
