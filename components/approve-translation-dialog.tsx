@@ -40,15 +40,13 @@ const DEFAULT_LOCALES = [
 
 export interface ApproveTranslationDialogProps {
   contentType: ContentType;
-  entityId: string | undefined;
   locales?: { value: string; label: string }[];
-  getLocaleEditorStateJson: (locale: string) => Promise<string | undefined>;
+  getLocaleEditorStateJson: (locale: string) => string | undefined;
   disabled?: boolean;
 }
 
 export function ApproveTranslationDialog({
   contentType,
-  entityId,
   locales = DEFAULT_LOCALES,
   getLocaleEditorStateJson,
   disabled,
@@ -62,18 +60,12 @@ export function ApproveTranslationDialog({
 
   const mutation = useMutation({
     mutationFn: async () => {
-      if (!entityId) {
-        throw new Error("Save this item before approving a translation.");
-      }
-
-      const [sourceEditorStateJson, targetEditorStateJson] = await Promise.all([
-        getLocaleEditorStateJson(sourceLocale),
-        getLocaleEditorStateJson(targetLocale),
-      ]);
+      const sourceEditorStateJson = getLocaleEditorStateJson(sourceLocale);
+      const targetEditorStateJson = getLocaleEditorStateJson(targetLocale);
 
       if (!sourceEditorStateJson || !targetEditorStateJson) {
         throw new Error(
-          `Both ${LOCALE_LABELS[sourceLocale] ?? sourceLocale} and ${LOCALE_LABELS[targetLocale] ?? targetLocale} need saved content before they can be approved as a translation pair.`,
+          `Both ${LOCALE_LABELS[sourceLocale] ?? sourceLocale} and ${LOCALE_LABELS[targetLocale] ?? targetLocale} need content before they can be approved as a translation pair.`,
         );
       }
 
@@ -108,7 +100,7 @@ export function ApproveTranslationDialog({
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button type="button" variant="outline" disabled={disabled || !entityId}>
+        <Button type="button" variant="outline" disabled={disabled}>
           <CheckCheck className="mr-2 h-4 w-4" />
           Approve Translation
         </Button>
@@ -117,9 +109,9 @@ export function ApproveTranslationDialog({
         <DialogHeader>
           <DialogTitle>Approve translation</DialogTitle>
           <DialogDescription>
-            Confirms the saved content in these two locales is a good translation
-            pair and adds it to the translation memory, so future AI drafts can
-            reuse it.
+            Confirms the current content in these two locales is a good
+            translation pair and adds it to the translation memory, so future
+            AI drafts can reuse it.
           </DialogDescription>
         </DialogHeader>
 

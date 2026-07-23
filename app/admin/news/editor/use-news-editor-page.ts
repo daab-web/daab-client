@@ -17,6 +17,12 @@ function toUtcDateOnly(date: Date): Date {
   return new Date(Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()));
 }
 
+interface LocaleDraft {
+  title: string;
+  excerpt: string;
+  editorState: SerializedEditorState | undefined;
+}
+
 export function useNewsEditorPage(editId?: string) {
   const router = useRouter();
 
@@ -26,6 +32,7 @@ export function useNewsEditorPage(editId?: string) {
     handleSubmit,
     watch,
     setValue,
+    getValues,
     reset,
     control,
     formState: { errors },
@@ -34,6 +41,9 @@ export function useNewsEditorPage(editId?: string) {
   const [editingNewsId, setEditingNewsId] = useState<string | null>(null);
   const [isLoadingArticle, setIsLoadingArticle] = useState(false);
   const [locale, setLocale] = useState<"en" | "az">("en");
+  const [localeDrafts, setLocaleDrafts] = useState<
+    Partial<Record<"en" | "az", LocaleDraft>>
+  >({});
   const [editorKey, setEditorKey] = useState(0);
   const [thumbnailPreview, setThumbnailPreview] = useState("");
   const [originalThumbnailPreview, setOriginalThumbnailPreview] = useState("");
@@ -60,6 +70,7 @@ export function useNewsEditorPage(editId?: string) {
     setAttachments([]);
     setEditingNewsId(null);
     setInitialEditorState(undefined);
+    setLocaleDrafts({});
     editorStateRef.current = undefined;
     setEditorKey((prev) => prev + 1);
   };
@@ -91,6 +102,14 @@ export function useNewsEditorPage(editId?: string) {
       );
       setTags(Array.isArray(article.tags) ? article.tags : []);
       setInitialEditorState(article.editorState);
+      setLocaleDrafts((prev) => ({
+        ...prev,
+        [locale]: {
+          title: article.title,
+          excerpt: article.excerpt ?? "",
+          editorState: article.editorState,
+        },
+      }));
       editorStateRef.current = undefined;
       const thumb = article.thumbnail ?? "";
       setThumbnailPreview(thumb);
@@ -111,6 +130,25 @@ export function useNewsEditorPage(editId?: string) {
 
   const onSubmit = handleSubmit(async (formData: NewsFormData) => {
     const thumbnail = formData.thumbnail?.[0];
+    const currentEditorStateJson = JSON.stringify(
+      editorStateRef.current?.toJSON() ?? initialEditorState,
+    );
+
+    const translations: Record<string, LocaleDraft> = {
+      ...localeDrafts,
+      [locale]: {
+        title: formData.title,
+        excerpt: formData.excerpt,
+        editorState: editorStateRef.current?.toJSON() ?? initialEditorState,
+      },
+    };
+    const stringifiedTranslations = Object.fromEntries(
+      Object.entries(translations).map(([loc, t]) => [
+        loc,
+        { title: t!.title, excerpt: t!.excerpt, editorState: JSON.stringify(t!.editorState) },
+      ]),
+    );
+
     try {
       if (editId) {
         await mutateAsync({
@@ -120,13 +158,13 @@ export function useNewsEditorPage(editId?: string) {
             category: formData.category,
             author: formData.authorName,
             authorId: "",
-            editorState: JSON.stringify(editorStateRef.current?.toJSON()),
+            editorState: currentEditorStateJson,
             tags: tags,
             publishedDate: toUtcDateOnly(formData.publishedDate),
           },
           thumbnail,
           attachments,
-          locale,
+          translations: stringifiedTranslations,
         });
       } else {
         const result = await mutateAsync({
@@ -136,13 +174,13 @@ export function useNewsEditorPage(editId?: string) {
             category: formData.category,
             author: formData.authorName,
             authorId: "",
-            editorState: JSON.stringify(editorStateRef.current?.toJSON()),
+            editorState: currentEditorStateJson,
             tags: tags,
             publishedDate: toUtcDateOnly(formData.publishedDate),
           },
           thumbnail,
           attachments,
-          locale,
+          translations: stringifiedTranslations,
         });
 
         const createdId = result?.id;
@@ -158,12 +196,74 @@ export function useNewsEditorPage(editId?: string) {
 
   useEffect(() => {
     if (editId) void loadNewsForEdit(editId);
-  }, [locale, editId]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [editId]);
 
-  const applyTranslatedContent = (state: SerializedEditorState) => {
-    setInitialEditorState(state);
+  const loadLocaleDraft = (draft: LocaleDraft | undefined) => {
+    setValue("title", draft?.title ?? "");
+    setValue("excerpt", draft?.excerpt ?? "");
+    setInitialEditorState(draft?.editorState);
     editorStateRef.current = undefined;
     setEditorKey((prev) => prev + 1);
+  };
+
+  const handleLocaleChange = (value: "en" | "az") => {
+    if (value === locale) return;
+
+    const currentDraft: LocaleDraft = {
+      title: getValues("title"),
+      excerpt: getValues("excerpt"),
+      editorState: editorStateRef.current?.toJSON() ?? initialEditorState,
+    };
+    setLocaleDrafts((prev) => ({ ...prev, [locale]: currentDraft }));
+
+    const cached = localeDrafts[value];
+    if (cached) {
+      loadLocaleDraft(cached);
+    } else if (editingNewsId) {
+      loadLocaleDraft(undefined);
+      setIsLoadingArticle(true);
+      getNewsByIdOrSlug(editingNewsId, value)
+        .then((article) => {
+          const draft: LocaleDraft = {
+            title: article.title,
+            excerpt: article.excerpt ?? "",
+            editorState: article.editorState,
+          };
+          setLocaleDrafts((prev) => ({ ...prev, [value]: draft }));
+          loadLocaleDraft(draft);
+        })
+        .catch(() => {
+          toast.error("Could not load translation", {
+            description: "Please try again.",
+          });
+        })
+        .finally(() => setIsLoadingArticle(false));
+    } else {
+      loadLocaleDraft(undefined);
+    }
+
+    setLocale(value);
+  };
+
+  const applyTranslatedContent = (
+    state: SerializedEditorState,
+    targetLocale: string,
+  ) => {
+    if (targetLocale === locale) {
+      setInitialEditorState(state);
+      editorStateRef.current = undefined;
+      setEditorKey((prev) => prev + 1);
+    } else {
+      setLocaleDrafts((prev) => ({
+        ...prev,
+        [targetLocale]: {
+          title: prev[targetLocale as "en" | "az"]?.title ?? "",
+          excerpt: prev[targetLocale as "en" | "az"]?.excerpt ?? "",
+          editorState: state,
+        },
+      }));
+    }
   };
 
   return {
@@ -203,6 +303,7 @@ export function useNewsEditorPage(editId?: string) {
     router,
     //locale
     locale,
-    setLocale,
+    localeDrafts,
+    handleLocaleChange,
   };
 }
