@@ -14,19 +14,11 @@ import {
   FormControl,
   FormMessage,
 } from "@/components/ui/form";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Spinner } from "@/components/ui/spinner";
 import router from "next/router";
 import { Button } from "@/components/ui/button";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { EditorState, SerializedEditorState } from "lexical";
 import { ComboboxMultiple } from "@/components/combobox-multiple";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -36,11 +28,20 @@ import { ButtonGroup } from "@/components/ui/button-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { fetchScientistById } from "@/lib/api/scientists";
 import dynamic from "next/dynamic";
+import { TranslateDraftPanel } from "@/components/translate-draft-panel";
+import { ApproveTranslationDialog } from "@/components/approve-translation-dialog";
+import { ContentType } from "@/types/translation-memory";
 
 const Editor = dynamic(
   () => import("@/components/editor").then((m) => ({ default: m.Editor })),
   { ssr: false }
 );
+
+interface LocaleDraft {
+  firstName: string;
+  lastName: string;
+  description: SerializedEditorState | undefined;
+}
 
 export interface ScientistsEditorProps {
   scientist?: Scientist;
@@ -58,11 +59,23 @@ export default function ScientistsEditor({
   const buttonText = action === "POST" ? "Create" : "Update";
   const processingText = action === "POST" ? "Creating..." : "Updating...";
   const [locale, setLocale] = useState<"en" | "az">("en");
-  const [pendingLocale, setPendingLocale] = useState<"en" | "az" | null>(null);
-  const [editorKey, setEditorKey] = useState(locale)
+  const [localeDrafts, setLocaleDrafts] = useState<
+    Partial<Record<"en" | "az", LocaleDraft>>
+  >(() =>
+    action === "PUT" && scientist
+      ? {
+          en: {
+            firstName: scientist.firstName,
+            lastName: scientist.lastName,
+            description: scientist.description,
+          },
+        }
+      : {},
+  );
+  const [editorKey, setEditorKey] = useState(0)
   const editorStateRef = useRef<EditorState | undefined>(undefined);
   const createMutation = useScientistCreateMutation(locale);
-  const updateMutation = useScientistUpdateMutation(scientist?.id ?? "", locale);
+  const updateMutation = useScientistUpdateMutation(scientist?.id ?? "");
   const { mutate, isPending } =
     action === "POST" ? createMutation : updateMutation;
 
@@ -79,50 +92,81 @@ export default function ScientistsEditor({
     queryFn: () => getTranslationNames("institutions").then((n) => n.map((e) => e.key)),
   });
 
-  useEffect(() => {
-    if (action !== "PUT" || !scientist) return;
+  const loadLocaleDraft = (draft: LocaleDraft | undefined) => {
+    form.setValue("firstName", draft?.firstName ?? "");
+    form.setValue("lastName", draft?.lastName ?? "");
+    setEditorState(draft?.description);
+    editorStateRef.current = undefined;
+    setEditorKey((k) => k + 1);
+  };
 
-    const loadLocaleData = async () => {
-      const data = await fetchScientistById(scientist.id, locale);
-      setEditorState(data.description);
+  const applyTranslatedDescription = (
+    state: SerializedEditorState,
+    targetLocale: string,
+  ) => {
+    if (targetLocale === locale) {
+      setEditorState(state);
       editorStateRef.current = undefined;
-      form.resetField("firstName", { defaultValue: data.firstName });
-      form.resetField("lastName", { defaultValue: data.lastName });
-      setEditorKey(locale)
-    };
-
-    loadLocaleData();
-  }, [locale, action, scientist, form]);
-
-  const hasUnsavedTranslation = () =>
-    Boolean(form.formState.dirtyFields.firstName) ||
-    Boolean(form.formState.dirtyFields.lastName) ||
-    editorStateRef.current !== undefined;
+      setEditorKey((k) => k + 1);
+    } else {
+      setLocaleDrafts((prev) => ({
+        ...prev,
+        [targetLocale]: {
+          firstName: prev[targetLocale as "en" | "az"]?.firstName ?? "",
+          lastName: prev[targetLocale as "en" | "az"]?.lastName ?? "",
+          description: state,
+        },
+      }));
+    }
+  };
 
   const handleLocaleChange = (value: string) => {
     const next = value as "en" | "az";
     if (next === locale) return;
-    if (hasUnsavedTranslation()) {
-      setPendingLocale(next);
-    } else {
-      setLocale(next);
-    }
-  };
 
-  const confirmLocaleSwitch = () => {
-    if (pendingLocale) setLocale(pendingLocale);
-    setPendingLocale(null);
+    const currentDraft: LocaleDraft = {
+      firstName: form.getValues("firstName"),
+      lastName: form.getValues("lastName"),
+      description: editorStateRef.current?.toJSON() ?? editorState,
+    };
+    setLocaleDrafts((prev) => ({ ...prev, [locale]: currentDraft }));
+
+    const cached = localeDrafts[next];
+    if (cached) {
+      loadLocaleDraft(cached);
+    } else if (action === "PUT" && scientist) {
+      loadLocaleDraft(undefined);
+      fetchScientistById(scientist.id, next).then((data) => {
+        const draft: LocaleDraft = {
+          firstName: data.firstName,
+          lastName: data.lastName,
+          description: data.description,
+        };
+        setLocaleDrafts((prev) => ({ ...prev, [next]: draft }));
+        loadLocaleDraft(draft);
+      });
+    } else {
+      loadLocaleDraft(undefined);
+    }
+
+    setLocale(next);
   };
 
   return (
     <Form {...form}>
       <form
-        onSubmit={form.handleSubmit((data) =>
-          mutate({
-            ...data,
-            description: editorStateRef.current?.toJSON() ?? editorState,
-          }),
-        )}
+        onSubmit={form.handleSubmit((data) => {
+          const translations: Record<string, LocaleDraft> = {
+            ...localeDrafts,
+            [locale]: {
+              firstName: data.firstName,
+              lastName: data.lastName,
+              description: editorStateRef.current?.toJSON() ?? editorState,
+            },
+          };
+
+          mutate({ data, translations });
+        })}
         className="space-y-4"
       >
         <div className="grid grid-cols-2 gap-4">
@@ -252,6 +296,16 @@ export default function ScientistsEditor({
           render={() => (
             <FormItem>
               <FormLabel>Description (optional)</FormLabel>
+              <TranslateDraftPanel
+                contentType={ContentType.Scientist}
+                sourceLocale={locale}
+                getSourceStateJson={() => {
+                  const state = editorStateRef.current?.toJSON() ?? editorState;
+                  return state ? JSON.stringify(state) : undefined;
+                }}
+                onApply={applyTranslatedDescription}
+                disabled={isPending}
+              />
               <FormControl>
                 <Editor
                   key={editorKey}
@@ -398,6 +452,18 @@ export default function ScientistsEditor({
               )}
             </Button>
           </ButtonGroup>
+          <ApproveTranslationDialog
+            contentType={ContentType.Scientist}
+            getLocaleEditorStateJson={(loc) => {
+              if (loc === locale) {
+                const state = editorStateRef.current?.toJSON() ?? editorState;
+                return state ? JSON.stringify(state) : undefined;
+              }
+              const draft = localeDrafts[loc as "en" | "az"];
+              return draft?.description ? JSON.stringify(draft.description) : undefined;
+            }}
+            disabled={isPending}
+          />
           <Button
             type="button"
             variant="outline"
@@ -408,34 +474,6 @@ export default function ScientistsEditor({
           </Button>
         </div>
       </form>
-
-      <Dialog
-        open={pendingLocale !== null}
-        onOpenChange={(open) => !open && setPendingLocale(null)}
-      >
-        <DialogContent className="max-w-md">
-          <DialogHeader>
-            <DialogTitle>Discard unsaved changes?</DialogTitle>
-            <DialogDescription>
-              Switching language will discard unsaved name and description
-              edits for the current language. This cannot be undone.
-            </DialogDescription>
-          </DialogHeader>
-
-          <DialogFooter>
-            <Button
-              type="button"
-              variant="outline"
-              onClick={() => setPendingLocale(null)}
-            >
-              Cancel
-            </Button>
-            <Button type="button" variant="destructive" onClick={confirmLocaleSwitch}>
-              Switch language
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
     </Form>
   );
 }

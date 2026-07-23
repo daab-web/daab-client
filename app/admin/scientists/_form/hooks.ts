@@ -5,20 +5,36 @@ import { ScientistFormData, scientistSchema } from "./types";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Scientist } from "@/types/scientist";
+import { SerializedEditorState } from "lexical";
 
-export function useScientistCreateMutation(locale: string) {
+export type ScientistLocaleTranslation = {
+  firstName: string;
+  lastName: string;
+  description: SerializedEditorState | undefined;
+};
+
+export function useScientistCreateMutation(primaryLocale: string) {
   const client = useQueryClient();
 
   return useMutation({
-    mutationFn: async (data: ScientistFormData) => {
-      const { id } = await createScientist(data, locale)
-      const translationRes = await updateScientistTranslation(id, locale, {
-        firstName: data.firstName,
-        lastName: data.lastName,
-        description: JSON.stringify(data.description)
-      })
-      if (!translationRes.ok) {
-        throw new Error(`Failed to create scientist translation (${translationRes.status})`);
+    mutationFn: async ({
+      data,
+      translations,
+    }: {
+      data: ScientistFormData;
+      translations: Record<string, ScientistLocaleTranslation>;
+    }) => {
+      const { id } = await createScientist(data, primaryLocale);
+
+      for (const [loc, t] of Object.entries(translations)) {
+        const translationRes = await updateScientistTranslation(id, loc, {
+          firstName: t.firstName,
+          lastName: t.lastName,
+          description: JSON.stringify(t.description),
+        });
+        if (!translationRes.ok) {
+          throw new Error(`Failed to save ${loc} translation (${translationRes.status})`);
+        }
       }
     },
     onSuccess: () => {
@@ -30,18 +46,26 @@ export function useScientistCreateMutation(locale: string) {
   });
 }
 
-export function useScientistUpdateMutation(id: string, locale: string) {
+export function useScientistUpdateMutation(id: string) {
   const client = useQueryClient();
 
   return useMutation({
-    mutationFn: async (data: ScientistFormData) => {
-      const translationRes = await updateScientistTranslation(id, locale, {
-        firstName: data.firstName,
-        lastName: data.lastName,
-        description: JSON.stringify(data.description)
-      })
-      if (!translationRes.ok) {
-        throw new Error(`Failed to update scientist translation (${translationRes.status})`);
+    mutationFn: async ({
+      data,
+      translations,
+    }: {
+      data: ScientistFormData;
+      translations: Record<string, ScientistLocaleTranslation>;
+    }) => {
+      for (const [loc, t] of Object.entries(translations)) {
+        const translationRes = await updateScientistTranslation(id, loc, {
+          firstName: t.firstName,
+          lastName: t.lastName,
+          description: JSON.stringify(t.description),
+        });
+        if (!translationRes.ok) {
+          throw new Error(`Failed to save ${loc} translation (${translationRes.status})`);
+        }
       }
 
       const updateRes = await updateScientist(id, {
@@ -80,4 +104,3 @@ export const useScientistForm = (s?: Scientist) =>
       dateOfBirth: s?.dateOfBirth || "",
     },
   });
-

@@ -25,6 +25,9 @@ import { PreviewDialog } from "./preview-dialog";
 import { useNewsEditorPage } from "./use-news-editor-page";
 import { ButtonGroup } from "@/components/ui/button-group";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { TranslateDraftPanel } from "@/components/translate-draft-panel";
+import { ApproveTranslationDialog } from "@/components/approve-translation-dialog";
+import { ContentType } from "@/types/translation-memory";
 import { use } from "react";
 
 export default function NewsEditorPage({
@@ -45,6 +48,7 @@ export default function NewsEditorPage({
     editorKey,
     editorStateRef,
     initialEditorState,
+    applyTranslatedContent,
     thumbnailPreview,
     setThumbnailPreview,
     originalThumbnailPreview,
@@ -62,7 +66,8 @@ export default function NewsEditorPage({
     resetFormForCreate,
     router,
     locale,
-    setLocale
+    localeDrafts,
+    handleLocaleChange,
   } = useNewsEditorPage(editId);
 
   return (
@@ -103,7 +108,7 @@ export default function NewsEditorPage({
             Preview
           </Button>
           <ButtonGroup>
-            <Select defaultValue={locale} onValueChange={v => setLocale(v as "en" | "az")}>
+            <Select value={locale} onValueChange={(v) => handleLocaleChange(v as "en" | "az")}>
               <SelectTrigger>
                 <SelectValue placeholder="Select locale" />
               </SelectTrigger>
@@ -121,6 +126,18 @@ export default function NewsEditorPage({
               {editingNewsId ? "Update" : "Save"}
             </Button>
           </ButtonGroup>
+          <ApproveTranslationDialog
+            contentType={ContentType.Article}
+            getLocaleEditorStateJson={(loc) => {
+              if (loc === locale) {
+                const state = editorStateRef.current?.toJSON() ?? initialEditorState;
+                return state ? JSON.stringify(state) : undefined;
+              }
+              const draft = localeDrafts[loc as "en" | "az"];
+              return draft?.editorState ? JSON.stringify(draft.editorState) : undefined;
+            }}
+            disabled={isLoadingArticle}
+          />
         </div>
       </div>
 
@@ -168,7 +185,17 @@ export default function NewsEditorPage({
                 Write your article content using the rich text editor
               </CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="space-y-4">
+              <TranslateDraftPanel
+                contentType={ContentType.Article}
+                sourceLocale={locale}
+                getSourceStateJson={() => {
+                  const state = editorStateRef.current?.toJSON() ?? initialEditorState;
+                  return state ? JSON.stringify(state) : undefined;
+                }}
+                onApply={applyTranslatedContent}
+                disabled={isLoadingArticle}
+              />
               <Editor
                 key={editorKey}
                 editorSerializedState={initialEditorState}

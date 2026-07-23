@@ -11,18 +11,24 @@ import { CreateNewsRequest, CreateNewsResponse } from "@/types/news";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "sonner";
 
+export type NewsLocaleTranslation = {
+  title: string;
+  excerpt: string;
+  editorState: string;
+};
+
 export type createNewsOpts = {
   data: CreateNewsRequest;
   thumbnail?: File;
   attachments: Attachment[];
-  locale: "en" | "az";
+  translations: Record<string, NewsLocaleTranslation>;
 };
 
 export type updateNewsProps = {
   data: CreateNewsRequest;
   thumbnail?: File;
   attachments?: Attachment[];
-  locale: "en" | "az";
+  translations: Record<string, NewsLocaleTranslation>;
 };
 
 export const useCreateNewsMutation = () =>
@@ -31,7 +37,7 @@ export const useCreateNewsMutation = () =>
       data,
       thumbnail,
       attachments,
-      locale,
+      translations,
     }: createNewsOpts) => {
       const creationResponse = await createNews(data);
       if (!creationResponse.ok) {
@@ -46,14 +52,16 @@ export const useCreateNewsMutation = () =>
         }
       }
 
-      const translationRes = await createTranslation(id, {
-        locale: locale,
-        title: data.title,
-        excerpt: data.excerpt,
-        editorState: data.editorState,
-      });
-      if (!translationRes.ok) {
-        throw new Error(`Failed to create translation (${translationRes.status})`);
+      for (const [loc, t] of Object.entries(translations)) {
+        const translationRes = await createTranslation(id, {
+          locale: loc,
+          title: t.title,
+          excerpt: t.excerpt,
+          editorState: t.editorState,
+        });
+        if (!translationRes.ok) {
+          throw new Error(`Failed to create ${loc} translation (${translationRes.status})`);
+        }
       }
 
       const newAttachments = attachments.filter(isNewAttachment);
@@ -92,10 +100,10 @@ export const useCreateNewsMutation = () =>
 export const useUpdateNewsMutation = (newsId: string) =>
   useMutation({
     mutationFn: async ({
-      locale,
       thumbnail,
       data,
       attachments,
+      translations,
     }: updateNewsProps) => {
       const updateRes = await updateNews(newsId, {
         category: data.category,
@@ -113,14 +121,16 @@ export const useUpdateNewsMutation = (newsId: string) =>
         }
       }
 
-      const translationRes = await updateTranslation(newsId, {
-        locale: locale,
-        title: data.title,
-        excerpt: data.excerpt,
-        editorState: data.editorState,
-      });
-      if (!translationRes.ok) {
-        throw new Error(`Failed to update translation (${translationRes.status})`);
+      for (const [loc, t] of Object.entries(translations)) {
+        const translationRes = await updateTranslation(newsId, {
+          locale: loc,
+          title: t.title,
+          excerpt: t.excerpt,
+          editorState: t.editorState,
+        });
+        if (!translationRes.ok) {
+          throw new Error(`Failed to update ${loc} translation (${translationRes.status})`);
+        }
       }
 
       const newAttachments = (attachments ?? []).filter(isNewAttachment);
