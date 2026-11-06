@@ -4,6 +4,7 @@ import { LanguageSwitcher } from "../language-switcher";
 import { ModeToggle } from "../mode-toggle";
 import Link from "next/link";
 import { MobileMenu } from "./mobile-menu";
+import { AccountMenu } from "./account-menu";
 
 export async function LogoSection() {
   const t = await getTranslations("Global");
@@ -26,6 +27,7 @@ export function ControlsSection() {
     <div className="flex shrink-0 items-center gap-2">
       <ModeToggle />
       <LanguageSwitcher />
+      <AccountMenu />
       <MobileMenu />
     </div>
   );

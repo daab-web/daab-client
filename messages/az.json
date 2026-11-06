@@ -54,6 +54,7 @@
     "readSection": "Bölməni oxu"
   },
   "Navigation": {
+    "blog": "Bloq",
     "home": "Ana səhifə",
     "aboutWaas": "Haqqımızda",
     "boardOfDirectors": "İdarə heyəti",
@@ -396,5 +397,51 @@
     "chairmanTitle": "James D. Murray adına Fəxri Professor, Almaniya",
     "address": "DAAB-nin Türkiyədə qeydiyyatdan keçdiyi ünvan: Feneryolu Mahallesi, Gazi Muhtar Paşa Sokak No: 44, Kadıköy, İstanbul, Türkiyə",
     "copyright": "DAAB / Dünya Azərbaycanlı Alimlər Birliyi. Bütün hüquqlar qorunur."
+  },
+
+  "Auth": {
+    "signIn": "Daxil ol",
+    "signOut": "Çıxış",
+    "blogPanel": "Bloq paneli",
+    "adminPanel": "İdarə paneli"
+  },
+
+  "Blog": {
+    "title": "Bloq",
+    "description": "Akademiyanın alimlərinin qələmə aldığı məqalələr.",
+    "noPosts": "Hələ heç bir məqalə dərc olunmayıb.",
+    "readMore": "Ətraflı",
+    "commentCount": "{count, plural, =0 {Şərh yoxdur} one {# şərh} other {# şərh}}",
+    "backToBlog": "Bloqa qayıt",
+    "previous": "Əvvəlki",
+    "next": "Növbəti",
+    "pageOf": "Səhifə {page} / {total}",
+    "blogPanel": "Yazılarınızı idarə edin",
+    "edit": "Redaktə et",
+    "authorProfile": "Profilə bax",
+    "draftNotice": "Bu yazı qaralamadır və yalnız sizə görünür.",
+    "rejectedNotice": "Bu yazı məzmun yoxlamasından keçmədi",
+    "languages": {
+      "en": "İngilis dili",
+      "az": "Azərbaycan dili"
+    },
+    "comments": {
+      "title": "Şərhlər",
+      "empty": "Hələ şərh yoxdur. Fikrinizi ilk siz bölüşün.",
+      "placeholder": "Fikrinizi bölüşün…",
+      "submit": "Şərh yaz",
+      "posting": "Göndərilir…",
+      "posted": "Şərh əlavə olundu",
+      "signInPrompt": "Müzakirəyə qoşulmaq üçün daxil olun.",
+      "signIn": "Daxil ol",
+      "delete": "Sil",
+      "deleted": "Şərh silindi",
+      "translate": "Tərcümə et",
+      "translating": "Tərcümə olunur…",
+      "showOriginal": "Orijinalı göstər",
+      "translatedFrom": "Tərcümə edilib (orijinal: {language})",
+      "translationFailed": "Tərcümə hazırda mümkün deyil",
+      "tooLong": "Şərh ən çox 2000 simvol ola bilər"
+    }
   }
 }
