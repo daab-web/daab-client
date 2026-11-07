@@ -5,34 +5,42 @@ import { usePathname } from "next/navigation";
 import { useLocale, useTranslations } from "next-intl";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
-import { Languages, Loader2, MessageSquare, Trash2, UserRound } from "lucide-react";
+import {
+  Check,
+  Languages,
+  Loader2,
+  MessageSquare,
+  Sparkles,
+  Trash2,
+  UserRound,
+} from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Textarea } from "@/components/ui/textarea";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Separator } from "@/components/ui/separator";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { useSession } from "@/hooks/use-session";
 import { signInUrl } from "@/lib/api/auth";
 import {
   addComment,
   deleteComment,
   fetchComments,
-  translateComment,
+  suggestTranslation,
 } from "@/lib/api/blog";
-import { formatDateTime, languageName } from "@/lib/format";
+import { formatDateTime } from "@/lib/format";
+import { routing } from "@/i18n/routing";
 import { BlogComment } from "@/types/blog";
 import { isAdmin } from "@/types/session";
 
 const MAX_LENGTH = 2000;
+const LOCALES = routing.locales as readonly string[];
 
-/**
- * A comment offers translation when it is written in a language other than
- * the app language the reader is using. Comments whose language could not be
- * detected (null) offer it too; "und" means there is nothing to translate.
- */
-export function needsTranslation(comment: BlogComment, appLocale: string) {
-  return comment.language !== appLocale && comment.language !== "und";
+/** The comment in the reader's language, falling back to the original. */
+export function commentText(comment: BlogComment, locale: string) {
+  return comment.texts[locale] ?? comment.texts[comment.sourceLocale] ?? "";
 }
 
 interface CommentsSectionProps {
@@ -42,6 +50,7 @@ interface CommentsSectionProps {
 
 export function CommentsSection({ postId, postAuthorId }: CommentsSectionProps) {
   const t = useTranslations("Blog.comments");
+  const locale = useLocale();
   const { user, isLoading: sessionLoading } = useSession();
   const queryKey = ["blog", "comments", postId];
 
@@ -90,6 +99,7 @@ export function CommentsSection({ postId, postAuthorId }: CommentsSectionProps) 
             <CommentItem
               key={comment.id}
               comment={comment}
+              text={commentText(comment, locale)}
               canDelete={
                 !!user &&
                 (user.sub === comment.authorId ||
@@ -122,6 +132,9 @@ function SignInPrompt() {
   );
 }
 
+/** How a translation got into its box; only "approved" and "own" may be posted. */
+type TranslationState = "empty" | "suggested" | "approved" | "own";
+
 function CommentForm({
   postId,
   queryKey,
@@ -130,53 +143,200 @@ function CommentForm({
   queryKey: readonly unknown[];
 }) {
   const t = useTranslations("Blog.comments");
+  const tLanguages = useTranslations("Blog.languages");
+  const appLocale = useLocale();
   const queryClient = useQueryClient();
-  const [content, setContent] = useState("");
 
-  const mutation = useMutation({
-    mutationFn: () => addComment(postId, content.trim()),
+  const [sourceLocale, setSourceLocale] = useState(
+    LOCALES.includes(appLocale) ? appLocale : routing.defaultLocale,
+  );
+  const [texts, setTexts] = useState<Record<string, string>>({});
+  const [states, setStates] = useState<Record<string, TranslationState>>({});
+
+  const targets = LOCALES.filter((l) => l !== sourceLocale);
+  const sourceText = texts[sourceLocale] ?? "";
+  const tooLong = LOCALES.some((l) => (texts[l]?.length ?? 0) > MAX_LENGTH);
+  const ready =
+    sourceText.trim().length > 0 &&
+    !tooLong &&
+    targets.every(
+      (l) =>
+        (texts[l] ?? "").trim().length > 0 &&
+        (states[l] === "approved" || states[l] === "own"),
+    );
+
+  const setText = (locale: string, value: string, state?: TranslationState) => {
+    setTexts((prev) => ({ ...prev, [locale]: value }));
+    if (state) setStates((prev) => ({ ...prev, [locale]: state }));
+  };
+
+  // The text already in a box stays the user's own when the original language changes.
+  const changeSource = (next: string) => {
+    if (!next || next === sourceLocale) return;
+    setStates((prev) => {
+      const updated = { ...prev };
+      for (const l of LOCALES) {
+        if (l !== next) updated[l] = texts[l]?.trim() ? "own" : "empty";
+      }
+      return updated;
+    });
+    setSourceLocale(next);
+  };
+
+  const suggest = useMutation({
+    mutationFn: async (target: string) => {
+      const [translation] = await suggestTranslation(sourceLocale, target, [
+        sourceText.trim(),
+      ]);
+      return { target, translation };
+    },
+    onSuccess: ({ target, translation }) =>
+      setText(target, translation, "suggested"),
+    onError: () => toast.error(t("suggestionFailed")),
+  });
+
+  const post = useMutation({
+    mutationFn: () =>
+      addComment(
+        postId,
+        sourceLocale,
+        Object.fromEntries(LOCALES.map((l) => [l, (texts[l] ?? "").trim()])),
+      ),
     onSuccess: (comment) => {
       queryClient.setQueryData<BlogComment[]>(queryKey, (prev) => [
         ...(prev ?? []),
         comment,
       ]);
-      setContent("");
+      setTexts({});
+      setStates({});
       toast.success(t("posted"));
     },
     onError: (error) => toast.error(error.message),
   });
 
-  const tooLong = content.length > MAX_LENGTH;
+  const busy = post.isPending;
 
   return (
     <form
-      className="space-y-3"
+      className="space-y-4"
       onSubmit={(e) => {
         e.preventDefault();
-        if (content.trim() && !tooLong) mutation.mutate();
+        if (ready) post.mutate();
       }}
     >
+      <div className="flex flex-wrap items-center gap-3">
+        <span className="text-sm text-muted-foreground">{t("writtenIn")}</span>
+        <ToggleGroup
+          type="single"
+          variant="outline"
+          size="sm"
+          value={sourceLocale}
+          onValueChange={changeSource}
+          disabled={busy}
+        >
+          {LOCALES.map((l) => (
+            <ToggleGroupItem key={l} value={l} className="px-3 uppercase">
+              {l}
+            </ToggleGroupItem>
+          ))}
+        </ToggleGroup>
+      </div>
+
       <Textarea
-        value={content}
-        onChange={(e) => setContent(e.target.value)}
+        value={sourceText}
+        onChange={(e) => setText(sourceLocale, e.target.value)}
         placeholder={t("placeholder")}
         rows={3}
-        aria-invalid={tooLong}
-        disabled={mutation.isPending}
+        aria-label={tLanguages(sourceLocale)}
+        disabled={busy}
       />
-      <div className="flex items-center justify-between gap-3">
+
+      {targets.map((target) => {
+        const state = states[target] ?? "empty";
+        const language = tLanguages(target);
+        const suggesting = suggest.isPending && suggest.variables === target;
+        return (
+          <div key={target} className="space-y-2 rounded-lg border p-3">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <div className="flex items-center gap-2 text-sm font-medium">
+                <Languages className="h-4 w-4" />
+                {t("translationLabel", { language })}
+                {state === "suggested" && (
+                  <Badge variant="secondary">
+                    <Sparkles />
+                    AI
+                  </Badge>
+                )}
+                {state === "approved" && (
+                  <Badge variant="outline">
+                    <Check />
+                    {t("approved")}
+                  </Badge>
+                )}
+                {state === "own" && (
+                  <Badge variant="outline">{t("ownTranslation")}</Badge>
+                )}
+              </div>
+              <div className="flex gap-2">
+                {state === "suggested" && (
+                  <Button
+                    type="button"
+                    size="sm"
+                    variant="outline"
+                    onClick={() =>
+                      setStates((prev) => ({ ...prev, [target]: "approved" }))
+                    }
+                  >
+                    <Check className="mr-1 h-4 w-4" />
+                    {t("approve")}
+                  </Button>
+                )}
+                <Button
+                  type="button"
+                  size="sm"
+                  variant="ghost"
+                  disabled={!sourceText.trim() || suggesting || busy}
+                  onClick={() => suggest.mutate(target)}
+                >
+                  {suggesting ? (
+                    <Loader2 className="mr-1 h-4 w-4 animate-spin" />
+                  ) : (
+                    <Sparkles className="mr-1 h-4 w-4" />
+                  )}
+                  {suggesting ? t("suggesting") : t("suggest")}
+                </Button>
+              </div>
+            </div>
+            <Textarea
+              value={texts[target] ?? ""}
+              onChange={(e) =>
+                setText(target, e.target.value, e.target.value.trim() ? "own" : "empty")
+              }
+              placeholder={t("translationPlaceholder", { language })}
+              rows={3}
+              aria-label={language}
+              disabled={busy || suggesting}
+            />
+            {state === "suggested" && (
+              <p className="text-xs text-muted-foreground">{t("aiSuggestion")}</p>
+            )}
+          </div>
+        );
+      })}
+
+      <div className="flex flex-wrap items-center justify-between gap-3">
         <span
           className={`text-xs ${tooLong ? "text-destructive" : "text-muted-foreground"}`}
         >
-          {tooLong ? t("tooLong") : `${content.length}/${MAX_LENGTH}`}
+          {tooLong
+            ? t("tooLong")
+            : !ready && sourceText.trim()
+              ? t("needsTranslation")
+              : `${sourceText.length}/${MAX_LENGTH}`}
         </span>
-        <Button
-          type="submit"
-          size="sm"
-          disabled={!content.trim() || tooLong || mutation.isPending}
-        >
-          {mutation.isPending && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-          {mutation.isPending ? t("posting") : t("submit")}
+        <Button type="submit" size="sm" disabled={!ready || busy}>
+          {busy && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+          {busy ? t("posting") : t("submit")}
         </Button>
       </div>
     </form>
@@ -185,28 +345,18 @@ function CommentForm({
 
 function CommentItem({
   comment,
+  text,
   canDelete,
   queryKey,
 }: {
   comment: BlogComment;
+  text: string;
   canDelete: boolean;
   queryKey: readonly unknown[];
 }) {
   const t = useTranslations("Blog.comments");
-  const tLanguages = useTranslations("Blog.languages");
   const locale = useLocale();
   const queryClient = useQueryClient();
-  const [translation, setTranslation] = useState<string | null>(null);
-  const [showTranslation, setShowTranslation] = useState(false);
-
-  const translate = useMutation({
-    mutationFn: () => translateComment(comment.id, locale),
-    onSuccess: (result) => {
-      setTranslation(result.content);
-      setShowTranslation(true);
-    },
-    onError: () => toast.error(t("translationFailed")),
-  });
 
   const remove = useMutation({
     mutationFn: () => deleteComment(comment.id),
@@ -218,15 +368,6 @@ function CommentItem({
     },
     onError: (error) => toast.error(error.message),
   });
-
-  const canTranslate = needsTranslation(comment, locale);
-  const showingTranslation = showTranslation && translation !== null;
-
-  const onTranslateClick = () => {
-    if (showingTranslation) setShowTranslation(false);
-    else if (translation !== null) setShowTranslation(true);
-    else translate.mutate();
-  };
 
   return (
     <li className="rounded-xl border bg-card p-4">
@@ -256,41 +397,7 @@ function CommentItem({
         )}
       </div>
 
-      <p className="whitespace-pre-wrap break-words text-sm leading-6">
-        {showingTranslation ? translation : comment.content}
-      </p>
-
-      {canTranslate && (
-        <div className="mt-2 flex flex-wrap items-center gap-2">
-          <Button
-            variant="link"
-            size="sm"
-            className="h-auto px-0 text-xs"
-            onClick={onTranslateClick}
-            disabled={translate.isPending}
-          >
-            {translate.isPending ? (
-              <Loader2 className="mr-1 h-3.5 w-3.5 animate-spin" />
-            ) : (
-              <Languages className="mr-1 h-3.5 w-3.5" />
-            )}
-            {translate.isPending
-              ? t("translating")
-              : showingTranslation
-                ? t("showOriginal")
-                : t("translate")}
-          </Button>
-          {showingTranslation && comment.language && (
-            <span className="text-xs text-muted-foreground">
-              {t("translatedFrom", {
-                language: tLanguages.has(comment.language)
-                  ? tLanguages(comment.language)
-                  : languageName(comment.language, locale),
-              })}
-            </span>
-          )}
-        </div>
-      )}
+      <p className="whitespace-pre-wrap break-words text-sm leading-6">{text}</p>
     </li>
   );
 }

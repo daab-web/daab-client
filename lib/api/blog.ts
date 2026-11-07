@@ -1,7 +1,6 @@
 import {
   AdminPost,
   BlogComment,
-  CommentTranslation,
   MyPost,
   Post,
   PostInput,
@@ -14,15 +13,18 @@ import { toApiError } from "./errors";
 
 const json = { "Content-Type": "application/json" };
 
+/** Published posts, with titles and summaries in `locale` where available. */
 export async function fetchPublishedPosts(
   page = 1,
   pageSize = 12,
+  locale?: string,
   init?: RequestInit,
 ): Promise<PagedResponse<PostSummary>> {
   const params = new URLSearchParams({
     page: page.toString(),
     pageSize: pageSize.toString(),
   });
+  if (locale) params.set("locale", locale);
   const res = await fetchAPI(`/blog/posts?${params}`, init);
   if (!res.ok) throw await toApiError(res, "Failed to load posts");
   return res.json();
@@ -88,14 +90,16 @@ export async function fetchComments(postId: string): Promise<BlogComment[]> {
   return res.json();
 }
 
+/** Posts a comment in every language (`texts` is keyed by locale). */
 export async function addComment(
   postId: string,
-  content: string,
+  sourceLocale: string,
+  texts: Record<string, string>,
 ): Promise<BlogComment> {
   const res = await fetchAPI(`/blog/posts/${postId}/comments`, {
     method: "POST",
     headers: json,
-    body: JSON.stringify({ content }),
+    body: JSON.stringify({ sourceLocale, texts }),
   });
   if (!res.ok) throw await toApiError(res, "Failed to post the comment");
   return res.json();
@@ -106,17 +110,23 @@ export async function deleteComment(id: string) {
   if (!res.ok) throw await toApiError(res, "Failed to delete the comment");
 }
 
-export async function translateComment(
-  id: string,
-  locale: string,
-): Promise<CommentTranslation> {
-  const res = await fetchAPI(`/blog/comments/${id}/translation`, {
+/**
+ * AI translation suggestions for plain texts (post title and summary, a comment). The user
+ * reviews them; nothing is saved. Requires a signed-in user.
+ */
+export async function suggestTranslation(
+  sourceLocale: string,
+  targetLocale: string,
+  texts: string[],
+): Promise<string[]> {
+  const res = await fetchAPI("/blog/translations/suggest", {
     method: "POST",
     headers: json,
-    body: JSON.stringify({ locale }),
+    body: JSON.stringify({ sourceLocale, targetLocale, texts }),
   });
-  if (!res.ok) throw await toApiError(res, "Translation failed");
-  return res.json();
+  if (!res.ok) throw await toApiError(res, "Translation is unavailable right now");
+  const body: { translations: string[] } = await res.json();
+  return body.translations;
 }
 
 /** Admin only: every post in any status. */

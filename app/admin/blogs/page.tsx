@@ -31,6 +31,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from "@/components/ui/badge";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useSession } from "@/hooks/use-session";
@@ -43,7 +44,8 @@ type Row = {
   id: string;
   slug: string;
   title: string;
-  locale: string;
+  sourceLocale: string;
+  locales: string[];
   status: PostStatus;
   verificationFeedback: string | null;
   updatedAt: string;
@@ -234,7 +236,7 @@ function PostsTable({
                 <TableHead>Title</TableHead>
                 {showAuthor && <TableHead>Author</TableHead>}
                 <TableHead>Status</TableHead>
-                <TableHead>Language</TableHead>
+                <TableHead>Languages</TableHead>
                 <TableHead>Comments</TableHead>
                 <TableHead>Updated</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
@@ -255,13 +257,26 @@ function PostsTable({
                   <TableCell>
                     <StatusBadge status={post.status} />
                   </TableCell>
-                  <TableCell className="uppercase">{post.locale}</TableCell>
+                  <TableCell>
+                    <div className="flex gap-1">
+                      {post.locales.map((l) => (
+                        <Badge
+                          key={l}
+                          variant={l === post.sourceLocale ? "secondary" : "outline"}
+                          className="uppercase"
+                          title={l === post.sourceLocale ? "Original language" : "Translation"}
+                        >
+                          {l}
+                        </Badge>
+                      ))}
+                    </div>
+                  </TableCell>
                   <TableCell>{post.commentCount}</TableCell>
                   <TableCell>{formatDate(post.updatedAt)}</TableCell>
                   <TableCell>
                     <div className="flex justify-end gap-1">
                       <Button asChild variant="ghost" size="icon" aria-label="View">
-                        <Link href={`/${post.locale}/blog/${post.slug}`} target="_blank">
+                        <Link href={`/${post.sourceLocale}/blog/${post.slug}`} target="_blank">
                           <Eye className="h-4 w-4" />
                         </Link>
                       </Button>
