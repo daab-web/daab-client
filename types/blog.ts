@@ -3,9 +3,10 @@ export type PostStatus = "Draft" | "Published" | "Rejected";
 export interface PostSummary {
   id: string;
   slug: string;
+  /** Language of title and excerpt (the requested one, or the original as a fallback). */
+  locale: string;
   title: string;
   excerpt: string;
-  locale: string;
   authorId: string;
   authorName: string;
   scientistId: string | null;
@@ -13,14 +14,22 @@ export interface PostSummary {
   commentCount: number;
 }
 
-export interface Post {
-  id: string;
-  slug: string;
+/** A post's content in one language. */
+export interface PostTranslation {
+  locale: string;
   title: string;
   excerpt: string;
   /** Serialized Lexical editor state (JSON string). */
   editorState: string;
-  locale: string;
+}
+
+export interface Post {
+  id: string;
+  slug: string;
+  /** The language the author wrote the post in. */
+  sourceLocale: string;
+  /** The post in every language, original first. */
+  translations: PostTranslation[];
   authorId: string;
   authorName: string;
   scientistId: string | null;
@@ -34,9 +43,10 @@ export interface Post {
 export interface MyPost {
   id: string;
   slug: string;
+  /** Title in the original language. */
   title: string;
-  excerpt: string;
-  locale: string;
+  sourceLocale: string;
+  locales: string[];
   status: PostStatus;
   verificationFeedback: string | null;
   createdAt: string;
@@ -45,11 +55,10 @@ export interface MyPost {
   commentCount: number;
 }
 
+/** Create/update payload: the post in every language. */
 export interface PostInput {
-  title: string;
-  excerpt: string;
-  editorState: string;
-  locale: string;
+  sourceLocale: string;
+  translations: PostTranslation[];
 }
 
 export interface SubmitPostResult {
@@ -64,25 +73,21 @@ export interface BlogComment {
   postId: string;
   authorId: string;
   authorName: string;
-  content: string;
-  /** ISO 639-1 code the comment is written in; null when unknown. */
-  language: string | null;
+  /** The language the commenter wrote in. */
+  sourceLocale: string;
+  /** The comment in every language, keyed by locale. */
+  texts: Record<string, string>;
   createdAt: string;
-}
-
-export interface CommentTranslation {
-  commentId: string;
-  locale: string;
-  content: string;
-  sourceLanguage: string | null;
 }
 
 /** A post as listed in the admin's "All posts" view. */
 export interface AdminPost {
   id: string;
   slug: string;
+  /** Title in the original language. */
   title: string;
-  locale: string;
+  sourceLocale: string;
+  locales: string[];
   authorId: string;
   authorName: string;
   status: PostStatus;

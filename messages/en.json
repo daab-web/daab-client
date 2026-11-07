@@ -436,12 +436,18 @@
       "signIn": "Sign in",
       "delete": "Delete",
       "deleted": "Comment deleted",
-      "translate": "Translate",
-      "translating": "Translating…",
-      "showOriginal": "Show original",
-      "translatedFrom": "Translated from {language}",
-      "translationFailed": "Translation is unavailable right now",
-      "tooLong": "Comments can be up to 2000 characters"
+      "tooLong": "Comments can be up to 2000 characters",
+      "writtenIn": "Written in",
+      "translationLabel": "In {language}",
+      "translationPlaceholder": "Write it in {language}, or get a suggestion",
+      "suggest": "Suggest translation",
+      "suggesting": "Translating…",
+      "aiSuggestion": "AI suggestion. Check it, then approve it or edit it into your own translation.",
+      "approve": "Approve",
+      "approved": "Translation approved",
+      "ownTranslation": "Your translation",
+      "needsTranslation": "Add the comment in both languages: approve the suggestion or write your own.",
+      "suggestionFailed": "Translation suggestion is unavailable right now"
     }
   }
 }

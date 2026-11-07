@@ -26,7 +26,7 @@ export default async function BlogPage({ params, searchParams }: Props) {
 
   let posts: PagedResponse<PostSummary> | null = null;
   try {
-    posts = await fetchPublishedPosts(page, PAGE_SIZE);
+    posts = await fetchPublishedPosts(page, PAGE_SIZE, locale);
   } catch (error) {
     console.error("Error fetching blog posts:", error);
   }

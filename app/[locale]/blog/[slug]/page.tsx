@@ -23,7 +23,7 @@ import { CommentsSection } from "@/components/blog/comments-section";
 import { fetchPost } from "@/lib/api/blog";
 import { authHeaders } from "@/lib/api/server-auth";
 import { formatDate } from "@/lib/format";
-import { Post } from "@/types/blog";
+import { Post, PostTranslation } from "@/types/blog";
 
 type Props = {
   params: Promise<{ locale: string; slug: string }>;
@@ -39,6 +39,15 @@ async function loadPost(slug: string): Promise<Post | null> {
   }
 }
 
+/** The post in the reader's language, falling back to the original. */
+function contentFor(post: Post, locale: string): PostTranslation {
+  return (
+    post.translations.find((t) => t.locale === locale) ??
+    post.translations.find((t) => t.locale === post.sourceLocale) ??
+    post.translations[0]
+  );
+}
+
 function parseEditorState(json: string): SerializedEditorState | undefined {
   try {
     return JSON.parse(json);
@@ -48,11 +57,11 @@ function parseEditorState(json: string): SerializedEditorState | undefined {
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { slug } = await params;
+  const { locale, slug } = await params;
   const post = await loadPost(slug);
-  return post
-    ? { title: post.title, description: post.excerpt || undefined }
-    : {};
+  if (!post) return {};
+  const content = contentFor(post, locale);
+  return { title: content.title, description: content.excerpt || undefined };
 }
 
 export default async function BlogPostPage({ params }: Props) {
@@ -63,6 +72,7 @@ export default async function BlogPostPage({ params }: Props) {
   if (!post) notFound();
 
   const isPublished = post.status === "Published";
+  const content = contentFor(post, locale);
 
   return (
     <div className="relative">
@@ -117,20 +127,23 @@ export default async function BlogPostPage({ params }: Props) {
 
         <article className="reveal rounded-[28px] border border-slate-200/80 bg-white/92 p-5 shadow-[0_18px_60px_rgba(15,23,42,0.08)] backdrop-blur md:p-8 lg:p-10 dark:border-white/10 dark:bg-[#171717]/95 dark:shadow-[0_18px_60px_rgba(0,0,0,0.45)]">
           <div className="space-y-6">
-            <Badge
-              variant="outline"
-              className="w-fit rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#274380] dark:text-[#C9D6F0]"
-            >
-              {t(`languages.${post.locale}`)}
-            </Badge>
+            {content.locale !== locale && (
+              // Only older posts lack a language; say which one is shown instead.
+              <Badge
+                variant="outline"
+                className="w-fit rounded-full px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.22em] text-[#274380] dark:text-[#C9D6F0]"
+              >
+                {t(`languages.${content.locale}`)}
+              </Badge>
+            )}
 
             <div className="space-y-4">
               <h1 className="text-3xl font-semibold tracking-tight text-slate-950 md:text-5xl md:leading-[1.08] dark:text-white">
-                {post.title}
+                {content.title}
               </h1>
-              {post.excerpt && (
+              {content.excerpt && (
                 <p className="text-sm leading-7 text-slate-600 md:text-lg md:leading-8 dark:text-slate-300">
-                  {post.excerpt}
+                  {content.excerpt}
                 </p>
               )}
             </div>
@@ -162,7 +175,10 @@ export default async function BlogPostPage({ params }: Props) {
             <Separator />
 
             <div className="prose prose-slate max-w-none dark:prose-invert prose-a:text-primary">
-              <NewsViewer editorState={parseEditorState(post.editorState)} />
+              <NewsViewer
+                key={content.locale}
+                editorState={parseEditorState(content.editorState)}
+              />
             </div>
           </div>
         </article>

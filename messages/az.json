@@ -436,12 +436,18 @@
       "signIn": "Daxil ol",
       "delete": "Sil",
       "deleted": "Şərh silindi",
-      "translate": "Tərcümə et",
-      "translating": "Tərcümə olunur…",
-      "showOriginal": "Orijinalı göstər",
-      "translatedFrom": "Tərcümə edilib (orijinal: {language})",
-      "translationFailed": "Tərcümə hazırda mümkün deyil",
-      "tooLong": "Şərh ən çox 2000 simvol ola bilər"
+      "tooLong": "Şərh ən çox 2000 simvol ola bilər",
+      "writtenIn": "Yazıldığı dil",
+      "translationLabel": "{language}",
+      "translationPlaceholder": "{language} yazın və ya tərcümə təklifi alın",
+      "suggest": "Tərcümə təklif et",
+      "suggesting": "Tərcümə olunur…",
+      "aiSuggestion": "Süni intellekt təklifidir. Yoxlayın, sonra təsdiqləyin və ya öz tərcümənizə çevirin.",
+      "approve": "Təsdiqlə",
+      "approved": "Tərcümə təsdiqləndi",
+      "ownTranslation": "Sizin tərcüməniz",
+      "needsTranslation": "Şərhi hər iki dildə əlavə edin: təklifi təsdiqləyin və ya öz tərcümənizi yazın.",
+      "suggestionFailed": "Tərcümə təklifi hazırda mümkün deyil"
     }
   }
 }
