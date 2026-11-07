@@ -39,6 +39,7 @@ import {
 import { Scientist } from "@/types/scientist";
 import { fetchScientists, deleteScientist } from "@/lib/api/scientists";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { InviteScientistButton } from "./invite-button";
 
 export default function ScientistsPage() {
   const router = useRouter();
@@ -229,6 +230,7 @@ export default function ScientistsPage() {
                           <Pencil className="h-4 w-4 mr-2" />
                           Edit
                         </Button>
+                        <InviteScientistButton scientist={scientist} />
                         <Button
                           onClick={() => openDeleteDialog(scientist)}
                           variant="outline"

@@ -20,10 +20,39 @@ export async function proxy(request: NextRequest) {
       return NextResponse.redirect(redirectUrl);
     }
 
-    return NextResponse.next();
+    // Admins get the whole panel; scientists only the Blogs tab; everyone else
+    // is sent home. (UX gate only — the backend authorizes every call.)
+    const roles = tokenRoles(sessionCookie.value);
+    if (roles.includes("admin")) {
+      return NextResponse.next();
+    }
+
+    if (roles.includes("scientist")) {
+      const inBlogs =
+        pathname === "/admin/blogs" || pathname.startsWith("/admin/blogs/");
+      return inBlogs
+        ? NextResponse.next()
+        : NextResponse.redirect(new URL("/admin/blogs", request.url));
+    }
+
+    return NextResponse.redirect(new URL("/", request.url));
   }
 
   return intlMiddleware(request);
+}
+
+// Reads the `roles` claim from the JWT payload without verifying the signature.
+function tokenRoles(token: string): string[] {
+  try {
+    const payload = token.split(".")[1];
+    const json = atob(payload.replace(/-/g, "+").replace(/_/g, "/"));
+    const roles: unknown = JSON.parse(json).roles;
+    if (Array.isArray(roles)) return roles.map(String);
+    if (typeof roles === "string") return roles.split(",");
+    return [];
+  } catch {
+    return [];
+  }
 }
 
 export const config = {

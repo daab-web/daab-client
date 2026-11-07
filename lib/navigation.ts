@@ -3,6 +3,7 @@ export type NavKey =
   | "boardOfDirectors"
   | "ourScientists"
   | "ourActivities"
+  | "blog"
   | "membership";
 
 export type NavItem = {
@@ -15,6 +16,7 @@ export const NAV_ITEMS: NavItem[] = [
   { key: "boardOfDirectors", href: "/directors" },
   { key: "ourScientists", href: "/scientists" },
   { key: "ourActivities", href: "/activities" },
+  { key: "blog", href: "/blog" },
   { key: "membership", href: "/membership" },
 ];
 

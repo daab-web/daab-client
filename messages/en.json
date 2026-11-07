@@ -54,6 +54,7 @@
     "readSection": "Read section"
   },
   "Navigation": {
+    "blog": "Blog",
     "home": "Home",
     "aboutWaas": "About ",
     "boardOfDirectors": "Board of Directors",
@@ -396,5 +397,51 @@
     "chairmanTitle": "James D. Murray Distinguished Professor, Germany",
     "address": "Registered Address of WAAS in Turkey: Feneryolu Mahallesi, Gazi Muhtar Paşa Sokak No: 44, Kadıköy, Istanbul, Turkey",
     "copyright": "DAAB / World Association of Azerbaijani Scientists (WAAS). All rights reserved."
+  },
+
+  "Auth": {
+    "signIn": "Sign in",
+    "signOut": "Sign out",
+    "blogPanel": "Blog panel",
+    "adminPanel": "Admin dashboard"
+  },
+
+  "Blog": {
+    "title": "Blog",
+    "description": "Articles written by the scientists of the academy.",
+    "noPosts": "No articles have been published yet.",
+    "readMore": "Read more",
+    "commentCount": "{count, plural, =0 {No comments} one {# comment} other {# comments}}",
+    "backToBlog": "Back to blog",
+    "previous": "Previous",
+    "next": "Next",
+    "pageOf": "Page {page} of {total}",
+    "blogPanel": "Manage your posts",
+    "edit": "Edit",
+    "authorProfile": "View profile",
+    "draftNotice": "This post is a draft and is visible only to you.",
+    "rejectedNotice": "This post did not pass content verification",
+    "languages": {
+      "en": "English",
+      "az": "Azerbaijani"
+    },
+    "comments": {
+      "title": "Comments",
+      "empty": "No comments yet. Be the first to share your thoughts.",
+      "placeholder": "Share your thoughts…",
+      "submit": "Post comment",
+      "posting": "Posting…",
+      "posted": "Comment posted",
+      "signInPrompt": "Sign in to join the discussion.",
+      "signIn": "Sign in",
+      "delete": "Delete",
+      "deleted": "Comment deleted",
+      "translate": "Translate",
+      "translating": "Translating…",
+      "showOriginal": "Show original",
+      "translatedFrom": "Translated from {language}",
+      "translationFailed": "Translation is unavailable right now",
+      "tooLong": "Comments can be up to 2000 characters"
+    }
   }
 }
